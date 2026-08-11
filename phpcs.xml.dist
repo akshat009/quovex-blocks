@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<ruleset name="Flux Blocks">
+	<!--
+		Why this file exists: without a ruleset here, PHPCS falls back to the
+		default PEAR standard (irrelevant tags like @category/@package on every
+		file) instead of WordPress Coding Standards. This is what makes editor
+		auto-fix-on-save (PHPSAB) apply the right rules for this plugin.
+		Impact of changing: touches every PHP file's fix-on-save behavior and
+		the pre-push lint gate — not just this file.
+	-->
+	<description>WordPress Coding Standards ruleset for Flux Blocks.</description>
+
+	<file>.</file>
+	<exclude-pattern>/build/*</exclude-pattern>
+	<exclude-pattern>/node_modules/*</exclude-pattern>
+	<exclude-pattern>/vendor/*</exclude-pattern>
+
+	<arg value="sp"/>
+	<arg name="extensions" value="php"/>
+
+	<config name="minimum_supported_wp_version" value="6.8"/>
+	<config name="testVersion" value="7.4-"/>
+
+	<rule ref="WordPress">
+		<exclude name="Generic.Commenting.DocComment.MissingShort"/>
+		<!--
+			includes/ uses Composer PSR-4 autoloading (FluxBlocks\Foo\Bar ->
+			includes/Foo/Bar.php), which requires the filename to match the
+			class name case for case; that is incompatible with WP's legacy
+			class-foo.php/all-lowercase file-naming sniffs, which assume
+			manual require()s instead of an autoloader.
+		-->
+		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+	</rule>
+	<rule ref="WordPress-Extra"/>
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="flux-blocks"/>
+			</property>
+		</properties>
+	</rule>
+</ruleset>

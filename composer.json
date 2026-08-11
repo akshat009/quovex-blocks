@@ -1,0 +1,41 @@
+{
+	"name": "flux-blocks/flux-blocks",
+	"description": "Custom Gutenberg block category with a Query Grid and a Featured CPT Section block for any public post type.",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"authors": [
+		{
+			"name": "Akshat",
+			"homepage": "https://github.com/akshat009"
+		}
+	],
+	"require": {
+		"php": ">=7.4"
+	},
+	"require-dev": {
+		"wp-coding-standards/wpcs": "^3.1",
+		"phpunit/phpunit": "^9.6",
+		"brain/monkey": "^2.6",
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0"
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	},
+	"scripts": {
+		"lint": "phpcs",
+		"lint:fix": "phpcbf",
+		"test": "phpunit"
+	},
+	"autoload": {
+		"psr-4": {
+			"FluxBlocks\\": "includes/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"FluxBlocks\\Tests\\": "tests/"
+		}
+	}
+}

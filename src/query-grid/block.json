@@ -1,0 +1,126 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "flux-blocks/query-grid",
+	"version": "0.1.0",
+	"title": "Query Grid",
+	"category": "flux-blocks",
+	"icon": "media-interactive",
+	"description": "A filterable, paginated grid of posts with search and category chips.",
+	"example": {},
+	"attributes": {
+		"showHeading": {
+			"type": "boolean",
+			"default": true
+		},
+		"heading": {
+			"type": "string",
+			"default": "Latest Articles & News"
+		},
+		"headingAccent": {
+			"type": "string",
+			"default": ""
+		},
+		"showSearch": {
+			"type": "boolean",
+			"default": true
+		},
+		"showCategoryFilter": {
+			"type": "boolean",
+			"default": true
+		},
+		"facetTaxonomies": {
+			"type": "array",
+			"default": []
+		},
+		"showSidebar": {
+			"type": "boolean",
+			"default": false
+		},
+		"sidebarSide": {
+			"type": "string",
+			"default": "left"
+		},
+		"showFilterHeadings": {
+			"type": "boolean",
+			"default": true
+		},
+		"facetHeadings": {
+			"type": "object",
+			"default": {}
+		},
+		"searchAlign": {
+			"type": "string",
+			"default": "center"
+		},
+		"paginationStyle": {
+			"type": "string",
+			"default": "numbers"
+		},
+		"showAllPosts": {
+			"type": "boolean",
+			"default": false
+		},
+		"carouselItemsPerView": {
+			"type": "number",
+			"default": 3
+		},
+		"postType": {
+			"type": "string",
+			"default": "post"
+		},
+		"postCount": {
+			"type": "number",
+			"default": 9
+		},
+		"orderBy": {
+			"type": "string",
+			"default": "date"
+		},
+		"order": {
+			"type": "string",
+			"default": "desc"
+		},
+		"columns": {
+			"type": "object",
+			"default": { "mobile": 1, "tablet": 2, "desktop": 3 }
+		},
+		"colors": {
+			"type": "object",
+			"default": {
+				"titleColor": "",
+				"accentColor": "",
+				"activeAccent": "",
+				"disabledNav": "",
+				"inactivePillBg": "",
+				"inactivePillText": "",
+				"metaText": "",
+				"authorText": ""
+			}
+		},
+		"queryId": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"supports": {
+		"interactivity": true,
+		"align": [ "wide", "full" ],
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+	"styles": [
+		{ "name": "grid", "label": "Grid", "isDefault": true },
+		{ "name": "list", "label": "List" },
+		{ "name": "masonry", "label": "Masonry" },
+		{ "name": "carousel", "label": "Carousel" }
+	],
+	"textdomain": "flux-blocks",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScriptModule": "file:./view.js"
+}

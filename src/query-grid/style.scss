@@ -1,0 +1,541 @@
+/**
+ * Query Grid — frontend + editor shared styles.
+ *
+ * Why: layout switching (Grid/List/Masonry/Carousel/Spotlight) is a native
+ * block Style Variation -- WordPress adds `is-style-<name>` to the wrapper
+ * itself (see block.json's `styles` + Renderer::layout_from_class_name()),
+ * so `.fb-query-grid--<layout>` below is driven by that class, not a custom
+ * attribute. Colors are CSS custom properties set inline by PHP
+ * (Renderer::build_inline_style()) from the block's `colors` attribute,
+ * each with a fallback here via var(--x, #default) so unset colors still
+ * look intentional.
+ * Impact of changing: custom property names like --fb-cols-mobile and
+ * --fb-title-color are shared with includes/Blocks/QueryGrid/Renderer.php --
+ * renaming one without the other silently breaks that property.
+ */
+
+.fb-query-grid {
+	--fb-cols-mobile: 1;
+	--fb-cols-tablet: 2;
+	--fb-cols-desktop: 3;
+
+	&__heading {
+		margin: 0 0 1em;
+		text-align: center;
+		font-size: 2em;
+		color: var(--fb-title-color, inherit);
+	}
+
+	&__heading-accent {
+		color: var(--fb-accent-color, #d1372d);
+	}
+
+	&__toolbar {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.75em;
+		margin-bottom: 1.5em;
+
+		&--align-left {
+			align-items: flex-start;
+		}
+
+		&--align-right {
+			align-items: flex-end;
+		}
+	}
+
+	&__search {
+		display: flex;
+		align-items: center;
+		width: 100%;
+		max-width: 28em;
+		border: 1px solid #ddd;
+		border-radius: 999px;
+		padding: 0.25em 0.25em 0.25em 1em;
+	}
+
+	&__search-input {
+		flex: 1;
+		border: none;
+		outline: none;
+		background: transparent;
+		font-size: 1em;
+	}
+
+	&__search-btn {
+		cursor: pointer;
+		border: none;
+		background: transparent;
+		border-radius: 50%;
+		width: 2.25em;
+		height: 2.25em;
+		font-size: 1em;
+	}
+
+	&__filters {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.5em;
+	}
+
+	&__filter-btn {
+		cursor: pointer;
+		border: 1px solid var(--fb-inactive-pill-bg, #ddd);
+		background: var(--fb-inactive-pill-bg, transparent);
+		color: var(--fb-inactive-pill-text, inherit);
+		border-radius: 999px;
+		padding: 0.4em 1em;
+		font-size: 0.9em;
+
+		&.is-active {
+			border-color: var(--fb-active-accent, #d1372d);
+			background: var(--fb-active-accent, #d1372d);
+			color: #fff;
+
+			// A leading "x" on active pills only -- visually confirms the
+			// term is selected and that clicking it again removes it
+			// (clicking the whole pill already toggles, this is just the
+			// affordance; see actions.onFilterClick in view.js).
+			&::before {
+				content: "\2715";
+				margin-right: 0.5em;
+				font-size: 0.85em;
+			}
+		}
+	}
+
+	/* One per facet group (Categories, Tags, ...) -- see the $show_heading
+	   param on Renderer::render_facet_group(). */
+	&__filter-group {
+		margin-bottom: 1.5em;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	// Styled like a classic WordPress sidebar widget title (e.g. the core
+	// "Categories" widget) rather than a small inline label -- bigger,
+	// bold, with a bottom border to visually separate it from its pills.
+	&__filter-heading {
+		font-weight: 700;
+		font-size: 1.2em;
+		line-height: 1.3;
+		margin: 0 0 0.75em;
+		padding-bottom: 0.4em;
+		border-bottom: 2px solid var(--fb-active-accent, #d1372d);
+	}
+
+	&__items {
+		display: grid;
+		grid-template-columns: repeat(var(--fb-cols-mobile), minmax(0, 1fr));
+		gap: 1.5em;
+	}
+
+	@media (min-width: 600px) {
+
+		&__items {
+			grid-template-columns: repeat(var(--fb-cols-tablet), minmax(0, 1fr));
+		}
+	}
+
+	@media (min-width: 960px) {
+
+		&__items {
+			grid-template-columns: repeat(var(--fb-cols-desktop), minmax(0, 1fr));
+		}
+	}
+
+	/* Base item card -- must come before the &--list/&--masonry overrides
+	   below (the no-descending-specificity lint rule wants the plain
+	   .fb-query-grid__item rule declared before anything more specific that
+	   also targets it). */
+	&__item {
+		border: 1px solid #eee;
+		border-radius: 6px;
+		overflow: hidden;
+
+		&-image {
+			display: block;
+
+			img {
+				width: 100%;
+				height: 12em;
+				object-fit: cover;
+				display: block;
+			}
+		}
+
+		&-image-placeholder {
+			display: block;
+			width: 100%;
+			height: 12em;
+			background: #e9edf3;
+		}
+
+		&-body {
+			padding: 1em;
+		}
+
+		&-meta {
+			display: flex;
+			align-items: center;
+			gap: 0.4em;
+			font-size: 0.8em;
+			color: var(--fb-meta-text, #767676);
+			margin: 0 0 0.5em;
+		}
+
+		&-title {
+			margin: 0 0 0.4em;
+			font-size: 1.1em;
+
+			a {
+				text-decoration: none;
+				color: inherit;
+			}
+		}
+
+		&-excerpt {
+			margin: 0 0 0.75em;
+			opacity: 0.8;
+			font-size: 0.9em;
+		}
+
+		&-readmore {
+			font-size: 0.85em;
+			font-weight: 600;
+			text-decoration: none;
+		}
+
+		&-author {
+			color: var(--fb-author-text, inherit);
+		}
+	}
+
+	&--list &__items {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	&--list &__item {
+		display: flex;
+		gap: 1.5em;
+		align-items: flex-start;
+
+		/* Same min-width: auto gotcha as the grid tracks above, flexbox's
+		   version of it: the text side is a flex item too, so without this
+		   it would refuse to shrink narrower than its own longest
+		   unbroken word/URL, which is exactly what can push a full-width
+		   block wider than the viewport on mobile. */
+		.fb-query-grid__item-body {
+			min-width: 0;
+		}
+
+		.fb-query-grid__item-image {
+			flex: 0 0 12em;
+		}
+	}
+
+	/* Masonry used to be plain `column-count` -- CSS multi-column layout
+	   fills column 1 completely (top-to-bottom) before starting column 2,
+	   so with e.g. 101 posts across 3 columns, column 2's first post is
+	   whichever one landed ~34th, not 2nd. Visually that reads as "random"
+	   order even though the query itself is correctly sorted -- there is no
+	   query bug here, `column-count` genuinely does not preserve reading
+	   order. Switched to a CSS Grid + per-item `grid-row-end: span N`
+	   technique instead (view.js's `layoutMasonryItems()` measures each
+	   item's real rendered height and sets its span) -- the standard
+	   workaround for the still-not-baseline native
+	   `grid-template-rows: masonry`. Grid auto-placement fills LEFT TO
+	   RIGHT, top row first, so items stay in DOM/query order while still
+	   getting variable heights. `grid-auto-rows` is intentionally left at
+	   its default (`auto`) here, NOT set to a small JS-measured unit -- the
+	   editor's ServerSideRender preview never runs Interactivity API JS
+	   (see docs/architecture.md), so without a script running there this
+	   rule alone is the only masonry styling that preview ever sees. `auto`
+	   rows make that preview fall back to a plain responsive grid (no
+	   stagger, but not broken/overlapping either); `layoutMasonryItems()`
+	   overrides `grid-auto-rows` to a small pixel unit via inline style
+	   itself once real JS is running on the frontend, only then enabling
+	   real per-item spans. */
+	&--masonry &__items {
+		display: grid;
+		grid-template-columns: repeat(var(--fb-cols-mobile), minmax(0, 1fr));
+		align-items: start;
+
+		@media (min-width: 600px) {
+			grid-template-columns: repeat(var(--fb-cols-tablet), minmax(0, 1fr));
+		}
+
+		@media (min-width: 960px) {
+			grid-template-columns: repeat(var(--fb-cols-desktop), minmax(0, 1fr));
+		}
+	}
+
+	/* Grid/List/Carousel all crop images to a fixed 12em (see &-image img
+	   above) -- CSS Grid then stretches every card to match its row's
+	   tallest item anyway (the default `align-items: stretch`), so a fixed
+	   crop never actually shows there. Masonry's `align-items: start` above
+	   opts out of that stretch specifically so a fixed crop there would
+	   have made every card end up nearly the same height anyway -- letting
+	   the image keep its natural aspect ratio is what actually produces
+	   variable card heights for layoutMasonryItems() to measure and act on. */
+	&--masonry &__item-image img {
+		height: auto;
+	}
+
+	/* Carousel shows a GROUP of --fb-carousel-items cards side by side (a
+	   single visible card at a time read as unpolished) -- see the
+	   $carousel_items_per_view variable in Renderer::render() and view.js's
+	   isCurrentSlide getter, which windows visibility to match this same
+	   column count. */
+	&--carousel &__items {
+		display: grid;
+		grid-template-columns: repeat(var(--fb-carousel-items, 3), minmax(0, 1fr));
+		gap: 1.5em;
+
+		@media (max-width: 782px) {
+
+			/* Regardless of how many columns are configured, a phone-width
+			   viewport only fits one at a time -- the JS windowing logic
+			   still reveals --fb-carousel-items cards, they just wrap to
+			   their own rows here instead of squeezing into one. */
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+
+	/* Carousel items rely on the default UA stylesheet rule for the hidden
+	   attribute (data-wp-bind--hidden toggles it) -- no explicit display is
+	   set on &__item for this layout, so nothing overrides that default. */
+
+	&__empty {
+		opacity: 0.7;
+		font-style: italic;
+		text-align: center;
+	}
+
+	&__carousel-nav {
+		margin-top: 1.5em;
+		display: flex;
+		justify-content: center;
+		gap: 0.75em;
+	}
+
+	&__nav-btn {
+		cursor: pointer;
+		border: 1px solid currentcolor;
+		background: transparent;
+		border-radius: 4px;
+		padding: 0.5em 0.9em;
+		line-height: 1;
+		font-size: 1em;
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: default;
+			border-color: var(--fb-disabled-nav, currentcolor);
+			color: var(--fb-disabled-nav, currentcolor);
+		}
+	}
+
+	&__pagination {
+		margin-top: 2em;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 0.5em;
+
+		@media (max-width: 480px) {
+			gap: 0.35em;
+		}
+	}
+
+	// Plain page-number buttons: no border/background, just text -- only
+	// the active page (and Prev/Next) get a visible shape.
+
+	/* Now real <a href> elements (page numbers/Prev/Next) or <span> (the
+	   current page, and disabled Prev/Next) instead of <button> -- see
+	   Renderer::render_pagination()'s docblock for why (SEO/crawlability).
+	   `<a>`/`<span>` are inline by default, so width/height/min-width
+	   below would otherwise be ignored -- inline-flex both makes those
+	   apply AND centers the page number text without a separate rule. */
+	&__page-btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		border: none;
+		background: transparent;
+		color: inherit;
+		text-decoration: none;
+		font-weight: 600;
+		font-size: 0.95em;
+		min-width: 2.25em;
+		height: 2.25em;
+		padding: 0 0.25em;
+
+		@media (max-width: 480px) {
+			min-width: 1.85em;
+			height: 1.85em;
+			font-size: 0.85em;
+		}
+
+		&.is-active {
+			border-radius: 6px;
+			background: var(--fb-active-accent, #d1372d);
+			color: #fff;
+		}
+
+		/* Full "Prev"/"Next" pill padding is wide enough that, together with
+		   however many page-number buttons sit between them, the whole row
+		   can exceed a phone-width viewport and wrap -- flex-wrap then
+		   isolates "Next" alone on its own centered line, which reads as
+		   broken even though the wrap itself is correct flex behavior.
+		   Shrinking the pills below 480px makes the full row fit in one
+		   line for the common case (a handful of page numbers) instead. */
+		&--prev,
+		&--next {
+			border: 2px solid var(--fb-active-accent, #d1372d);
+			border-radius: 999px;
+			color: var(--fb-active-accent, #d1372d);
+			padding: 0 1.25em;
+			font-weight: 600;
+
+			@media (max-width: 480px) {
+				padding: 0 0.75em;
+				font-size: 0.85em;
+			}
+		}
+
+		/* :disabled kept for safety even though these are no longer real
+		   <button> elements -- [aria-disabled="true"] is what actually
+		   matches now (the disabled Prev/Next <span>, see
+		   render_pagination()). */
+		&:disabled,
+		&[aria-disabled="true"] {
+			cursor: default;
+			border-color: var(--fb-disabled-nav, #f3c8c4);
+			background: transparent;
+			color: var(--fb-disabled-nav, #f3c8c4);
+		}
+	}
+
+	&__page-ellipsis {
+		font-weight: 600;
+		opacity: 0.7;
+	}
+
+	&__load-more {
+		margin-top: 1.5em;
+		display: flex;
+		justify-content: center;
+	}
+
+	&__load-more-btn {
+		cursor: pointer;
+		border: 2px solid var(--fb-active-accent, #d1372d);
+		background: transparent;
+		color: var(--fb-active-accent, #d1372d);
+		border-radius: 999px;
+		padding: 0.6em 1.5em;
+		font-size: 0.95em;
+		font-weight: 600;
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: default;
+		}
+	}
+
+	/* Sidebar layout: a two-column layout (search + filters in one column,
+	   items + pagination in the other) instead of the default single-column
+	   top toolbar. Only applied when the block wrapper has the
+	   fb-query-grid--filter-sidebar modifier -- see the $is_sidebar variable
+	   in Renderer::render() (only true when Show Sidebar is on AND at least
+	   one of search/filters is actually showing). Declared last so its
+	   .fb-query-grid__filters override always wins over the earlier plain
+	   &__filters rule (no-descending-specificity). */
+	&--filter-sidebar {
+
+		.fb-query-grid__layout {
+			display: grid;
+
+			/* minmax(0, 1fr), not a bare 1fr: grid items default to
+			   `min-width: auto`, meaning this column would refuse to
+			   shrink narrower than its own content's min-content width
+			   (e.g. a long facet pill label or the items grid inside it)
+			   -- on a full-width block that is exactly what causes the
+			   whole page to gain a horizontal scrollbar on mobile instead
+			   of the column actually shrinking to fit. */
+			grid-template-columns: 16em minmax(0, 1fr);
+			gap: 2em;
+			align-items: start;
+
+			@media (max-width: 782px) {
+				grid-template-columns: minmax(0, 1fr);
+			}
+		}
+
+		.fb-query-grid__sidebar {
+			display: flex;
+			flex-direction: column;
+			gap: 1.5em;
+		}
+
+		/* Vertical pill stacking only makes sense while the sidebar is the
+		   narrow 16em column above (each pill has the full column width to
+		   itself, wrapping would look cramped) -- once the layout collapses
+		   to one full-width column below 782px (see .fb-query-grid__layout
+		   above), that same full width fits several pills per row easily,
+		   so stacking one-per-line there was just wasting scroll height for
+		   no reason. Revert to the default wrapping row at that breakpoint. */
+		.fb-query-grid__filters {
+			flex-direction: column;
+			align-items: flex-start;
+
+			@media (max-width: 782px) {
+				flex-direction: row;
+				flex-wrap: wrap;
+				align-items: center;
+
+				/* NOT center: the sidebar's whole design language is
+				   left-aligned (heading, search input, the desktop vertical
+				   pill stack above) -- centering only belongs to the OTHER
+				   layout, the top toolbar (see the plain &__filters rule),
+				   which sits under a centered heading. Centering here made
+				   single-pill rows (e.g. "Uncategorized" alone) look like
+				   they were floating in the middle of nowhere instead of
+				   lining up with the search box and every other pill row
+				   above it. */
+				justify-content: flex-start;
+			}
+		}
+
+		.fb-query-grid__toolbar {
+			margin-bottom: 1.5em;
+		}
+	}
+
+	// Sidebar on the right: swap column order (grid-template-columns stays
+	// the same, only which side each pane renders on changes) via `order`
+	// rather than re-declaring grid-template-columns in reverse.
+	&--sidebar-right .fb-query-grid__layout {
+		grid-template-columns: minmax(0, 1fr) 16em;
+
+		.fb-query-grid__sidebar {
+			order: 2;
+		}
+
+		.fb-query-grid__main {
+			order: 1;
+		}
+
+		@media (max-width: 782px) {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+}
