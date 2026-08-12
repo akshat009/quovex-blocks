@@ -156,4 +156,28 @@ class QueryCacheTest extends TestCase {
 		$registry = $this->options['_flux_blocks_cache_keys_post'];
 		$this->assertCount( 1, $registry );
 	}
+
+	/**
+	 * Regression test for the audit fix: the registry option used to grow
+	 * without bound -- every unique query signature added one more entry,
+	 * forever. Now it's capped at QueryCache::MAX_REGISTRY_SIZE, dropping
+	 * the oldest entries first.
+	 */
+	public function test_the_invalidation_registry_is_capped_and_drops_the_oldest_entries_first(): void {
+		$cap = QueryCache::MAX_REGISTRY_SIZE;
+
+		// One more unique signature than the cap allows.
+		for ( $i = 0; $i <= $cap; $i++ ) {
+			$this->cache->remember( 'post', "sig-cap-$i", fn() => "v$i" );
+		}
+
+		$registry = $this->options['_flux_blocks_cache_keys_post'];
+		$this->assertCount( $cap, $registry, 'Registry must never exceed MAX_REGISTRY_SIZE.' );
+
+		$first_key = 'fb_q_' . md5( 'sig-cap-0' );
+		$this->assertNotContains( $first_key, $registry, 'The OLDEST entry must be the one dropped once over the cap.' );
+
+		$last_key = 'fb_q_' . md5( "sig-cap-$cap" );
+		$this->assertContains( $last_key, $registry, 'The newest entry must still be present.' );
+	}
 }

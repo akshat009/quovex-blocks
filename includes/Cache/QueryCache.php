@@ -35,8 +35,9 @@ use FluxBlocks\Logger\LoggerInterface;
  */
 class QueryCache implements CacheInterface {
 
-	const TTL             = HOUR_IN_SECONDS;
-	const REGISTRY_PREFIX = '_flux_blocks_cache_keys_';
+	const TTL               = HOUR_IN_SECONDS;
+	const REGISTRY_PREFIX   = '_flux_blocks_cache_keys_';
+	const MAX_REGISTRY_SIZE = 200;
 
 	/** @var LoggerInterface|null */
 	private $logger;
@@ -90,6 +91,17 @@ class QueryCache implements CacheInterface {
 	 * which silently misses sites where transients live in a persistent
 	 * object cache (Redis/Memcached) rather than wp_options.
 	 *
+	 * Capped at MAX_REGISTRY_SIZE, oldest-first -- every unique query
+	 * signature (different filter/search/pagination combo) for a post
+	 * type adds one entry here, and a busy site can accumulate many
+	 * between full forget_for_post_type() wipes. Dropping the oldest
+	 * entries once over the cap is safe: every transient still has its
+	 * own TTL (self::TTL) regardless of whether this registry remembers
+	 * it, so a dropped key just means that one (already old, already
+	 * cooling-off) query shape's transient lingers until its own TTL
+	 * expiry instead of being proactively cleared on the next post
+	 * save/delete -- never a correctness issue, only a bounded delay.
+	 *
 	 * @param string $post_type Post type slug.
 	 * @param string $key       Transient key that was just written.
 	 */
@@ -99,6 +111,9 @@ class QueryCache implements CacheInterface {
 
 		if ( ! in_array( $key, $keys, true ) ) {
 			$keys[] = $key;
+			if ( count( $keys ) > self::MAX_REGISTRY_SIZE ) {
+				$keys = array_slice( $keys, -self::MAX_REGISTRY_SIZE );
+			}
 			update_option( $registry_option, $keys, false ); // autoload=false: not needed on every page load.
 		}
 	}

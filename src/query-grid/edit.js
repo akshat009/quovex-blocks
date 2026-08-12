@@ -14,35 +14,33 @@
  * reading/writing values into a plain JS object then re-rendering the DOM
  * by hand — React (and `useBlockProps`) just automates "re-render whenever
  * this object changes" instead of you calling `render()` yourself.
+ *
+ * This file is the ORCHESTRATOR only -- it resolves shared/derived state
+ * (colors, typography, font option lists, the pagination-slug REST round
+ * trip, ...) and hands each Inspector panel group to its own component in
+ * ./inspector/ (mirrors the same "extract collaborators out of one god
+ * file" split already done for the PHP Renderer -- see
+ * includes/Blocks/QueryGrid/Render/Renderer.php's docblock). Splitting it
+ * doesn't change any UI -- every panel, label, and control is byte-for-byte
+ * the same, just moved into its own file.
  */
-import { __, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { useEffect, useState, useRef } from '@wordpress/element';
 import {
 	useBlockProps,
-	InspectorControls,
-	PanelColorSettings,
 	useSettings,
+	InspectorControls,
 } from '@wordpress/block-editor';
 import ServerSideRender from '@wordpress/server-side-render';
 import apiFetch from '@wordpress/api-fetch';
-/* eslint-disable @wordpress/no-unsafe-wp-apis -- NumberControl is still
-   experimental in @wordpress/components but has no stable alternative for
-   this UI pattern yet; this opt-in-by-comment is the standard way the block
-   editor ecosystem uses it until it stabilizes. */
-import {
-	SelectControl,
-	RangeControl,
-	__experimentalNumberControl as NumberControl,
-	PanelBody,
-	ToggleControl,
-	TextControl,
-	CheckboxControl,
-	BaseControl,
-} from '@wordpress/components';
-/* eslint-enable @wordpress/no-unsafe-wp-apis */
 
 import usePostTypeOptions from '../shared/use-post-type-options';
 import useTaxonomyOptions from '../shared/use-taxonomy-options';
+import ContentSettingsPanel from './inspector/ContentSettingsPanel';
+import SectionHeaderStylesPanel from './inspector/SectionHeaderStylesPanel';
+import CardStylesPanel from './inspector/CardStylesPanel';
+import FilterPaginationStylesPanel from './inspector/FilterPaginationStylesPanel';
+import FacetFiltersPanel from './inspector/FacetFiltersPanel';
 
 const DEFAULT_COLUMNS = { mobile: 1, tablet: 2, desktop: 3 };
 const DEFAULT_COLORS = {
@@ -70,24 +68,9 @@ const DEFAULT_TYPOGRAPHY = {
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
-		showHeading,
-		heading,
-		headingAccent,
-		showSearch,
-		showCategoryFilter,
 		facetTaxonomies,
-		showSidebar,
-		sidebarSide,
-		showFilterHeadings,
 		facetHeadings,
-		searchAlign,
-		paginationStyle,
-		showAllPosts,
-		carouselItemsPerView,
 		postType,
-		postCount,
-		orderBy,
-		order,
 		columns,
 		colors,
 		typography,
@@ -155,9 +138,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	// is a SITE-WIDE setting, not a per-block attribute -- the rewrite rule
 	// backing it has to be registered with one fixed name before WordPress
 	// parses any specific post's blocks, so it can't vary per instance (see
-	// that file's docblock). Read/written through a dedicated REST route
-	// (not core's /wp/v2/settings, which requires Administrator access) so
-	// any Editor-capable user configuring THIS block can also set it.
+	// that file's docblock). Read through a dedicated REST route (not
+	// core's /wp/v2/settings, which requires Administrator access for
+	// reads too) so any Editor-capable user configuring THIS block can see
+	// the current value -- writing it still requires manage_options
+	// server-side (see PaginationSlugController.php), since it's a
+	// site-wide setting, not scoped to this one block.
 	const [ paginationSlug, setPaginationSlug ] = useState( null );
 	const paginationSlugSaveTimeout = useRef();
 
@@ -211,641 +197,62 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody
-					title={ __( 'Section Heading Settings', 'flux-blocks' ) }
-					initialOpen={ false }
-				>
-					<ToggleControl
-						__nextHasNoMarginBottom
-						label={ __( 'Show Section Heading', 'flux-blocks' ) }
-						checked={ !! showHeading }
-						onChange={ ( value ) =>
-							setAttributes( { showHeading: value } )
-						}
-					/>
-					{ showHeading && (
-						<>
-							<TextControl
-								__nextHasNoMarginBottom
-								label={ __( 'Section Title', 'flux-blocks' ) }
-								value={ heading }
-								onChange={ ( value ) =>
-									setAttributes( { heading: value } )
-								}
-							/>
-							<TextControl
-								__nextHasNoMarginBottom
-								label={ __(
-									'Highlighted Accent Text',
-									'flux-blocks'
-								) }
-								help={ __(
-									'Must exactly match a substring of the title above to be colored.',
-									'flux-blocks'
-								) }
-								value={ headingAccent }
-								onChange={ ( value ) =>
-									setAttributes( { headingAccent: value } )
-								}
-							/>
-						</>
-					) }
-				</PanelBody>
-
-				<PanelBody
-					title={ __( 'Grid Layout Settings', 'flux-blocks' ) }
-					initialOpen={ false }
-				>
-					<SelectControl
-						__nextHasNoMarginBottom
-						label={ __( 'Post type', 'flux-blocks' ) }
-						value={ postType }
-						options={
-							postTypeOptions.length
-								? postTypeOptions
-								: [
-										{
-											label: __( 'Post', 'flux-blocks' ),
-											value: 'post',
-										},
-								  ]
-						}
-						onChange={ ( value ) =>
-							setAttributes( { postType: value } )
-						}
-					/>
-					{ ! showAllPosts && (
-						<RangeControl
-							__nextHasNoMarginBottom
-							label={
-								currentStyle === 'carousel'
-									? __(
-											'Total Posts (Carousel)',
-											'flux-blocks'
-									  )
-									: __( 'Posts per page', 'flux-blocks' )
-							}
-							help={
-								currentStyle === 'carousel'
-									? __(
-											'Total posts loaded into the carousel (Prev/Next cycle through these). Want every matching post instead? Turn on "Show All Posts (No Pagination)" below.',
-											'flux-blocks'
-									  )
-									: undefined
-							}
-							min={ 1 }
-							max={ 50 }
-							value={ postCount }
-							onChange={ ( value ) =>
-								setAttributes( { postCount: value } )
-							}
-						/>
-					) }
-					<SelectControl
-						__nextHasNoMarginBottom
-						label={ __( 'Order by', 'flux-blocks' ) }
-						value={ `${ orderBy }-${ order }` }
-						options={ [
-							{
-								label: __( 'Newest first', 'flux-blocks' ),
-								value: 'date-desc',
-							},
-							{
-								label: __( 'Oldest first', 'flux-blocks' ),
-								value: 'date-asc',
-							},
-							{
-								label: __( 'Title A→Z', 'flux-blocks' ),
-								value: 'title-asc',
-							},
-							{
-								label: __( 'Title Z→A', 'flux-blocks' ),
-								value: 'title-desc',
-							},
-						] }
-						onChange={ ( value ) => {
-							const [ newOrderBy, newOrder ] = value.split( '-' );
-							setAttributes( {
-								orderBy: newOrderBy,
-								order: newOrder,
-							} );
-						} }
-					/>
-					{ currentStyle !== 'carousel' && ! showAllPosts && (
-						<SelectControl
-							__nextHasNoMarginBottom
-							label={ __( 'Pagination Style', 'flux-blocks' ) }
-							value={ paginationStyle }
-							options={ [
-								{
-									label: __( 'Page numbers', 'flux-blocks' ),
-									value: 'numbers',
-								},
-								{
-									label: __(
-										'Load more button',
-										'flux-blocks'
-									),
-									value: 'load-more',
-								},
-							] }
-							onChange={ ( value ) =>
-								setAttributes( { paginationStyle: value } )
-							}
-						/>
-					) }
-					{ currentStyle !== 'carousel' &&
-						! showAllPosts &&
-						paginationStyle === 'numbers' && (
-							<TextControl
-								__nextHasNoMarginBottom
-								label={ __(
-									'Pagination URL Segment',
-									'flux-blocks'
-								) }
-								help={ __(
-									'Site-wide -- shared by every Query Grid block on this site. Shown in the address bar as e.g. /your-value/2/.',
-									'flux-blocks'
-								) }
-								value={ paginationSlug ?? '' }
-								onChange={ updatePaginationSlug }
-							/>
-						) }
-					<ToggleControl
-						__nextHasNoMarginBottom
-						label={ __(
-							'Show All Posts (No Pagination)',
-							'flux-blocks'
-						) }
-						help={
-							currentStyle === 'carousel'
-								? __(
-										'Cycles through every matching post (up to 200) instead of stopping at the Total Posts number above -- Prev/Next still work as normal.',
-										'flux-blocks'
-								  )
-								: __(
-										'Shows every matching post on one page (up to 200) instead of paginating. Turns off Posts per page and Pagination Style above.',
-										'flux-blocks'
-								  )
-						}
-						checked={ !! showAllPosts }
-						onChange={ ( value ) =>
-							setAttributes( { showAllPosts: value } )
-						}
-					/>
-					{ currentStyle === 'carousel' && (
-						<RangeControl
-							__nextHasNoMarginBottom
-							label={ __( 'Cards Per Slide', 'flux-blocks' ) }
-							help={ __(
-								'How many cards show side by side; Next/Prev move a whole group at a time.',
-								'flux-blocks'
-							) }
-							min={ 1 }
-							max={ 6 }
-							value={ carouselItemsPerView }
-							onChange={ ( value ) =>
-								setAttributes( { carouselItemsPerView: value } )
-							}
-						/>
-					) }
-					<NumberControl
-						label={ __( 'Mobile columns', 'flux-blocks' ) }
-						min={ 1 }
-						max={ 4 }
-						value={ columnsValue.mobile }
-						onChange={ ( value ) =>
-							setAttributes( {
-								columns: {
-									...columnsValue,
-									mobile: Number( value ),
-								},
-							} )
-						}
-					/>
-					<NumberControl
-						label={ __( 'Tablet columns', 'flux-blocks' ) }
-						min={ 1 }
-						max={ 6 }
-						value={ columnsValue.tablet }
-						onChange={ ( value ) =>
-							setAttributes( {
-								columns: {
-									...columnsValue,
-									tablet: Number( value ),
-								},
-							} )
-						}
-					/>
-					<NumberControl
-						label={ __( 'Desktop columns', 'flux-blocks' ) }
-						min={ 1 }
-						max={ 6 }
-						value={ columnsValue.desktop }
-						onChange={ ( value ) =>
-							setAttributes( {
-								columns: {
-									...columnsValue,
-									desktop: Number( value ),
-								},
-							} )
-						}
-					/>
-				</PanelBody>
-
-				<PanelColorSettings
-					title={ __( 'Section Header Colors', 'flux-blocks' ) }
-					initialOpen={ false }
-					colorSettings={ [
-						{
-							value: colorsValue.titleColor,
-							onChange: setColor( 'titleColor' ),
-							label: __( 'Section Title Color', 'flux-blocks' ),
-						},
-						{
-							value: colorsValue.accentColor,
-							onChange: setColor( 'accentColor' ),
-							label: __(
-								'Title Accent Highlight Color',
-								'flux-blocks'
-							),
-						},
-						{
-							value: colorsValue.subheadingColor,
-							onChange: setColor( 'subheadingColor' ),
-							label: __( 'Subheading Text Color', 'flux-blocks' ),
-						},
-					] }
+				<ContentSettingsPanel
+					attributes={ attributes }
+					setAttributes={ setAttributes }
+					postTypeOptions={ postTypeOptions }
+					currentStyle={ currentStyle }
+					columnsValue={ columnsValue }
+					paginationSlug={ paginationSlug }
+					updatePaginationSlug={ updatePaginationSlug }
 				/>
 
-				<PanelBody
-					title={ __( 'Section Header Typography', 'flux-blocks' ) }
-					initialOpen={ false }
-				>
-					<p>
-						{ __(
-							'Font choices come from the active theme -- picking one here never needs a separate font to be installed or loaded.',
-							'flux-blocks'
-						) }
-					</p>
+				<FacetFiltersPanel
+					attributes={ attributes }
+					setAttributes={ setAttributes }
+					taxonomyOptions={ taxonomyOptions }
+					facets={ facets }
+					toggleFacet={ toggleFacet }
+					facetHeadingsValue={ facetHeadingsValue }
+					setFacetHeading={ setFacetHeading }
+				/>
+			</InspectorControls>
 
-					<SelectControl
-						__nextHasNoMarginBottom
-						label={ __( 'Section Title Font', 'flux-blocks' ) }
-						value={ typographyValue.headingTitleFontFamily }
-						options={ fontFamilyOptions }
-						onChange={ setTypography( 'headingTitleFontFamily' ) }
-					/>
-					<SelectControl
-						__nextHasNoMarginBottom
-						label={ __( 'Section Title Weight', 'flux-blocks' ) }
-						value={ typographyValue.headingTitleFontWeight }
-						options={ fontWeightOptions }
-						onChange={ setTypography( 'headingTitleFontWeight' ) }
-					/>
-				</PanelBody>
-
-				<PanelColorSettings
-					title={ __( 'Card Content & Link Colors', 'flux-blocks' ) }
-					initialOpen={ false }
-					colorSettings={ [
-						{
-							value: colorsValue.metaText,
-							onChange: setColor( 'metaText' ),
-							label: __(
-								'Date & Meta Text Color',
-								'flux-blocks'
-							),
-						},
-						{
-							value: colorsValue.authorText,
-							onChange: setColor( 'authorText' ),
-							label: __( 'Author Name Color', 'flux-blocks' ),
-						},
-						{
-							value: colorsValue.cardTitleColor,
-							onChange: setColor( 'cardTitleColor' ),
-							label: __( 'Card Title Color', 'flux-blocks' ),
-						},
-						{
-							value: colorsValue.cardTitleHoverColor,
-							onChange: setColor( 'cardTitleHoverColor' ),
-							label: __(
-								'Card Title Link Hover Color',
-								'flux-blocks'
-							),
-						},
-						{
-							value: colorsValue.cardExcerptColor,
-							onChange: setColor( 'cardExcerptColor' ),
-							label: __(
-								'Card Excerpt Text Color',
-								'flux-blocks'
-							),
-						},
-						{
-							value: colorsValue.readMoreColor,
-							onChange: setColor( 'readMoreColor' ),
-							label: __( 'Read More Link Color', 'flux-blocks' ),
-						},
-						{
-							value: colorsValue.readMoreHoverColor,
-							onChange: setColor( 'readMoreHoverColor' ),
-							label: __(
-								'Read More Link Hover Color',
-								'flux-blocks'
-							),
-						},
-					] }
+			{ /*
+			 * Color/typography panels render into the native "Styles" tab
+			 * (group="styles") instead of "Settings" -- matches both core
+			 * blocks' own convention and Content Showcase's existing split,
+			 * so appearance controls live where WordPress users already
+			 * expect to find them.
+			 */ }
+			<InspectorControls group="styles">
+				<SectionHeaderStylesPanel
+					attributes={ attributes }
+					colorsValue={ colorsValue }
+					setColor={ setColor }
+					typographyValue={ typographyValue }
+					setTypography={ setTypography }
+					fontFamilyOptions={ fontFamilyOptions }
+					fontWeightOptions={ fontWeightOptions }
 				/>
 
-				<PanelBody
-					title={ __( 'Card Typography', 'flux-blocks' ) }
-					initialOpen={ false }
-				>
-					<p>
-						{ __(
-							'Font choices come from the active theme -- picking one here never needs a separate font to be installed or loaded.',
-							'flux-blocks'
-						) }
-					</p>
-
-					<SelectControl
-						__nextHasNoMarginBottom
-						label={ __( 'Card Title Font', 'flux-blocks' ) }
-						value={ typographyValue.cardTitleFontFamily }
-						options={ fontFamilyOptions }
-						onChange={ setTypography( 'cardTitleFontFamily' ) }
-					/>
-					<SelectControl
-						__nextHasNoMarginBottom
-						label={ __( 'Card Title Weight', 'flux-blocks' ) }
-						value={ typographyValue.cardTitleFontWeight }
-						options={ fontWeightOptions }
-						onChange={ setTypography( 'cardTitleFontWeight' ) }
-					/>
-
-					<SelectControl
-						__nextHasNoMarginBottom
-						label={ __( 'Card Excerpt Font', 'flux-blocks' ) }
-						value={ typographyValue.cardExcerptFontFamily }
-						options={ fontFamilyOptions }
-						onChange={ setTypography( 'cardExcerptFontFamily' ) }
-					/>
-					<SelectControl
-						__nextHasNoMarginBottom
-						label={ __( 'Card Excerpt Weight', 'flux-blocks' ) }
-						value={ typographyValue.cardExcerptFontWeight }
-						options={ fontWeightOptions }
-						onChange={ setTypography( 'cardExcerptFontWeight' ) }
-					/>
-
-					<SelectControl
-						__nextHasNoMarginBottom
-						label={ __( 'Date & Author Font', 'flux-blocks' ) }
-						value={ typographyValue.metaFontFamily }
-						options={ fontFamilyOptions }
-						onChange={ setTypography( 'metaFontFamily' ) }
-					/>
-					<SelectControl
-						__nextHasNoMarginBottom
-						label={ __( 'Date & Author Weight', 'flux-blocks' ) }
-						value={ typographyValue.metaFontWeight }
-						options={ fontWeightOptions }
-						onChange={ setTypography( 'metaFontWeight' ) }
-					/>
-				</PanelBody>
-
-				<PanelColorSettings
-					title={ __( 'Filter & Pagination Colors', 'flux-blocks' ) }
-					initialOpen={ false }
-					colorSettings={ [
-						{
-							value: colorsValue.activeAccent,
-							onChange: setColor( 'activeAccent' ),
-							label: __(
-								'Active Pill & Pagination Accent',
-								'flux-blocks'
-							),
-						},
-						{
-							value: colorsValue.disabledNav,
-							onChange: setColor( 'disabledNav' ),
-							label: __(
-								'Disabled Prev/Next Button Color',
-								'flux-blocks'
-							),
-						},
-						{
-							value: colorsValue.inactivePillBg,
-							onChange: setColor( 'inactivePillBg' ),
-							label: __(
-								'Inactive Pill Background Color',
-								'flux-blocks'
-							),
-						},
-						{
-							value: colorsValue.inactivePillText,
-							onChange: setColor( 'inactivePillText' ),
-							label: __(
-								'Inactive Pill Text Color',
-								'flux-blocks'
-							),
-						},
-					] }
+				<CardStylesPanel
+					colorsValue={ colorsValue }
+					setColor={ setColor }
+					typographyValue={ typographyValue }
+					setTypography={ setTypography }
+					fontFamilyOptions={ fontFamilyOptions }
+					fontWeightOptions={ fontWeightOptions }
 				/>
 
-				<PanelBody
-					title={ __(
-						'Filter & Pagination Typography',
-						'flux-blocks'
-					) }
-					initialOpen={ false }
-				>
-					<p>
-						{ __(
-							'Font choices come from the active theme -- picking one here never needs a separate font to be installed or loaded.',
-							'flux-blocks'
-						) }
-					</p>
-
-					<SelectControl
-						__nextHasNoMarginBottom
-						label={ __(
-							'Filter & Pagination Font',
-							'flux-blocks'
-						) }
-						value={ typographyValue.filterPaginationFontFamily }
-						options={ fontFamilyOptions }
-						onChange={ setTypography(
-							'filterPaginationFontFamily'
-						) }
-					/>
-					<SelectControl
-						__nextHasNoMarginBottom
-						label={ __(
-							'Filter & Pagination Weight',
-							'flux-blocks'
-						) }
-						value={ typographyValue.filterPaginationFontWeight }
-						options={ fontWeightOptions }
-						onChange={ setTypography(
-							'filterPaginationFontWeight'
-						) }
-					/>
-				</PanelBody>
-
-				<PanelBody
-					title={ __( 'Facet Filters', 'flux-blocks' ) }
-					initialOpen={ false }
-				>
-					{ ( showSearch || showCategoryFilter ) && (
-						<ToggleControl
-							__nextHasNoMarginBottom
-							label={ __( 'Show Sidebar', 'flux-blocks' ) }
-							help={ __(
-								'Off keeps search/filters at the top instead. Only applies when at least one is on.',
-								'flux-blocks'
-							) }
-							checked={ !! showSidebar }
-							onChange={ ( value ) =>
-								setAttributes( { showSidebar: value } )
-							}
-						/>
-					) }
-					{ ( showSearch || showCategoryFilter ) && showSidebar && (
-						<SelectControl
-							__nextHasNoMarginBottom
-							label={ __( 'Sidebar Side', 'flux-blocks' ) }
-							value={ sidebarSide }
-							options={ [
-								{
-									label: __( 'Left', 'flux-blocks' ),
-									value: 'left',
-								},
-								{
-									label: __( 'Right', 'flux-blocks' ),
-									value: 'right',
-								},
-							] }
-							onChange={ ( value ) =>
-								setAttributes( { sidebarSide: value } )
-							}
-						/>
-					) }
-					<ToggleControl
-						__nextHasNoMarginBottom
-						label={ __( 'Show Search', 'flux-blocks' ) }
-						checked={ !! showSearch }
-						onChange={ ( value ) =>
-							setAttributes( { showSearch: value } )
-						}
-					/>
-					{ showSearch && (
-						<SelectControl
-							__nextHasNoMarginBottom
-							label={ __( 'Search Alignment', 'flux-blocks' ) }
-							value={ searchAlign }
-							options={ [
-								{
-									label: __( 'Left', 'flux-blocks' ),
-									value: 'left',
-								},
-								{
-									label: __( 'Center', 'flux-blocks' ),
-									value: 'center',
-								},
-								{
-									label: __( 'Right', 'flux-blocks' ),
-									value: 'right',
-								},
-							] }
-							onChange={ ( value ) =>
-								setAttributes( { searchAlign: value } )
-							}
-						/>
-					) }
-					<ToggleControl
-						__nextHasNoMarginBottom
-						label={ __( 'Show Category Filter', 'flux-blocks' ) }
-						checked={ !! showCategoryFilter }
-						onChange={ ( value ) =>
-							setAttributes( { showCategoryFilter: value } )
-						}
-					/>
-					{ showCategoryFilter && taxonomyOptions.length > 0 && (
-						<BaseControl
-							id="fb-query-grid-facet-taxonomies"
-							__nextHasNoMarginBottom
-							label={ __(
-								'Filter by these taxonomies',
-								'flux-blocks'
-							) }
-						>
-							{ taxonomyOptions.map( ( taxonomy ) => (
-								<CheckboxControl
-									key={ taxonomy.value }
-									label={ taxonomy.label }
-									checked={ facets.includes(
-										taxonomy.value
-									) }
-									onChange={ ( checked ) =>
-										toggleFacet( taxonomy.value, checked )
-									}
-								/>
-							) ) }
-						</BaseControl>
-					) }
-					{ showCategoryFilter && taxonomyOptions.length === 0 && (
-						<p>
-							{ __(
-								'This post type has no public taxonomies to filter by.',
-								'flux-blocks'
-							) }
-						</p>
-					) }
-					{ showCategoryFilter && facets.length > 0 && (
-						<ToggleControl
-							__nextHasNoMarginBottom
-							label={ __(
-								'Show Filter Headings',
-								'flux-blocks'
-							) }
-							help={ __(
-								'Labels each selected taxonomy above its pills, e.g. "Categories", "Tags".',
-								'flux-blocks'
-							) }
-							checked={ !! showFilterHeadings }
-							onChange={ ( value ) =>
-								setAttributes( { showFilterHeadings: value } )
-							}
-						/>
-					) }
-					{ showCategoryFilter &&
-						showFilterHeadings &&
-						facets.map( ( slug ) => {
-							const taxonomyLabel =
-								taxonomyOptions.find(
-									( option ) => option.value === slug
-								)?.label || slug;
-							return (
-								<TextControl
-									key={ slug }
-									__nextHasNoMarginBottom
-									label={ sprintf(
-										/* translators: %s: taxonomy label, e.g. "Categories". */
-										__( '%s Heading Text', 'flux-blocks' ),
-										taxonomyLabel
-									) }
-									placeholder={ taxonomyLabel }
-									value={ facetHeadingsValue[ slug ] || '' }
-									onChange={ ( value ) =>
-										setFacetHeading( slug, value )
-									}
-								/>
-							);
-						} ) }
-				</PanelBody>
+				<FilterPaginationStylesPanel
+					colorsValue={ colorsValue }
+					setColor={ setColor }
+					typographyValue={ typographyValue }
+					setTypography={ setTypography }
+					fontFamilyOptions={ fontFamilyOptions }
+					fontWeightOptions={ fontWeightOptions }
+				/>
 			</InspectorControls>
 
 			<div { ...blockProps }>
