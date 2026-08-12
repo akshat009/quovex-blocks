@@ -28,6 +28,20 @@ class MemoizesInstanceTraitFixture {
 }
 
 /**
+ * Second, plainer fixture -- deliberately does NOT override reset() (unlike
+ * MemoizesInstanceTraitFixture above, whose own reset() would shadow the
+ * trait's and defeat these specific tests) -- so calling ::reset() here
+ * exercises MemoizesInstanceTrait's OWN public reset() method.
+ */
+class MemoizesInstanceTraitResetFixture {
+	use MemoizesInstanceTrait;
+
+	public static function get( string $key, callable $factory ) {
+		return self::once( $key, $factory );
+	}
+}
+
+/**
  * @covers \FluxBlocks\MemoizesInstanceTrait
  */
 class MemoizesInstanceTraitTest extends TestCase {
@@ -35,6 +49,12 @@ class MemoizesInstanceTraitTest extends TestCase {
 	protected function setUp(): void {
 		parent::setUp();
 		MemoizesInstanceTraitFixture::reset();
+		// MemoizesInstanceTraitResetFixture deliberately has no reset() of
+		// its own (see its docblock) -- this calls the TRAIT's public
+		// reset() instead, both for test isolation AND as a sanity check
+		// that reset() actually works (a no-op reset() would leave state
+		// leaking between tests and fail them, same as no reset at all).
+		MemoizesInstanceTraitResetFixture::reset();
 	}
 
 	public function test_factory_runs_on_first_call(): void {
@@ -93,5 +113,69 @@ class MemoizesInstanceTraitTest extends TestCase {
 		$this->assertNull( $first );
 		$this->assertNull( $second );
 		$this->assertSame( 1, $calls, 'A factory returning null must still only run once (isset() vs array_key_exists() regression).' );
+	}
+
+	/**
+	 * Regression coverage for the audit fix: memoized state previously had
+	 * no way to be cleared, which is harmless in production (a fresh
+	 * per-request PHP process starts empty anyway) but meant the FIRST
+	 * PHPUnit test to memoize a key would silently pin it for every later
+	 * test in the same process, regardless of what that later test itself
+	 * configures.
+	 */
+	public function test_reset_with_no_key_forgets_every_memoized_value(): void {
+		$calls = 0;
+		$again = function () use ( &$calls ) {
+			++$calls;
+			return 'value';
+		};
+
+		MemoizesInstanceTraitResetFixture::get( 'key-x', $again );
+		MemoizesInstanceTraitResetFixture::get( 'key-y', $again );
+		MemoizesInstanceTraitResetFixture::reset();
+		MemoizesInstanceTraitResetFixture::get( 'key-x', $again );
+		MemoizesInstanceTraitResetFixture::get( 'key-y', $again );
+
+		$this->assertSame( 4, $calls, 'reset() with no key must forget every memoized key, forcing both factories to re-run.' );
+	}
+
+	public function test_reset_with_a_specific_key_only_forgets_that_key(): void {
+		$calls_x = 0;
+		$calls_y = 0;
+
+		MemoizesInstanceTraitResetFixture::get(
+			'key-x',
+			function () use ( &$calls_x ) {
+				++$calls_x;
+				return 'x';
+			}
+		);
+		MemoizesInstanceTraitResetFixture::get(
+			'key-y',
+			function () use ( &$calls_y ) {
+				++$calls_y;
+				return 'y';
+			}
+		);
+
+		MemoizesInstanceTraitResetFixture::reset( 'key-x' );
+
+		MemoizesInstanceTraitResetFixture::get(
+			'key-x',
+			function () use ( &$calls_x ) {
+				++$calls_x;
+				return 'x';
+			}
+		);
+		MemoizesInstanceTraitResetFixture::get(
+			'key-y',
+			function () use ( &$calls_y ) {
+				++$calls_y;
+				return 'y';
+			}
+		);
+
+		$this->assertSame( 2, $calls_x, 'key-x was reset, so its factory must run again.' );
+		$this->assertSame( 1, $calls_y, 'key-y was never reset, so its factory must NOT run again.' );
 	}
 }

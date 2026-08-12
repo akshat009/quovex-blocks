@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Turns block attributes into WP_Query args.
  */
-class QueryArgsBuilder {
+class QueryArgsBuilder implements ArgsBuilderInterface {
 
 	/**
 	 * Build WP_Query args from a normalized set of block attributes.

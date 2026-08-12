@@ -53,4 +53,26 @@ trait MemoizesInstanceTrait {
 		}
 		return self::$instances[ $key ];
 	}
+
+	/**
+	 * Forgets every memoized value (or just one, by key) -- WordPress's
+	 * own per-request PHP process model never needed this in production
+	 * (a new process naturally starts with an empty self::$instances), but
+	 * PHPUnit runs every test in the SAME process: without a way to clear
+	 * memoized state between tests, the first test to call e.g.
+	 * Services::logger() would silently pin its return value for every
+	 * later test too, regardless of what each test itself configures.
+	 * A plain static property, not shared across classes: each class
+	 * `use`-ing this trait gets its OWN copy of self::$instances, so
+	 * Services::reset() only clears Services' own memoized values.
+	 *
+	 * @param string|null $key Specific memoized key to forget, or null to forget all.
+	 */
+	public static function reset( ?string $key = null ): void {
+		if ( null === $key ) {
+			self::$instances = array();
+			return;
+		}
+		unset( self::$instances[ $key ] );
+	}
 }

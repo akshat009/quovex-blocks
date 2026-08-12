@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Turns a WP_Post into the plain array shape templates/REST responses use.
  */
-class PostDataTransformer {
+class PostDataTransformer implements TransformerInterface {
 
 	/**
 	 * Transform a single post.

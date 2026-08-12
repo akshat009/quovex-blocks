@@ -1,0 +1,258 @@
+<?php
+/**
+ * Renders Query Grid's item grid, "Load more" button, and numbered
+ * pagination -- the block's biggest single rendering concern, now
+ * separated from querying/caching/facets/heading so each stays
+ * independently readable and testable.
+ *
+ * @package FluxBlocks
+ */
+
+namespace FluxBlocks\Blocks\QueryGrid\Render;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
+use FluxBlocks\Blocks\QueryGrid\Routing\PaginationEndpoint;
+
+/**
+ * Renders items, "Load more", and Prev/page-number/Next pagination.
+ */
+class ItemsRenderer {
+
+	/**
+	 * The items grid plus its trailing nav.
+	 *
+	 * @param ItemsRenderContext $context Everything needed to render this page's items + nav.
+	 * @return string Escaped HTML.
+	 */
+	public function render_items_and_nav( ItemsRenderContext $context ): string {
+		ob_start();
+		?>
+		<div
+			class="fb-query-grid__items"
+			<?php if ( 'masonry' === $context->layout ) : ?>
+				data-wp-init="callbacks.initMasonryLayout"
+			<?php endif; ?>
+		>
+			<?php echo $this->render_items( $context->result['items'], $context->layout, $context->carousel_items_per_view ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_items() escapes per field. ?>
+		</div>
+
+		<?php if ( $context->show_all_no_nav ) : ?>
+		<?php elseif ( $context->is_carousel ) : ?>
+			<div class="fb-query-grid__carousel-nav">
+				<button type="button" class="fb-query-grid__nav-btn" data-wp-on--click="actions.carouselPrev" aria-label="<?php esc_attr_e( 'Previous', 'flux-blocks' ); ?>">&#8249;</button>
+				<button type="button" class="fb-query-grid__nav-btn" data-wp-on--click="actions.carouselNext" aria-label="<?php esc_attr_e( 'Next', 'flux-blocks' ); ?>">&#8250;</button>
+			</div>
+		<?php elseif ( 'load-more' === $context->pagination_style ) : ?>
+			<?php echo $this->render_load_more_button( $context->result['has_more'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_load_more_button() escapes per field. ?>
+		<?php else : ?>
+			<div class="fb-query-grid__pagination-slot" data-wp-init="callbacks.initPaginationDelegation">
+				<?php echo $this->render_pagination( $context->current_page, $context->result['total_pages'], $context->current_url ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_pagination() escapes per field. ?>
+			</div>
+		<?php endif; ?>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * "Load more" button rendering.
+	 *
+	 * @param bool $has_more Whether a next page exists for the initial query.
+	 * @return string Escaped HTML.
+	 */
+	private function render_load_more_button( bool $has_more ): string {
+		if ( ! $has_more ) {
+			return '';
+		}
+
+		ob_start();
+		?>
+		<div class="fb-query-grid__load-more">
+			<button
+				type="button"
+				class="fb-query-grid__load-more-btn"
+				data-wp-on--click="actions.loadMore"
+				data-wp-bind--hidden="!context.hasMore"
+				data-wp-bind--disabled="context.isLoading"
+			>
+				<?php esc_html_e( 'Load more', 'flux-blocks' ); ?>
+			</button>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Render item markup.
+	 *
+	 * @param array[] $items                   Transformed post data.
+	 * @param string  $layout                  Layout slug.
+	 * @param int     $carousel_items_per_view Cards per view.
+	 * @return string Escaped HTML.
+	 */
+	public function render_items( array $items, string $layout, int $carousel_items_per_view = 3 ): string {
+		if ( empty( $items ) ) {
+			return '<p class="fb-query-grid__empty">' . esc_html__( 'No items found.', 'flux-blocks' ) . '</p>';
+		}
+
+		ob_start();
+		foreach ( $items as $index => $item ) {
+			$this->render_item( $item, $layout, $index, $carousel_items_per_view );
+		}
+		return ob_get_clean();
+	}
+
+	/**
+	 * Single item rendering.
+	 *
+	 * @param array  $item                    Transformed post data.
+	 * @param string $layout                  Layout slug.
+	 * @param int    $index                   Position index.
+	 * @param int    $carousel_items_per_view Cards per view.
+	 */
+	private function render_item( array $item, string $layout, int $index, int $carousel_items_per_view = 3 ): void {
+		?>
+		<article
+			class="fb-query-grid__item fb-query-grid__item--<?php echo esc_attr( $layout ); ?>"
+			<?php if ( 'carousel' === $layout ) : ?>
+				<?php echo $index < $carousel_items_per_view ? '' : 'hidden'; ?>
+				<?php echo wp_interactivity_data_wp_context( array( 'slideIndex' => $index ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			<?php endif; ?>
+		>
+			<a href="<?php echo esc_url( $item['permalink'] ); ?>" class="fb-query-grid__item-image">
+				<?php if ( $item['image'] ) : ?>
+					<img src="<?php echo esc_url( $item['image'] ); ?>" alt="<?php echo esc_attr( $item['imageAlt'] ); ?>" loading="lazy" />
+				<?php else : ?>
+					<span class="fb-query-grid__item-image-placeholder" aria-hidden="true"></span>
+				<?php endif; ?>
+			</a>
+			<div class="fb-query-grid__item-body">
+				<p class="fb-query-grid__item-meta">
+					<span class="fb-query-grid__item-date"><?php echo esc_html( $item['date'] ); ?></span>
+					<span class="fb-query-grid__item-sep" aria-hidden="true">&#183;</span>
+					<span class="fb-query-grid__item-author"><?php echo esc_html( $item['author'] ); ?></span>
+				</p>
+				<h3 class="fb-query-grid__item-title">
+					<a href="<?php echo esc_url( $item['permalink'] ); ?>"><?php echo esc_html( $item['title'] ); ?></a>
+				</h3>
+				<p class="fb-query-grid__item-excerpt"><?php echo esc_html( $item['excerpt'] ); ?></p>
+				<a href="<?php echo esc_url( $item['permalink'] ); ?>" class="fb-query-grid__item-readmore">
+					<?php esc_html_e( 'Read More', 'flux-blocks' ); ?> &#8250;
+				</a>
+			</div>
+		</article>
+		<?php
+	}
+
+	/**
+	 * Renders Prev / page-number / Next controls.
+	 *
+	 * @param int    $current_page Page currently displayed.
+	 * @param int    $total_pages  Total pages.
+	 * @param string $base_url     Base page URL.
+	 * @return string Escaped HTML.
+	 */
+	public function render_pagination( int $current_page, int $total_pages, string $base_url = '' ): string {
+		if ( $total_pages <= 1 ) {
+			return '';
+		}
+
+		$page_url = function ( int $page ) use ( $base_url ) {
+			return $this->build_page_url( $base_url, $page );
+		};
+
+		ob_start();
+		?>
+		<nav class="fb-query-grid__pagination" aria-label="<?php esc_attr_e( 'Pagination', 'flux-blocks' ); ?>">
+			<?php if ( $current_page > 1 ) : ?>
+				<a href="<?php echo esc_url( $page_url( $current_page - 1 ) ); ?>" class="fb-query-grid__page-btn fb-query-grid__page-btn--prev">
+					<?php esc_html_e( 'Prev', 'flux-blocks' ); ?>
+				</a>
+			<?php else : ?>
+				<span class="fb-query-grid__page-btn fb-query-grid__page-btn--prev" aria-disabled="true">
+					<?php esc_html_e( 'Prev', 'flux-blocks' ); ?>
+				</span>
+			<?php endif; ?>
+
+			<?php
+			$last_rendered_page = 0;
+			for ( $page_num = 1; $page_num <= $total_pages; $page_num++ ) :
+				$is_edge   = ( 1 === $page_num || $total_pages === $page_num );
+				$is_nearby = abs( $page_num - $current_page ) <= 1;
+				if ( ! $is_edge && ! $is_nearby ) {
+					continue;
+				}
+				if ( $page_num - $last_rendered_page > 1 ) :
+					?>
+					<span class="fb-query-grid__page-ellipsis" aria-hidden="true">&hellip;</span>
+					<?php
+				endif;
+				$last_rendered_page = $page_num;
+				$page_context       = wp_interactivity_data_wp_context( array( 'pageNum' => $page_num ) );
+				if ( $page_num === $current_page ) :
+					?>
+					<span
+						class="fb-query-grid__page-btn is-active"
+						aria-current="page"
+						<?php echo $page_context; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					>
+						<?php echo esc_html( (string) $page_num ); ?>
+					</span>
+					<?php
+				else :
+					?>
+					<a
+						href="<?php echo esc_url( $page_url( $page_num ) ); ?>"
+						class="fb-query-grid__page-btn"
+						<?php echo $page_context; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					>
+						<?php echo esc_html( (string) $page_num ); ?>
+					</a>
+					<?php
+				endif;
+			endfor;
+			?>
+
+			<?php if ( $current_page < $total_pages ) : ?>
+				<a href="<?php echo esc_url( $page_url( $current_page + 1 ) ); ?>" class="fb-query-grid__page-btn fb-query-grid__page-btn--next">
+					<?php esc_html_e( 'Next', 'flux-blocks' ); ?>
+				</a>
+			<?php else : ?>
+				<span class="fb-query-grid__page-btn fb-query-grid__page-btn--next" aria-disabled="true">
+					<?php esc_html_e( 'Next', 'flux-blocks' ); ?>
+				</span>
+			<?php endif; ?>
+		</nav>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Builds page URL.
+	 *
+	 * @param string $base_url Base URL.
+	 * @param int    $page     Page number.
+	 * @return string Unescaped URL.
+	 */
+	private function build_page_url( string $base_url, int $page ): string {
+		$slug   = PaginationEndpoint::slug();
+		$parsed = wp_parse_url( $base_url );
+		$path   = isset( $parsed['path'] ) ? $parsed['path'] : '/';
+		$path   = preg_replace( '#/' . preg_quote( $slug, '#' ) . '/\d+/?$#', '/', $path );
+		$path   = trailingslashit( $path );
+		if ( $page > 1 ) {
+			$path = trailingslashit( $path . $slug . '/' . $page );
+		}
+
+		$origin = ( isset( $parsed['scheme'], $parsed['host'] ) )
+			? $parsed['scheme'] . '://' . $parsed['host']
+			: home_url();
+		$url    = $origin . $path;
+		if ( ! empty( $parsed['query'] ) ) {
+			$url .= '?' . $parsed['query'];
+		}
+		return $url;
+	}
+}

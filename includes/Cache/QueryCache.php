@@ -33,7 +33,7 @@ use FluxBlocks\Logger\LoggerInterface;
 /**
  * Transients-backed read-through cache for query results.
  */
-class QueryCache {
+class QueryCache implements CacheInterface {
 
 	const TTL             = HOUR_IN_SECONDS;
 	const REGISTRY_PREFIX = '_flux_blocks_cache_keys_';

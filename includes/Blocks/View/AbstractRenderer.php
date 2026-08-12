@@ -51,6 +51,30 @@ abstract class AbstractRenderer {
 	}
 
 	/**
+	 * Reads a block's active Style Variation slug off its `className`
+	 * attribute -- WordPress stores the active Style Variation there as
+	 * `is-style-<slug>` (see block.json's `styles`).
+	 *
+	 * Was previously duplicated as two near-identical private methods (one
+	 * per block's Renderer) with no validation: any regex match was
+	 * returned as-is, so a malformed/unrecognized `is-style-<slug>` value
+	 * would silently flow through into rendering as if it were a real
+	 * layout. $known_layouts closes that gap -- an unrecognized slug now
+	 * explicitly falls back to $fallback instead.
+	 *
+	 * @param string   $class_name    Block's className attribute.
+	 * @param string[] $known_layouts Every layout slug this block actually supports.
+	 * @param string   $fallback       Layout slug to use when className has no match, or an unrecognized one.
+	 * @return string Layout slug -- always one of $known_layouts.
+	 */
+	protected function layout_from_class_name( string $class_name, array $known_layouts, string $fallback ): string {
+		if ( preg_match( '/is-style-([a-z-]+)/', $class_name, $matches ) && in_array( $matches[1], $known_layouts, true ) ) {
+			return $matches[1];
+		}
+		return $fallback;
+	}
+
+	/**
 	 * Every block's Renderer must implement this with the EXACT signature
 	 * WordPress's dynamic-block `render_callback` requires -- see
 	 * block.json's `"render"` key, which points at a render.php that calls
