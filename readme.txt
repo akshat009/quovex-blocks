@@ -8,11 +8,11 @@ Stable tag:         0.1.0
 License:            GPL-2.0-or-later
 License URI:        https://www.gnu.org/licenses/gpl-2.0.html
 
-A filterable Query Grid and a customizable Content Showcase block, built with the native block editor and the Interactivity API.
+A filterable Query Grid, a Content Showcase, and a Notification Banner block, built with the native block editor.
 
 == Description ==
 
-Flux Blocks adds two focused, modern Gutenberg blocks to the native block editor -- a filterable/paginated posts grid, and a magazine-style Content Showcase with four layouts and interactive image hotspots. Both work with **any public post type**, not just Posts.
+Flux Blocks adds three focused, modern Gutenberg blocks to the native block editor -- a filterable/paginated posts grid, a magazine-style Content Showcase with four layouts and interactive image hotspots, and a dismissible Notification Banner for announcements and alerts. Query Grid and Content Showcase both work with **any public post type**, not just Posts.
 
 = Why this plugin? =
 
@@ -34,6 +34,7 @@ A filterable, paginated grid of posts.
 * Numbered pagination or a "Load more" button -- your choice.
 * "Show all posts" toggle to disable pagination entirely for smaller lists.
 * Two-tone heading with a colored accent word, full color controls for pills/pagination/meta text, and responsive column counts (mobile/tablet/desktop).
+* Font family and font weight controls (pulled from your active theme, no separate fonts to install) for the heading, card titles, excerpts, meta text, filter pills, and pagination.
 
 = Content Showcase =
 
@@ -46,12 +47,23 @@ A magazine-style showcase of up to three posts, automatic or hand-picked.
 * Interactive image hotspots -- add clickable pins anywhere on a post's image, each opening a small popover with its own title, text, and optional link.
 * Optional "Explore More" button with a custom label, link, and colors.
 * Color controls for the heading, card titles, dates, excerpts, and hotspot pins/tooltips.
+* Font family and font weight controls (pulled from your active theme, no separate fonts to install) for the heading, subheading, card titles, excerpts, dates, and the Explore button.
+
+= Notification Banner =
+
+A dismissible announcement bar or alert box for promos, notices, and updates.
+
+* Four presets (Announcement, Info, Success, Warning) and five style variations (Gradient Background, Left Accent, Soft Card, Glassmorphism, Outline).
+* Icon picker: emoji, a built-in dashicon, or a small SVG icon set.
+* Editable title and message, an optional CTA button with its own label, link, and open-in-new-tab option.
+* Dismiss button with "remember dismissal" (stored in the visitor's browser, so a dismissed banner stays hidden on their next visit).
+* Color and typography controls (font family/weight, pulled from your active theme) for the background, text, accent, and button.
 
 == Installation ==
 
 1. Upload the plugin files to the `/wp-content/plugins/flux-blocks` directory, or install the plugin through the WordPress Plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress.
-3. Add a "Query Grid" or "Content Showcase" block from the "Flux Blocks" category in the block inserter.
+3. Add a "Query Grid", "Content Showcase", or "Notification Banner" block from the "Flux Blocks" category in the block inserter.
 
 == Frequently Asked Questions ==
 

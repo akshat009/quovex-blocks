@@ -1,6 +1,6 @@
 {
 	"name": "flux-blocks/flux-blocks",
-	"description": "Custom Gutenberg block category with a Query Grid and a Featured CPT Section block for any public post type.",
+	"description": "Custom Gutenberg block category with a Query Grid, a Content Showcase, and a Notification Banner block for any public post type.",
 	"type": "wordpress-plugin",
 	"license": "GPL-2.0-or-later",
 	"authors": [
