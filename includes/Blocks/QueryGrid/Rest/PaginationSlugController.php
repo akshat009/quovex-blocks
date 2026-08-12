@@ -1,17 +1,23 @@
 <?php
 /**
  * REST endpoint backing the "Pagination URL Segment" Inspector control in
- * src/query-grid/edit.js -- lets someone reading/writing this ONE site-wide
- * setting without needing Administrator (`manage_options`) access.
+ * src/query-grid/edit.js.
  *
  * Why a dedicated route instead of core's `/wp/v2/settings`: that endpoint
- * (and `register_setting()` generally) enforces `manage_options` for every
- * field it exposes, no per-setting override -- an Editor-role user who can
- * fully edit the post/page a Query Grid block lives on would get a 403
- * trying to change this purely cosmetic URL preference through it. This
- * route uses `edit_posts` instead, matching "if you're allowed to edit a
- * page with this block on it, you're allowed to configure how its
- * pagination URL looks."
+ * (and `register_setting()` generally) enforces `manage_options` for
+ * BOTH reading and writing every field it exposes, no per-method
+ * override. Reading the current slug is harmless (it's just displayed in
+ * the Inspector so an Editor knows what it's currently set to), but this
+ * setting is SITE-WIDE -- it's the URL segment for every Query Grid
+ * instance across the whole site, not something scoped to the one block
+ * being edited -- so an Editor able to WRITE it could silently change
+ * pagination URLs (and trigger a rewrite-rules flush) for every other
+ * Query Grid on the site, including ones on pages they don't otherwise
+ * have access to. This route therefore splits the two: GET stays
+ * `edit_posts` (matches core's own read-friendliness for low-risk data),
+ * POST requires `manage_options` -- the same capability WordPress core's
+ * own Permalinks settings screen requires for changing site-wide URL
+ * structure.
  * Impact of changing: `update_slug()` is the ONLY place
  * `PaginationEndpoint::OPTION` should ever be written -- writing it any
  * other way skips this route's sanitization AND its automatic
@@ -66,12 +72,12 @@ class PaginationSlugController {
 				array(
 					'methods'             => \WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_slug' ),
-					'permission_callback' => array( $this, 'check_permission' ),
+					'permission_callback' => array( $this, 'check_read_permission' ),
 				),
 				array(
 					'methods'             => \WP_REST_Server::EDITABLE,
 					'callback'            => array( $this, 'update_slug' ),
-					'permission_callback' => array( $this, 'check_permission' ),
+					'permission_callback' => array( $this, 'check_write_permission' ),
 					'args'                => array(
 						'slug' => array(
 							'type'     => 'string',
@@ -84,12 +90,25 @@ class PaginationSlugController {
 	}
 
 	/**
-	 * `edit_posts` (not `manage_options`) -- see this file's docblock for why.
+	 * Reading the current slug is low-risk (see this file's docblock) --
+	 * `edit_posts` is the lowest capability that can use the block editor
+	 * at all.
 	 *
 	 * @return bool
 	 */
-	public function check_permission(): bool {
+	public function check_read_permission(): bool {
 		return current_user_can( 'edit_posts' );
+	}
+
+	/**
+	 * Writing changes a SITE-WIDE setting (and triggers a rewrite-rules
+	 * flush) -- `manage_options`, same as core's own Permalinks settings
+	 * screen, not `edit_posts` (see this file's docblock for why).
+	 *
+	 * @return bool
+	 */
+	public function check_write_permission(): bool {
+		return current_user_can( 'manage_options' );
 	}
 
 	/**
