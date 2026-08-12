@@ -5,6 +5,7 @@ import {
 	InspectorControls,
 	RichText,
 	ColorPalette,
+	useSettings,
 } from '@wordpress/block-editor';
 import {
 	PanelBody,
@@ -34,6 +35,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		bannerId = '',
 		bgColor = '',
 		textColor = '',
+		textFontFamily = '',
+		textFontWeight = '',
 		accentColor = '',
 		btnBgColor = '',
 		btnTextColor = '',
@@ -58,12 +61,41 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const { libraries, emojiList, dashiconList, svgList } = useIconLibraries();
 
+	// Theme-provided font choices (theme.json's settings.typography.fontFamilies)
+	// -- never a hardcoded Google Fonts list: those would need to be
+	// enqueued/loaded ourselves to actually work, whereas whatever the theme
+	// declares here is guaranteed already loaded by the theme itself.
+	const [ rawThemeFontFamilies ] = useSettings( 'typography.fontFamilies' );
+	// Some themes return this as an array; others (e.g. no theme.json entry)
+	// return `false`/`undefined`/a non-array shape -- guard so `.map()` below
+	// never blows up regardless of what the active theme provides.
+	const themeFontFamilies = Array.isArray( rawThemeFontFamilies )
+		? rawThemeFontFamilies
+		: [];
+	const fontFamilyOptions = [
+		{ label: __( 'Theme Default', 'flux-blocks' ), value: '' },
+		...themeFontFamilies.map( ( font ) => ( {
+			label: font.name,
+			value: font.fontFamily,
+		} ) ),
+	];
+	const fontWeightOptions = [
+		{ label: __( 'Theme Default', 'flux-blocks' ), value: '' },
+		{ label: __( 'Normal (400)', 'flux-blocks' ), value: '400' },
+		{ label: __( 'Medium (500)', 'flux-blocks' ), value: '500' },
+		{ label: __( 'Semi-Bold (600)', 'flux-blocks' ), value: '600' },
+		{ label: __( 'Bold (700)', 'flux-blocks' ), value: '700' },
+		{ label: __( 'Extra-Bold (800)', 'flux-blocks' ), value: '800' },
+	];
+
 	const blockProps = useBlockProps( {
 		className: `fb-notification-banner fb-notification-banner--preset-${ preset } fb-notification-banner--style-${ styleVariation } fb-notification-banner--align-${ alignment }`,
 		style: {
 			'--fb-nb-radius': `${ borderRadius }px`,
 			'--fb-nb-custom-bg': bgColor || undefined,
 			'--fb-nb-custom-text': textColor || undefined,
+			'--fb-nb-text-font-family': textFontFamily || undefined,
+			'--fb-nb-text-font-weight': textFontWeight || undefined,
 			'--fb-nb-custom-accent': accentColor || undefined,
 			'--fb-nb-custom-btn-bg': btnBgColor || undefined,
 			'--fb-nb-custom-btn-text': btnTextColor || undefined,
@@ -565,6 +597,31 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							value={ textColor }
 							onChange={ ( val ) =>
 								setAttributes( { textColor: val || '' } )
+							}
+						/>
+					</div>
+
+					<div style={ { marginTop: '1em' } }>
+						<SelectControl
+							__nextHasNoMarginBottom
+							label={ __( 'Text & Title Font', 'flux-blocks' ) }
+							help={ __(
+								'Comes from the active theme -- picking one never needs a separate font to be installed or loaded.',
+								'flux-blocks'
+							) }
+							value={ textFontFamily }
+							options={ fontFamilyOptions }
+							onChange={ ( val ) =>
+								setAttributes( { textFontFamily: val } )
+							}
+						/>
+						<SelectControl
+							__nextHasNoMarginBottom
+							label={ __( 'Text & Title Weight', 'flux-blocks' ) }
+							value={ textFontWeight }
+							options={ fontWeightOptions }
+							onChange={ ( val ) =>
+								setAttributes( { textFontWeight: val } )
 							}
 						/>
 					</div>

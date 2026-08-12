@@ -73,6 +73,27 @@ class Renderer extends AbstractRenderer {
 		if ( ! empty( $attributes['cardExcerptColor'] ) ) {
 			$inline_styles[] = '--fb-card-excerpt-color:' . esc_attr( $attributes['cardExcerptColor'] );
 		}
+		// Font-family values come from the active theme's own theme.json
+		// (see edit.js's useSettings('typography.fontFamilies')) -- never a
+		// hardcoded list this plugin would need to load/enqueue itself.
+		if ( ! empty( $attributes['cardTitleFontFamily'] ) ) {
+			$inline_styles[] = '--fb-card-title-font-family:' . esc_attr( $attributes['cardTitleFontFamily'] );
+		}
+		if ( ! empty( $attributes['cardTitleFontWeight'] ) ) {
+			$inline_styles[] = '--fb-card-title-font-weight:' . esc_attr( $attributes['cardTitleFontWeight'] );
+		}
+		if ( ! empty( $attributes['cardExcerptFontFamily'] ) ) {
+			$inline_styles[] = '--fb-card-excerpt-font-family:' . esc_attr( $attributes['cardExcerptFontFamily'] );
+		}
+		if ( ! empty( $attributes['cardExcerptFontWeight'] ) ) {
+			$inline_styles[] = '--fb-card-excerpt-font-weight:' . esc_attr( $attributes['cardExcerptFontWeight'] );
+		}
+		if ( ! empty( $attributes['cardDateFontFamily'] ) ) {
+			$inline_styles[] = '--fb-card-date-font-family:' . esc_attr( $attributes['cardDateFontFamily'] );
+		}
+		if ( ! empty( $attributes['cardDateFontWeight'] ) ) {
+			$inline_styles[] = '--fb-card-date-font-weight:' . esc_attr( $attributes['cardDateFontWeight'] );
+		}
 
 		$wrapper_attrs = get_block_wrapper_attributes(
 			array(
@@ -81,16 +102,25 @@ class Renderer extends AbstractRenderer {
 			)
 		);
 
-		$show_heading         = ! empty( $attributes['showHeading'] );
-		$heading              = $show_heading ? ( $attributes['heading'] ?? '' ) : '';
-		$subheading           = $show_heading ? ( $attributes['subheading'] ?? '' ) : '';
-		$heading_accent       = $attributes['headingAccent'] ?? '';
-		$heading_title_color  = $attributes['headingTitleColor'] ?? '';
-		$heading_accent_color = $attributes['headingAccentColor'] ?? '';
-		$subheading_color     = $attributes['subheadingColor'] ?? '';
+		$show_heading           = ! empty( $attributes['showHeading'] );
+		$heading                = $show_heading ? ( $attributes['heading'] ?? '' ) : '';
+		$subheading             = $show_heading ? ( $attributes['subheading'] ?? '' ) : '';
+		$heading_accent         = $attributes['headingAccent'] ?? '';
+		$heading_title_color    = $attributes['headingTitleColor'] ?? '';
+		$heading_accent_color   = $attributes['headingAccentColor'] ?? '';
+		$heading_title_font_fam = $attributes['headingTitleFontFamily'] ?? '';
+		$heading_title_font_wt  = $attributes['headingTitleFontWeight'] ?? '';
+		$subheading_color       = $attributes['subheadingColor'] ?? '';
+		$subheading_style       = $this->build_style_attr(
+			array(
+				'color'       => $subheading_color,
+				'font-family' => $attributes['subheadingFontFamily'] ?? '',
+				'font-weight' => $attributes['subheadingFontWeight'] ?? '',
+			)
+		);
 
 		return $this->capture(
-			function () use ( $wrapper_attrs, $items, $layout, $attributes, $heading, $subheading, $heading_accent, $heading_title_color, $heading_accent_color, $subheading_color ) {
+			function () use ( $wrapper_attrs, $items, $layout, $attributes, $heading, $subheading, $heading_accent, $heading_title_color, $heading_accent_color, $heading_title_font_fam, $heading_title_font_wt, $subheading_style ) {
 				?>
 				<div
 					<?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_block_wrapper_attributes() already escapes. ?>
@@ -99,11 +129,11 @@ class Renderer extends AbstractRenderer {
 						<header class="fb-content-showcase__header">
 							<?php if ( $heading ) : ?>
 								<h2 class="fb-content-showcase__heading">
-									<?php echo $this->render_heading( $heading, $heading_accent, $heading_title_color, $heading_accent_color ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+									<?php echo $this->render_heading( $heading, $heading_accent, $heading_title_color, $heading_accent_color, $heading_title_font_fam, $heading_title_font_wt ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 								</h2>
 							<?php endif; ?>
 							<?php if ( $subheading ) : ?>
-								<p class="fb-content-showcase__subheading"<?php echo ! empty( $subheading_color ) ? ' style="color:' . esc_attr( $subheading_color ) . ';"' : ''; ?>>
+								<p class="fb-content-showcase__subheading"<?php echo $subheading_style; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- build_style_attr() already escapes. ?>>
 									<?php echo esc_html( $subheading ); ?>
 								</p>
 							<?php endif; ?>
@@ -131,17 +161,28 @@ class Renderer extends AbstractRenderer {
 	}
 
 	/**
-	 * Renders section heading with title and accent highlight color support.
+	 * Renders section heading with title/accent color + title font support.
+	 * The accent span deliberately only takes a color, not its own font --
+	 * it is an inline highlight of the same heading text, not a separate
+	 * element, so it always inherits the title's font-family/font-weight.
 	 *
-	 * @param string $heading      Full heading text.
-	 * @param string $accent       Substring of $heading to wrap in an accent span.
-	 * @param string $title_color  Custom color for title text.
-	 * @param string $accent_color Custom color for accent highlight text.
+	 * @param string $heading          Full heading text.
+	 * @param string $accent           Substring of $heading to wrap in an accent span.
+	 * @param string $title_color      Custom color for title text.
+	 * @param string $accent_color     Custom color for accent highlight text.
+	 * @param string $title_font_fam   Custom font-family for title text.
+	 * @param string $title_font_wt    Custom font-weight for title text.
 	 * @return string Escaped HTML.
 	 */
-	private function render_heading( string $heading, string $accent, string $title_color = '', string $accent_color = '' ): string {
-		$title_style  = ! empty( $title_color ) ? ' style="color:' . esc_attr( $title_color ) . ';"' : '';
-		$accent_style = ! empty( $accent_color ) ? ' style="color:' . esc_attr( $accent_color ) . ';"' : '';
+	private function render_heading( string $heading, string $accent, string $title_color = '', string $accent_color = '', string $title_font_fam = '', string $title_font_wt = '' ): string {
+		$title_style  = $this->build_style_attr(
+			array(
+				'color'       => $title_color,
+				'font-family' => $title_font_fam,
+				'font-weight' => $title_font_wt,
+			)
+		);
+		$accent_style = $this->build_style_attr( array( 'color' => $accent_color ) );
 
 		if ( '' === $accent || false === strpos( $heading, $accent ) ) {
 			return sprintf( '<span%s>%s</span>', $title_style, esc_html( $heading ) );
@@ -158,6 +199,25 @@ class Renderer extends AbstractRenderer {
 			$title_style,
 			esc_html( $after )
 		);
+	}
+
+	/**
+	 * Builds an escaped ` style="..."` attribute (with leading space) from a
+	 * property => value map, skipping any empty values. Returns '' if every
+	 * value is empty, so callers can echo it directly onto a tag with no
+	 * extra empty `style=""` cruft.
+	 *
+	 * @param array<string,string> $properties CSS property => value map.
+	 * @return string
+	 */
+	private function build_style_attr( array $properties ): string {
+		$declarations = array();
+		foreach ( $properties as $property => $value ) {
+			if ( ! empty( $value ) ) {
+				$declarations[] = $property . ':' . esc_attr( $value );
+			}
+		}
+		return ! empty( $declarations ) ? ' style="' . implode( ';', $declarations ) . '"' : '';
 	}
 
 	/**
@@ -484,11 +544,13 @@ class Renderer extends AbstractRenderer {
 		if ( empty( $attributes['showExploreButton'] ) || empty( $attributes['exploreButtonUrl'] ) ) {
 			return;
 		}
-		$text       = ! empty( $attributes['exploreButtonText'] ) ? $attributes['exploreButtonText'] : __( 'Explore More', 'flux-blocks' );
-		$text_color = $attributes['exploreButtonTextColor'] ?? '';
-		$bg_color   = $attributes['exploreButtonBgColor'] ?? '';
-		$hover_bg   = $attributes['exploreButtonHoverBg'] ?? '';
-		$styles     = array();
+		$text        = ! empty( $attributes['exploreButtonText'] ) ? $attributes['exploreButtonText'] : __( 'Explore More', 'flux-blocks' );
+		$text_color  = $attributes['exploreButtonTextColor'] ?? '';
+		$bg_color    = $attributes['exploreButtonBgColor'] ?? '';
+		$hover_bg    = $attributes['exploreButtonHoverBg'] ?? '';
+		$font_family = $attributes['exploreButtonFontFamily'] ?? '';
+		$font_weight = $attributes['exploreButtonFontWeight'] ?? '';
+		$styles      = array();
 
 		if ( ! empty( $text_color ) ) {
 			$styles[] = '--fb-btn-color:' . esc_attr( $text_color );
@@ -498,6 +560,15 @@ class Renderer extends AbstractRenderer {
 		}
 		if ( ! empty( $hover_bg ) ) {
 			$styles[] = '--fb-btn-hover-bg:' . esc_attr( $hover_bg );
+		}
+		// Font-family values come from the active theme's own theme.json
+		// (see edit.js's useSettings('typography.fontFamilies')) -- never a
+		// hardcoded list the plugin would need to load/enqueue itself.
+		if ( ! empty( $font_family ) ) {
+			$styles[] = '--fb-btn-font-family:' . esc_attr( $font_family );
+		}
+		if ( ! empty( $font_weight ) ) {
+			$styles[] = '--fb-btn-font-weight:' . esc_attr( $font_weight );
 		}
 
 		$style_attr = ! empty( $styles ) ? ' style="' . esc_attr( implode( ';', $styles ) ) . '"' : '';

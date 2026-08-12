@@ -5,7 +5,7 @@
 	"version": "0.1.0",
 	"title": "Query Grid",
 	"category": "flux-blocks",
-	"icon": { "src": "grid-view", "foreground": "#d1372d" },
+	"icon": "grid-view",
 	"description": "A filterable, paginated grid of posts with search and category chips.",
 
 	"attributes": {
@@ -102,6 +102,21 @@
 				"inactivePillText": "",
 				"metaText": "",
 				"authorText": ""
+			}
+		},
+		"typography": {
+			"type": "object",
+			"default": {
+				"headingTitleFontFamily": "",
+				"headingTitleFontWeight": "",
+				"cardTitleFontFamily": "",
+				"cardTitleFontWeight": "",
+				"cardExcerptFontFamily": "",
+				"cardExcerptFontWeight": "",
+				"metaFontFamily": "",
+				"metaFontWeight": "",
+				"filterPaginationFontFamily": "",
+				"filterPaginationFontWeight": ""
 			}
 		},
 		"queryId": {

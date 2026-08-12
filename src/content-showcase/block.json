@@ -5,7 +5,7 @@
 	"version": "0.1.0",
 	"title": "Content Showcase",
 	"category": "flux-blocks",
-	"icon": { "src": "cover-image", "foreground": "#d1372d" },
+	"icon": "format-gallery",
 	"description": "A magazine-style posts showcase with four distinct layouts -- Magazine (1 large + 3 small cards), Split (alternating text/image rows), Overlay (text floating on the image), and Two-Thirds/One-Third (1 large + smaller posts stacked beside it).",
 
 	"attributes": {
@@ -81,11 +81,27 @@
 			"type": "string",
 			"default": ""
 		},
+		"headingTitleFontFamily": {
+			"type": "string",
+			"default": ""
+		},
+		"headingTitleFontWeight": {
+			"type": "string",
+			"default": ""
+		},
 		"subheading": {
 			"type": "string",
 			"default": ""
 		},
 		"subheadingColor": {
+			"type": "string",
+			"default": ""
+		},
+		"subheadingFontFamily": {
+			"type": "string",
+			"default": ""
+		},
+		"subheadingFontWeight": {
 			"type": "string",
 			"default": ""
 		},
@@ -157,6 +173,14 @@
 			"type": "string",
 			"default": ""
 		},
+		"exploreButtonFontFamily": {
+			"type": "string",
+			"default": ""
+		},
+		"exploreButtonFontWeight": {
+			"type": "string",
+			"default": ""
+		},
 		"cardTitleColor": {
 			"type": "string",
 			"default": ""
@@ -170,6 +194,30 @@
 			"default": ""
 		},
 		"cardExcerptColor": {
+			"type": "string",
+			"default": ""
+		},
+		"cardTitleFontFamily": {
+			"type": "string",
+			"default": ""
+		},
+		"cardTitleFontWeight": {
+			"type": "string",
+			"default": ""
+		},
+		"cardExcerptFontFamily": {
+			"type": "string",
+			"default": ""
+		},
+		"cardExcerptFontWeight": {
+			"type": "string",
+			"default": ""
+		},
+		"cardDateFontFamily": {
+			"type": "string",
+			"default": ""
+		},
+		"cardDateFontWeight": {
 			"type": "string",
 			"default": ""
 		}

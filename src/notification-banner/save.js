@@ -55,6 +55,8 @@ export default function save( { attributes } ) {
 		bannerId = '',
 		bgColor = '',
 		textColor = '',
+		textFontFamily = '',
+		textFontWeight = '',
 		accentColor = '',
 		btnBgColor = '',
 		btnTextColor = '',
@@ -71,6 +73,15 @@ export default function save( { attributes } ) {
 	}
 	if ( textColor ) {
 		styleVars[ '--fb-nb-custom-text' ] = textColor;
+	}
+	// Font-family values come from the active theme's own theme.json (see
+	// edit.js's useSettings('typography.fontFamilies')) -- never a hardcoded
+	// list this plugin would need to load/enqueue itself.
+	if ( textFontFamily ) {
+		styleVars[ '--fb-nb-text-font-family' ] = textFontFamily;
+	}
+	if ( textFontWeight ) {
+		styleVars[ '--fb-nb-text-font-weight' ] = textFontWeight;
 	}
 	if ( accentColor ) {
 		styleVars[ '--fb-nb-custom-accent' ] = accentColor;

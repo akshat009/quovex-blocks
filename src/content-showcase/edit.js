@@ -23,6 +23,7 @@ import {
 	useBlockProps,
 	InspectorControls,
 	ColorPalette,
+	useSettings,
 } from '@wordpress/block-editor';
 import {
 	PanelBody,
@@ -72,8 +73,12 @@ export default function Edit( { attributes, setAttributes } ) {
 		headingAccent = '',
 		headingTitleColor = '',
 		headingAccentColor = '',
+		headingTitleFontFamily = '',
+		headingTitleFontWeight = '',
 		subheading = '',
 		subheadingColor = '',
+		subheadingFontFamily = '',
+		subheadingFontWeight = '',
 		taxonomyFilter = {},
 		post1Image = true,
 		post1Date = true,
@@ -91,14 +96,49 @@ export default function Edit( { attributes, setAttributes } ) {
 		exploreButtonTextColor = '',
 		exploreButtonBgColor = '',
 		exploreButtonHoverBg = '',
+		exploreButtonFontFamily = '',
+		exploreButtonFontWeight = '',
 		cardTitleColor = '',
 		cardTitleHoverColor = '',
 		cardDateColor = '',
 		cardExcerptColor = '',
+		cardTitleFontFamily = '',
+		cardTitleFontWeight = '',
+		cardExcerptFontFamily = '',
+		cardExcerptFontWeight = '',
+		cardDateFontFamily = '',
+		cardDateFontWeight = '',
 	} = attributes;
 
 	const blockProps = useBlockProps();
 	const { options: postTypeOptions } = usePostTypeOptions();
+
+	// Theme-provided font choices (theme.json's settings.typography.fontFamilies)
+	// -- never a hardcoded Google Fonts list: those would need to be
+	// enqueued/loaded ourselves to actually work, whereas whatever the theme
+	// declares here is guaranteed already loaded by the theme itself.
+	const [ rawThemeFontFamilies ] = useSettings( 'typography.fontFamilies' );
+	// Some themes return this as an array; others (e.g. no theme.json entry)
+	// return `false`/`undefined`/a non-array shape -- guard so `.map()` below
+	// never blows up regardless of what the active theme provides.
+	const themeFontFamilies = Array.isArray( rawThemeFontFamilies )
+		? rawThemeFontFamilies
+		: [];
+	const fontFamilyOptions = [
+		{ label: __( 'Theme Default', 'flux-blocks' ), value: '' },
+		...themeFontFamilies.map( ( font ) => ( {
+			label: font.name,
+			value: font.fontFamily,
+		} ) ),
+	];
+	const fontWeightOptions = [
+		{ label: __( 'Theme Default', 'flux-blocks' ), value: '' },
+		{ label: __( 'Normal (400)', 'flux-blocks' ), value: '400' },
+		{ label: __( 'Medium (500)', 'flux-blocks' ), value: '500' },
+		{ label: __( 'Semi-Bold (600)', 'flux-blocks' ), value: '600' },
+		{ label: __( 'Bold (700)', 'flux-blocks' ), value: '700' },
+		{ label: __( 'Extra-Bold (800)', 'flux-blocks' ), value: '800' },
+	];
 
 	// Shared with query-grid/edit.js instead of duplicating the same
 	// taxonomy/terms fetching inline a second time. Also fixes a real
@@ -919,6 +959,72 @@ export default function Edit( { attributes, setAttributes } ) {
 					</PanelBody>
 				) }
 
+				{ showHeading && (
+					<PanelBody
+						title={ __(
+							'Section Header Typography',
+							'flux-blocks'
+						) }
+						initialOpen={ false }
+					>
+						<p>
+							{ __(
+								'Font choices come from the active theme -- picking one here never needs a separate font to be installed or loaded.',
+								'flux-blocks'
+							) }
+						</p>
+
+						<SelectControl
+							__nextHasNoMarginBottom
+							label={ __( 'Section Title Font', 'flux-blocks' ) }
+							value={ headingTitleFontFamily }
+							options={ fontFamilyOptions }
+							onChange={ ( val ) =>
+								setAttributes( {
+									headingTitleFontFamily: val,
+								} )
+							}
+						/>
+						<SelectControl
+							__nextHasNoMarginBottom
+							label={ __(
+								'Section Title Weight',
+								'flux-blocks'
+							) }
+							value={ headingTitleFontWeight }
+							options={ fontWeightOptions }
+							onChange={ ( val ) =>
+								setAttributes( {
+									headingTitleFontWeight: val,
+								} )
+							}
+						/>
+
+						<SelectControl
+							__nextHasNoMarginBottom
+							label={ __( 'Subheading Font', 'flux-blocks' ) }
+							value={ subheadingFontFamily }
+							options={ fontFamilyOptions }
+							onChange={ ( val ) =>
+								setAttributes( {
+									subheadingFontFamily: val,
+								} )
+							}
+						/>
+						<SelectControl
+							__nextHasNoMarginBottom
+							label={ __( 'Subheading Weight', 'flux-blocks' ) }
+							value={ subheadingFontWeight }
+							options={ fontWeightOptions }
+							onChange={ ( val ) =>
+								setAttributes( {
+									subheadingFontWeight: val,
+								} )
+							}
+						/>
+					</PanelBody>
+				) }
+
 				{ enableHotspots && (
 					<PanelBody
 						title={ __( 'Hotspot Styling', 'flux-blocks' ) }
@@ -1071,6 +1177,46 @@ export default function Edit( { attributes, setAttributes } ) {
 					</PanelBody>
 				) }
 
+				{ showExploreButton && (
+					<PanelBody
+						title={ __(
+							'Explore Button Typography',
+							'flux-blocks'
+						) }
+						initialOpen={ false }
+					>
+						<p>
+							{ __(
+								'Font choices come from the active theme -- picking one here never needs a separate font to be installed or loaded.',
+								'flux-blocks'
+							) }
+						</p>
+
+						<SelectControl
+							__nextHasNoMarginBottom
+							label={ __( 'Button Font', 'flux-blocks' ) }
+							value={ exploreButtonFontFamily }
+							options={ fontFamilyOptions }
+							onChange={ ( val ) =>
+								setAttributes( {
+									exploreButtonFontFamily: val,
+								} )
+							}
+						/>
+						<SelectControl
+							__nextHasNoMarginBottom
+							label={ __( 'Button Weight', 'flux-blocks' ) }
+							value={ exploreButtonFontWeight }
+							options={ fontWeightOptions }
+							onChange={ ( val ) =>
+								setAttributes( {
+									exploreButtonFontWeight: val,
+								} )
+							}
+						/>
+					</PanelBody>
+				) }
+
 				<PanelBody
 					title={ __( 'Post Card Content Colors', 'flux-blocks' ) }
 					initialOpen={ false }
@@ -1124,6 +1270,75 @@ export default function Edit( { attributes, setAttributes } ) {
 							}
 						/>
 					</div>
+				</PanelBody>
+
+				<PanelBody
+					title={ __( 'Post Card Typography', 'flux-blocks' ) }
+					initialOpen={ false }
+				>
+					<p>
+						{ __(
+							'Font choices come from the active theme -- picking one here never needs a separate font to be installed or loaded.',
+							'flux-blocks'
+						) }
+					</p>
+
+					<SelectControl
+						__nextHasNoMarginBottom
+						label={ __( 'Post Title Font', 'flux-blocks' ) }
+						value={ cardTitleFontFamily }
+						options={ fontFamilyOptions }
+						onChange={ ( val ) =>
+							setAttributes( { cardTitleFontFamily: val } )
+						}
+					/>
+					<SelectControl
+						__nextHasNoMarginBottom
+						label={ __( 'Post Title Weight', 'flux-blocks' ) }
+						value={ cardTitleFontWeight }
+						options={ fontWeightOptions }
+						onChange={ ( val ) =>
+							setAttributes( { cardTitleFontWeight: val } )
+						}
+					/>
+
+					<SelectControl
+						__nextHasNoMarginBottom
+						label={ __( 'Post Excerpt Font', 'flux-blocks' ) }
+						value={ cardExcerptFontFamily }
+						options={ fontFamilyOptions }
+						onChange={ ( val ) =>
+							setAttributes( { cardExcerptFontFamily: val } )
+						}
+					/>
+					<SelectControl
+						__nextHasNoMarginBottom
+						label={ __( 'Post Excerpt Weight', 'flux-blocks' ) }
+						value={ cardExcerptFontWeight }
+						options={ fontWeightOptions }
+						onChange={ ( val ) =>
+							setAttributes( { cardExcerptFontWeight: val } )
+						}
+					/>
+
+					<SelectControl
+						__nextHasNoMarginBottom
+						label={ __( 'Post Date Font', 'flux-blocks' ) }
+						value={ cardDateFontFamily }
+						options={ fontFamilyOptions }
+						onChange={ ( val ) =>
+							setAttributes( { cardDateFontFamily: val } )
+						}
+					/>
+					<SelectControl
+						__nextHasNoMarginBottom
+						label={ __( 'Post Date Weight', 'flux-blocks' ) }
+						value={ cardDateFontWeight }
+						options={ fontWeightOptions }
+						onChange={ ( val ) =>
+							setAttributes( { cardDateFontWeight: val } )
+						}
+					/>
 				</PanelBody>
 			</InspectorControls>
 

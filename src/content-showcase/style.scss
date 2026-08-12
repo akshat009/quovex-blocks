@@ -47,6 +47,8 @@
 		display: block;
 		font-size: 0.8em;
 		color: var(--fb-card-date-color, #888);
+		font-family: var(--fb-card-date-font-family, inherit);
+		font-weight: var(--fb-card-date-font-weight, inherit);
 		margin-bottom: 0.35em;
 	}
 
@@ -114,6 +116,8 @@
 		margin: 0 0 0.35em;
 		font-size: var(--fb-card-title-size, 1.15em);
 		line-height: 1.35;
+		font-family: var(--fb-card-title-font-family, inherit);
+		font-weight: var(--fb-card-title-font-weight, inherit);
 	}
 
 	// Shared by &__card-body's title link AND &__split-text's (identical
@@ -138,6 +142,8 @@
 		opacity: 0.75;
 		line-height: 1.5;
 		font-size: 0.95em;
+		font-family: var(--fb-card-excerpt-font-family, inherit);
+		font-weight: var(--fb-card-excerpt-font-weight, inherit);
 	}
 
 	&__card--featured {
@@ -252,6 +258,8 @@
 		h3 {
 			margin: 0 0 0.5em;
 			font-size: 1.4em;
+			font-family: var(--fb-card-title-font-family, inherit);
+			font-weight: var(--fb-card-title-font-weight, inherit);
 		}
 
 		p {
@@ -259,6 +267,8 @@
 			color: var(--fb-card-excerpt-color, inherit);
 			opacity: 0.75;
 			line-height: 1.5;
+			font-family: var(--fb-card-excerpt-font-family, inherit);
+			font-weight: var(--fb-card-excerpt-font-weight, inherit);
 		}
 	}
 
@@ -332,7 +342,8 @@
 		border-radius: 0.3em;
 		color: var(--fb-btn-color, var(--fb-accent));
 		background-color: var(--fb-btn-bg, transparent);
-		font-weight: 600;
+		font-family: var(--fb-btn-font-family, inherit);
+		font-weight: var(--fb-btn-font-weight, 600);
 		text-decoration: none;
 		transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 

@@ -21,6 +21,7 @@ import {
 	useBlockProps,
 	InspectorControls,
 	PanelColorSettings,
+	useSettings,
 } from '@wordpress/block-editor';
 import ServerSideRender from '@wordpress/server-side-render';
 import apiFetch from '@wordpress/api-fetch';
@@ -54,6 +55,18 @@ const DEFAULT_COLORS = {
 	metaText: '',
 	authorText: '',
 };
+const DEFAULT_TYPOGRAPHY = {
+	headingTitleFontFamily: '',
+	headingTitleFontWeight: '',
+	cardTitleFontFamily: '',
+	cardTitleFontWeight: '',
+	cardExcerptFontFamily: '',
+	cardExcerptFontWeight: '',
+	metaFontFamily: '',
+	metaFontWeight: '',
+	filterPaginationFontFamily: '',
+	filterPaginationFontWeight: '',
+};
 
 export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
@@ -77,12 +90,40 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		order,
 		columns,
 		colors,
+		typography,
 		queryId,
 	} = attributes;
 
 	const blockProps = useBlockProps();
 	const { options: postTypeOptions } = usePostTypeOptions();
 	const { taxonomyOptions } = useTaxonomyOptions( postType );
+
+	// Theme-provided font choices (theme.json's settings.typography.fontFamilies)
+	// -- deliberately NOT a hardcoded Google Fonts list: those would need to be
+	// enqueued/loaded ourselves to actually work, whereas whatever the theme
+	// declares here is guaranteed already loaded by the theme itself.
+	const [ rawThemeFontFamilies ] = useSettings( 'typography.fontFamilies' );
+	// Some themes return this as an array; others (e.g. no theme.json entry)
+	// return `false`/`undefined`/a non-array shape -- guard so `.map()` below
+	// never blows up regardless of what the active theme provides.
+	const themeFontFamilies = Array.isArray( rawThemeFontFamilies )
+		? rawThemeFontFamilies
+		: [];
+	const fontFamilyOptions = [
+		{ label: __( 'Theme Default', 'flux-blocks' ), value: '' },
+		...themeFontFamilies.map( ( font ) => ( {
+			label: font.name,
+			value: font.fontFamily,
+		} ) ),
+	];
+	const fontWeightOptions = [
+		{ label: __( 'Theme Default', 'flux-blocks' ), value: '' },
+		{ label: __( 'Normal (400)', 'flux-blocks' ), value: '400' },
+		{ label: __( 'Medium (500)', 'flux-blocks' ), value: '500' },
+		{ label: __( 'Semi-Bold (600)', 'flux-blocks' ), value: '600' },
+		{ label: __( 'Bold (700)', 'flux-blocks' ), value: '700' },
+		{ label: __( 'Extra-Bold (800)', 'flux-blocks' ), value: '800' },
+	];
 
 	// The active Style Variation (Grid/List/Masonry/Carousel) isn't a
 	// tracked attribute -- WordPress stores it as `is-style-<name>` inside
@@ -146,6 +187,12 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const colorsValue = { ...DEFAULT_COLORS, ...colors };
 	const setColor = ( key ) => ( value ) =>
 		setAttributes( { colors: { ...colorsValue, [ key ]: value ?? '' } } );
+
+	const typographyValue = { ...DEFAULT_TYPOGRAPHY, ...typography };
+	const setTypography = ( key ) => ( value ) =>
+		setAttributes( {
+			typography: { ...typographyValue, [ key ]: value ?? '' },
+		} );
 
 	const facets = facetTaxonomies || [];
 	const toggleFacet = ( slug, checked ) =>
@@ -230,7 +277,22 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					{ ! showAllPosts && (
 						<RangeControl
 							__nextHasNoMarginBottom
-							label={ __( 'Posts per page', 'flux-blocks' ) }
+							label={
+								currentStyle === 'carousel'
+									? __(
+											'Total Posts (Carousel)',
+											'flux-blocks'
+									  )
+									: __( 'Posts per page', 'flux-blocks' )
+							}
+							help={
+								currentStyle === 'carousel'
+									? __(
+											'Total posts loaded into the carousel (Prev/Next cycle through these). Want every matching post instead? Turn on "Show All Posts (No Pagination)" below.',
+											'flux-blocks'
+									  )
+									: undefined
+							}
 							min={ 1 }
 							max={ 50 }
 							value={ postCount }
@@ -318,7 +380,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						help={
 							currentStyle === 'carousel'
 								? __(
-										'Cycles through every matching post (up to 200) instead of capping at Posts per page -- Prev/Next still work as normal.',
+										'Cycles through every matching post (up to 200) instead of stopping at the Total Posts number above -- Prev/Next still work as normal.',
 										'flux-blocks'
 								  )
 								: __(
@@ -416,6 +478,33 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					] }
 				/>
 
+				<PanelBody
+					title={ __( 'Section Header Typography', 'flux-blocks' ) }
+					initialOpen={ false }
+				>
+					<p>
+						{ __(
+							'Font choices come from the active theme -- picking one here never needs a separate font to be installed or loaded.',
+							'flux-blocks'
+						) }
+					</p>
+
+					<SelectControl
+						__nextHasNoMarginBottom
+						label={ __( 'Section Title Font', 'flux-blocks' ) }
+						value={ typographyValue.headingTitleFontFamily }
+						options={ fontFamilyOptions }
+						onChange={ setTypography( 'headingTitleFontFamily' ) }
+					/>
+					<SelectControl
+						__nextHasNoMarginBottom
+						label={ __( 'Section Title Weight', 'flux-blocks' ) }
+						value={ typographyValue.headingTitleFontWeight }
+						options={ fontWeightOptions }
+						onChange={ setTypography( 'headingTitleFontWeight' ) }
+					/>
+				</PanelBody>
+
 				<PanelColorSettings
 					title={ __( 'Card Content & Link Colors', 'flux-blocks' ) }
 					initialOpen={ false }
@@ -470,6 +559,63 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 					] }
 				/>
 
+				<PanelBody
+					title={ __( 'Card Typography', 'flux-blocks' ) }
+					initialOpen={ false }
+				>
+					<p>
+						{ __(
+							'Font choices come from the active theme -- picking one here never needs a separate font to be installed or loaded.',
+							'flux-blocks'
+						) }
+					</p>
+
+					<SelectControl
+						__nextHasNoMarginBottom
+						label={ __( 'Card Title Font', 'flux-blocks' ) }
+						value={ typographyValue.cardTitleFontFamily }
+						options={ fontFamilyOptions }
+						onChange={ setTypography( 'cardTitleFontFamily' ) }
+					/>
+					<SelectControl
+						__nextHasNoMarginBottom
+						label={ __( 'Card Title Weight', 'flux-blocks' ) }
+						value={ typographyValue.cardTitleFontWeight }
+						options={ fontWeightOptions }
+						onChange={ setTypography( 'cardTitleFontWeight' ) }
+					/>
+
+					<SelectControl
+						__nextHasNoMarginBottom
+						label={ __( 'Card Excerpt Font', 'flux-blocks' ) }
+						value={ typographyValue.cardExcerptFontFamily }
+						options={ fontFamilyOptions }
+						onChange={ setTypography( 'cardExcerptFontFamily' ) }
+					/>
+					<SelectControl
+						__nextHasNoMarginBottom
+						label={ __( 'Card Excerpt Weight', 'flux-blocks' ) }
+						value={ typographyValue.cardExcerptFontWeight }
+						options={ fontWeightOptions }
+						onChange={ setTypography( 'cardExcerptFontWeight' ) }
+					/>
+
+					<SelectControl
+						__nextHasNoMarginBottom
+						label={ __( 'Date & Author Font', 'flux-blocks' ) }
+						value={ typographyValue.metaFontFamily }
+						options={ fontFamilyOptions }
+						onChange={ setTypography( 'metaFontFamily' ) }
+					/>
+					<SelectControl
+						__nextHasNoMarginBottom
+						label={ __( 'Date & Author Weight', 'flux-blocks' ) }
+						value={ typographyValue.metaFontWeight }
+						options={ fontWeightOptions }
+						onChange={ setTypography( 'metaFontWeight' ) }
+					/>
+				</PanelBody>
+
 				<PanelColorSettings
 					title={ __( 'Filter & Pagination Colors', 'flux-blocks' ) }
 					initialOpen={ false }
@@ -508,6 +654,46 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 						},
 					] }
 				/>
+
+				<PanelBody
+					title={ __(
+						'Filter & Pagination Typography',
+						'flux-blocks'
+					) }
+					initialOpen={ false }
+				>
+					<p>
+						{ __(
+							'Font choices come from the active theme -- picking one here never needs a separate font to be installed or loaded.',
+							'flux-blocks'
+						) }
+					</p>
+
+					<SelectControl
+						__nextHasNoMarginBottom
+						label={ __(
+							'Filter & Pagination Font',
+							'flux-blocks'
+						) }
+						value={ typographyValue.filterPaginationFontFamily }
+						options={ fontFamilyOptions }
+						onChange={ setTypography(
+							'filterPaginationFontFamily'
+						) }
+					/>
+					<SelectControl
+						__nextHasNoMarginBottom
+						label={ __(
+							'Filter & Pagination Weight',
+							'flux-blocks'
+						) }
+						value={ typographyValue.filterPaginationFontWeight }
+						options={ fontWeightOptions }
+						onChange={ setTypography(
+							'filterPaginationFontWeight'
+						) }
+					/>
+				</PanelBody>
 
 				<PanelBody
 					title={ __( 'Facet Filters', 'flux-blocks' ) }

@@ -65,6 +65,7 @@ class Renderer extends AbstractRenderer {
 		$facet_headings          = is_array( $attributes['facetHeadings'] ?? null ) ? $attributes['facetHeadings'] : array();
 		$is_carousel             = 'carousel' === $layout;
 		$colors                  = wp_parse_args( is_array( $attributes['colors'] ?? null ) ? $attributes['colors'] : array(), $this->default_colors() );
+		$typography              = wp_parse_args( is_array( $attributes['typography'] ?? null ) ? $attributes['typography'] : array(), $this->default_typography() );
 		$carousel_items_per_view = max( 1, (int) ( $attributes['carouselItemsPerView'] ?? 3 ) );
 
 		$search_align     = in_array( $attributes['searchAlign'] ?? 'center', array( 'left', 'center', 'right' ), true )
@@ -103,7 +104,7 @@ class Renderer extends AbstractRenderer {
 					'fb-query-grid fb-query-grid--' . sanitize_html_class( $layout )
 					. ( $is_sidebar ? ' fb-query-grid--filter-sidebar fb-query-grid--sidebar-' . sanitize_html_class( $sidebar_side ) : '' )
 				),
-				'style' => $this->build_inline_style( $columns, $colors, $carousel_items_per_view ),
+				'style' => $this->build_inline_style( $columns, $colors, $typography, $carousel_items_per_view ),
 			)
 		);
 
@@ -305,10 +306,11 @@ class Renderer extends AbstractRenderer {
 	/**
 	 * @param array $columns                 Resolved mobile/tablet/desktop column counts.
 	 * @param array $colors                  Resolved color map.
+	 * @param array $typography              Resolved font-family/font-weight map.
 	 * @param int   $carousel_items_per_view Cards visible per carousel page.
 	 * @return string CSS custom properties.
 	 */
-	private function build_inline_style( array $columns, array $colors, int $carousel_items_per_view = 3 ): string {
+	private function build_inline_style( array $columns, array $colors, array $typography, int $carousel_items_per_view = 3 ): string {
 		$style = sprintf(
 			'--fb-cols-mobile:%d;--fb-cols-tablet:%d;--fb-cols-desktop:%d;--fb-carousel-items:%d;',
 			absint( $columns['mobile'] ),
@@ -340,6 +342,29 @@ class Renderer extends AbstractRenderer {
 			}
 		}
 
+		// Font-family values come from the active theme's own theme.json
+		// (see edit.js's useSettings('typography.fontFamilies')) -- never a
+		// hardcoded list the plugin would need to load/enqueue itself, so
+		// whatever gets picked here is already available on the frontend.
+		$typography_property_map = array(
+			'headingTitleFontFamily'     => '--fb-title-font-family',
+			'headingTitleFontWeight'     => '--fb-title-font-weight',
+			'cardTitleFontFamily'        => '--fb-card-title-font-family',
+			'cardTitleFontWeight'        => '--fb-card-title-font-weight',
+			'cardExcerptFontFamily'      => '--fb-card-excerpt-font-family',
+			'cardExcerptFontWeight'      => '--fb-card-excerpt-font-weight',
+			'metaFontFamily'             => '--fb-meta-font-family',
+			'metaFontWeight'             => '--fb-meta-font-weight',
+			'filterPaginationFontFamily' => '--fb-filter-pagination-font-family',
+			'filterPaginationFontWeight' => '--fb-filter-pagination-font-weight',
+		);
+
+		foreach ( $typography_property_map as $key => $css_var ) {
+			if ( ! empty( $typography[ $key ] ) ) {
+				$style .= sprintf( '%s:%s;', $css_var, esc_attr( $typography[ $key ] ) );
+			}
+		}
+
 		return $style;
 	}
 
@@ -362,6 +387,24 @@ class Renderer extends AbstractRenderer {
 			'inactivePillText'    => '',
 			'metaText'            => '',
 			'authorText'          => '',
+		);
+	}
+
+	/**
+	 * @return array<string,string> Default empty font-family/font-weight map.
+	 */
+	private function default_typography(): array {
+		return array(
+			'headingTitleFontFamily'     => '',
+			'headingTitleFontWeight'     => '',
+			'cardTitleFontFamily'        => '',
+			'cardTitleFontWeight'        => '',
+			'cardExcerptFontFamily'      => '',
+			'cardExcerptFontWeight'      => '',
+			'metaFontFamily'             => '',
+			'metaFontWeight'             => '',
+			'filterPaginationFontFamily' => '',
+			'filterPaginationFontWeight' => '',
 		);
 	}
 
