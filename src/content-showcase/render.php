@@ -1,13 +1,13 @@
 <?php
 /**
- * Delegates rendering to FluxBlocks\Blocks\QueryGrid\Renderer.
+ * Delegates rendering to FluxBlocks\Blocks\ContentShowcase\Renderer.
  *
  * Why: keeps this create-block-owned file thin — actual markup/query logic
- * lives in includes/Blocks/QueryGrid/Renderer.php, hand-written and
+ * lives in includes/Blocks/ContentShowcase/Renderer.php, hand-written and
  * independent of the block registration mechanics.
- * Impact of changing: this is the ONLY place Query Grid's PHP output starts
- * from — swapping the renderer class here changes what every instance of
- * this block outputs.
+ * Impact of changing: this is the ONLY place Content Showcase's PHP output
+ * starts from — swapping the renderer class here changes what every
+ * instance of this block outputs.
  *
  * The following variables are exposed to this file by WordPress:
  *     $attributes (array): The block attributes.
@@ -29,4 +29,4 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @var WP_Block $block      Block instance.
  */
 
-echo \FluxBlocks\Services::query_grid_renderer()->render( $attributes, $content, $block ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Renderer::render() escapes all dynamic output internally.
+echo \FluxBlocks\Services::content_showcase_renderer()->render( $attributes, $content, $block ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Renderer::render() escapes all dynamic output internally.

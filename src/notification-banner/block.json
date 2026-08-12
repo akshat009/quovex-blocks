@@ -1,0 +1,114 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "flux-blocks/notification-banner",
+	"version": "0.1.0",
+	"title": "Notification & Announcement Banner",
+	"category": "flux-blocks",
+	"icon": "megaphone",
+	"description": "An eye-catching alert box, announcement bar, or notice banner with dismiss options and CTA button.",
+
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ],
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+	"attributes": {
+		"preset": {
+			"type": "string",
+			"default": "announcement"
+		},
+		"styleVariation": {
+			"type": "string",
+			"default": "gradient-bg"
+		},
+		"icon": {
+			"type": "string",
+			"default": "🎉"
+		},
+		"iconType": {
+			"type": "string",
+			"default": "emoji"
+		},
+		"showIcon": {
+			"type": "boolean",
+			"default": true
+		},
+		"title": {
+			"type": "string",
+			"default": "Special Announcement"
+		},
+		"message": {
+			"type": "string",
+			"default": "Explore our latest 2026 Magazine Edition & featured content."
+		},
+		"showButton": {
+			"type": "boolean",
+			"default": true
+		},
+		"buttonText": {
+			"type": "string",
+			"default": "Explore Now →"
+		},
+		"buttonUrl": {
+			"type": "string",
+			"default": "#"
+		},
+		"buttonTarget": {
+			"type": "boolean",
+			"default": false
+		},
+		"allowDismiss": {
+			"type": "boolean",
+			"default": true
+		},
+		"rememberDismiss": {
+			"type": "boolean",
+			"default": true
+		},
+		"bannerId": {
+			"type": "string",
+			"default": ""
+		},
+		"bgColor": {
+			"type": "string",
+			"default": ""
+		},
+		"textColor": {
+			"type": "string",
+			"default": ""
+		},
+		"accentColor": {
+			"type": "string",
+			"default": ""
+		},
+		"btnBgColor": {
+			"type": "string",
+			"default": ""
+		},
+		"btnTextColor": {
+			"type": "string",
+			"default": ""
+		},
+		"btnHoverBg": {
+			"type": "string",
+			"default": ""
+		},
+		"borderRadius": {
+			"type": "number",
+			"default": 12
+		},
+		"alignment": {
+			"type": "string",
+			"default": "left"
+		}
+	},
+	"textdomain": "flux-blocks",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"viewScript": "file:./view.js"
+}

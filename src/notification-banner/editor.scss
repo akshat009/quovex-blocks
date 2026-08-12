@@ -1,0 +1,14 @@
+.fb-notification-banner {
+
+	/* Ensure block stays visible in Gutenberg editor even if dismiss
+	   button is clicked inside editor */
+	&.is-dismissed {
+		opacity: 0.6;
+		transform: none;
+		max-height: none;
+		padding: 1.15rem 1.4rem;
+		margin-bottom: 1.5rem;
+		overflow: visible;
+		border: 2px dashed #d1d5db;
+	}
+}

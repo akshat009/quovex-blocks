@@ -39,3 +39,8 @@ desktop.ini
 
 # Local WordPress debug log, if WP_DEBUG_LOG is ever turned on inside this folder
 debug.log
+
+# PHPUnit's own test-run cache (which tests passed/failed last time, for
+# --order-by=defects etc.) -- regenerated on every `composer test` run,
+# machine-specific, never meant to be committed.
+.phpunit.result.cache

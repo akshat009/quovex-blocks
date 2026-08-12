@@ -14,6 +14,10 @@
 
 namespace FluxBlocks;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
 /**
  * Registers the "Flux Blocks" inserter category.
  */

@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:       Flux Blocks
- * Description:       Custom Gutenberg block category with a Query Grid and a Featured CPT Section block for any public post type.
+ * Description:       A filterable Query Grid and a customizable Content Showcase block, built with the native block editor and the Interactivity API.
  * Version:           0.1.0
  * Requires at least: 6.8
  * Requires PHP:      7.4

@@ -1,18 +1,8 @@
 /**
- * Query Grid -- editor-only styles.
+ * The following styles get applied inside the editor only.
  *
- * Why: the canvas itself is a ServerSideRender preview of render.php's real
- * output (see edit.js), so it already picks up style.scss's frontend
- * classes -- only the Inspector's layout-picker buttons need editor-only
- * styling here.
+ * Replace them with your own styles or remove the file completely.
  */
-
-.fb-layout-picker {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.5em;
-	margin-bottom: 1em;
-}
 
 .block-editor-block-styles__item-preview {
 	overflow: hidden !important;

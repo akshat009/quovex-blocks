@@ -94,10 +94,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		attributes.className?.match( /is-style-([a-z]+)/ )?.[ 1 ] ?? 'grid';
 
 	// A stable per-instance id, generated once and persisted into the
-	// attribute — NOT useInstanceId(), which is session/mount-order scoped
-	// and can collide with an id already saved elsewhere in the same post
-	// (see docs/architecture.md §9). Needed so pagination state stays
-	// scoped to the right block instance on the frontend.
+	// attribute — NOT useInstanceId(), which counts "the Nth instance of
+	// this hook mounted this session" and is NOT deterministic across
+	// page loads/block reordering, so it can collide with an id already
+	// saved elsewhere in the same post. clientId itself IS stable/unique,
+	// so a slice of it (with the block-editor's own `-` separators
+	// stripped) makes a safe, permanent id once saved into the attribute.
+	// Needed so pagination state stays scoped to the right block instance
+	// on the frontend.
 	useEffect( () => {
 		if ( ! queryId ) {
 			setAttributes( {
@@ -162,7 +166,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			<InspectorControls>
 				<PanelBody
 					title={ __( 'Section Heading Settings', 'flux-blocks' ) }
-					initialOpen
+					initialOpen={ false }
 				>
 					<ToggleControl
 						__nextHasNoMarginBottom
@@ -404,11 +408,70 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								'flux-blocks'
 							),
 						},
+						{
+							value: colorsValue.subheadingColor,
+							onChange: setColor( 'subheadingColor' ),
+							label: __( 'Subheading Text Color', 'flux-blocks' ),
+						},
 					] }
 				/>
 
 				<PanelColorSettings
-					title={ __( 'Card & Pagination Colors', 'flux-blocks' ) }
+					title={ __( 'Card Content & Link Colors', 'flux-blocks' ) }
+					initialOpen={ false }
+					colorSettings={ [
+						{
+							value: colorsValue.metaText,
+							onChange: setColor( 'metaText' ),
+							label: __(
+								'Date & Meta Text Color',
+								'flux-blocks'
+							),
+						},
+						{
+							value: colorsValue.authorText,
+							onChange: setColor( 'authorText' ),
+							label: __( 'Author Name Color', 'flux-blocks' ),
+						},
+						{
+							value: colorsValue.cardTitleColor,
+							onChange: setColor( 'cardTitleColor' ),
+							label: __( 'Card Title Color', 'flux-blocks' ),
+						},
+						{
+							value: colorsValue.cardTitleHoverColor,
+							onChange: setColor( 'cardTitleHoverColor' ),
+							label: __(
+								'Card Title Link Hover Color',
+								'flux-blocks'
+							),
+						},
+						{
+							value: colorsValue.cardExcerptColor,
+							onChange: setColor( 'cardExcerptColor' ),
+							label: __(
+								'Card Excerpt Text Color',
+								'flux-blocks'
+							),
+						},
+						{
+							value: colorsValue.readMoreColor,
+							onChange: setColor( 'readMoreColor' ),
+							label: __( 'Read More Link Color', 'flux-blocks' ),
+						},
+						{
+							value: colorsValue.readMoreHoverColor,
+							onChange: setColor( 'readMoreHoverColor' ),
+							label: __(
+								'Read More Link Hover Color',
+								'flux-blocks'
+							),
+						},
+					] }
+				/>
+
+				<PanelColorSettings
+					title={ __( 'Filter & Pagination Colors', 'flux-blocks' ) }
 					initialOpen={ false }
 					colorSettings={ [
 						{
@@ -442,19 +505,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 								'Inactive Pill Text Color',
 								'flux-blocks'
 							),
-						},
-						{
-							value: colorsValue.metaText,
-							onChange: setColor( 'metaText' ),
-							label: __(
-								'Date & Meta Text Color',
-								'flux-blocks'
-							),
-						},
-						{
-							value: colorsValue.authorText,
-							onChange: setColor( 'authorText' ),
-							label: __( 'Author Name Color', 'flux-blocks' ),
 						},
 					] }
 				/>
@@ -616,9 +666,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				{ /*
 				 * Why ServerSideRender instead of a plain preview: render.php
 				 * is the only place Query Grid's markup exists (see
-				 * docs/architecture.md) -- SSR calls the same PHP render
-				 * path via the core `wp/v2/block-renderer` REST endpoint on
-				 * every attribute change (including a Style Variation
+				 * includes/Blocks/QueryGrid/Renderer.php) -- SSR calls the
+				 * same PHP render path via the core `wp/v2/block-renderer`
+				 * REST endpoint on every attribute change (including a Style Variation
 				 * switch, since that changes `attributes.className`), so the
 				 * editor always shows exactly what the frontend will. Load
 				 * more/pagination/search/filter/carousel behavior does not

@@ -9,7 +9,7 @@
  * `fetch('/wp-json/wp/v2/types').then(r => r.json())` + `useState` +
  * `useEffect` — `useSelect` just re-runs the selector and re-renders
  * whenever the underlying `core` store data changes, no manual wiring.
- * Impact of changing: both Query Grid's and Featured CPT Section's CPT
+ * Impact of changing: both Query Grid's and Content Showcase's CPT
  * picker import this — a bug here affects both blocks' post type dropdown.
  */
 import { useSelect } from '@wordpress/data';

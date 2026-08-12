@@ -1,0 +1,469 @@
+/**
+ * Content Showcase — frontend + editor shared styles.
+ *
+ * Why: layout switching (Magazine/Split/Overlay/Two-Thirds) is a native
+ * block Style Variation -- WordPress adds `is-style-<name>` to the wrapper
+ * itself (see block.json's `styles` +
+ * Renderer::layout_from_class_name()), so `.fb-content-showcase--<layout>`
+ * below is driven by that class, not a custom attribute.
+ * `min-width: 0` shows up on several flex children below -- flex/grid
+ * items default to `min-width: auto`, which refuses to shrink below its
+ * content's natural width and breaks full-width blocks on mobile (same
+ * fix already applied throughout query-grid/style.scss).
+ * Impact of changing: `--fb-accent` is the same red (#d1372d) Query Grid
+ * uses for its heading accent -- change both together if the plugin's
+ * accent color ever changes.
+ */
+
+.fb-content-showcase {
+	--fb-accent: #d1372d;
+
+	&__header {
+		text-align: center;
+		margin-bottom: 2.25em;
+	}
+
+	&__heading {
+		margin: 0 0 0.4em;
+		font-size: 2.2em;
+		font-weight: 700;
+		line-height: 1.25;
+		color: inherit;
+	}
+
+	&__heading-accent {
+		color: var(--fb-accent, #d1372d);
+	}
+
+	&__subheading {
+		margin: 0 auto;
+		max-width: 680px;
+		font-size: 1.05em;
+		line-height: 1.5;
+		color: #666;
+	}
+
+	&__date {
+		display: block;
+		font-size: 0.8em;
+		color: var(--fb-card-date-color, #888);
+		margin-bottom: 0.35em;
+	}
+
+	&__empty {
+		text-align: center;
+		opacity: 0.7;
+	}
+
+	// Image wrapper for positioning hotspot pins & handling rounded corners
+	&__image-wrap {
+		position: relative;
+		display: block;
+		width: 100%;
+		aspect-ratio: var(--fb-card-image-ratio, 16 / 9);
+		max-height: var(--fb-card-max-height, none);
+		border-radius: 0.6em;
+		overflow: hidden;
+		margin-bottom: 0.85em;
+		background-color: #f2f2f2;
+
+		a {
+			display: block;
+			width: 100%;
+			height: 100%;
+			text-decoration: none;
+		}
+
+		img {
+			display: block;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+
+	// Shared card (Magazine's + Two-Thirds' featured/small cards).
+	&__card {
+		display: flex;
+		flex-direction: column;
+
+		p {
+			color: var(--fb-card-excerpt-color, inherit);
+		}
+	}
+
+	&__card-image {
+		display: block;
+		width: 100%;
+		height: 100%;
+
+		img {
+			display: block;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			transition: transform 0.3s ease;
+		}
+
+		&:hover img {
+			transform: scale(1.04);
+		}
+	}
+
+	&__card-body h3 {
+		margin: 0 0 0.35em;
+		font-size: var(--fb-card-title-size, 1.15em);
+		line-height: 1.35;
+	}
+
+	// Shared by &__card-body's title link AND &__split-text's (identical
+	// styles either way) -- combined into one rule instead of two
+	// byte-for-byte duplicate ones, which also sidesteps a stylelint
+	// no-descending-specificity false-positive between two unrelated
+	// parent scopes that happen to end in the same "h3 a" shape.
+	&__card-body h3 a,
+	&__split-text h3 a {
+		text-decoration: none;
+		color: var(--fb-card-title-color, inherit);
+		transition: color 0.15s ease;
+
+		&:hover {
+			color: var(--fb-card-title-hover-color, var(--fb-card-title-color, inherit));
+		}
+	}
+
+	&__card-body p {
+		margin: 0;
+		color: var(--fb-card-excerpt-color, inherit);
+		opacity: 0.75;
+		line-height: 1.5;
+		font-size: 0.95em;
+	}
+
+	&__card--featured {
+		--fb-card-image-ratio: 21 / 9;
+		--fb-card-max-height: 380px;
+		--fb-card-title-size: 1.5em;
+
+		@media (max-width: 782px) {
+			--fb-card-image-ratio: 16 / 9;
+		}
+	}
+
+	// Magazine: 1 big featured card + a grid of small ones.
+	&__magazine {
+		display: flex;
+		flex-direction: column;
+		gap: 2.25em;
+	}
+
+	// Only ever 1-2 items reach here (postCount maxes out at 3, minus the 1
+	// featured card above) -- 2 columns, not 3, so the row always fills
+	// instead of leaving a visibly empty third column.
+	&__magazine-list {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 1.75em;
+		min-width: 0;
+
+		@media (min-width: 600px) {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	// Two-Thirds/One-Third: 1 big (left) + the rest stacked (right),
+	// divided by a vertical rule on desktop.
+	&__two-thirds {
+		display: flex;
+		flex-direction: column;
+		gap: 2em;
+
+		@media (min-width: 782px) {
+			flex-direction: row;
+			align-items: stretch;
+		}
+	}
+
+	&__two-thirds > &__card--featured {
+		min-width: 0;
+
+		@media (min-width: 782px) {
+			flex: 2;
+		}
+	}
+
+	&__two-thirds-list {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5em;
+		min-width: 0;
+		--fb-card-image-ratio: 16 / 9;
+		--fb-card-max-height: none;
+
+		@media (min-width: 782px) {
+			flex: 1;
+			padding-left: 2em;
+			border-left: 1px solid #e0e0e0;
+		}
+	}
+
+	// Split: full-width text/image rows, alternating sides.
+	&__split {
+		display: flex;
+		flex-direction: column;
+		gap: 2.5em;
+	}
+
+	&__split-row {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5em;
+		align-items: center;
+
+		@media (min-width: 782px) {
+			flex-direction: row;
+
+			&--image-left {
+				flex-direction: row-reverse;
+			}
+		}
+
+		.fb-content-showcase__image-wrap {
+			flex: 1;
+			min-width: 0;
+			width: 100%;
+			margin-bottom: 0;
+			--fb-card-image-ratio: 4 / 3;
+			--fb-card-max-height: 320px;
+		}
+	}
+
+	&__split-image {
+		display: block;
+		width: 100%;
+		height: 100%;
+		text-decoration: none;
+	}
+
+	&__split-text {
+		flex: 1;
+		min-width: 0;
+
+		h3 {
+			margin: 0 0 0.5em;
+			font-size: 1.4em;
+		}
+
+		p {
+			margin: 0;
+			color: var(--fb-card-excerpt-color, inherit);
+			opacity: 0.75;
+			line-height: 1.5;
+		}
+	}
+
+	// Overlay: image as background, text floating on top.
+	&__overlay-grid {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 1.5em;
+		min-width: 0;
+
+		@media (min-width: 600px) {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		@media (min-width: 960px) {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+
+	&__overlay-wrap {
+		position: relative;
+		display: block;
+		width: 100%;
+		height: 100%;
+		margin-bottom: 0;
+		border-radius: 0.6em;
+		overflow: hidden;
+		aspect-ratio: 4 / 5;
+		max-height: none;
+	}
+
+	&__overlay-card {
+		position: relative;
+		display: flex;
+		align-items: flex-end;
+		width: 100%;
+		height: 100%;
+		border-radius: 0.6em;
+		overflow: hidden;
+		background-color: #222;
+		background-size: cover;
+		background-position: center;
+		text-decoration: none;
+
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 0;
+			background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0) 60%);
+		}
+	}
+
+	&__overlay-text {
+		position: relative;
+		padding: 1.25em;
+		color: #fff;
+		font-weight: 600;
+		font-size: 1.1em;
+	}
+
+	// "Explore More" button -- outline style, shared by every layout.
+	&__explore {
+		margin: 2.5em 0 0;
+		text-align: center;
+	}
+
+	&__explore-button {
+		display: inline-block;
+		padding: 0.75em 2em;
+		border: 2px solid var(--fb-btn-color, var(--fb-accent));
+		border-radius: 0.3em;
+		color: var(--fb-btn-color, var(--fb-accent));
+		background-color: var(--fb-btn-bg, transparent);
+		font-weight: 600;
+		text-decoration: none;
+		transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+
+		&:hover,
+		&:focus {
+			background-color: var(--fb-btn-hover-bg, var(--fb-accent));
+			border-color: var(--fb-btn-hover-bg, var(--fb-accent));
+			color: #fff;
+		}
+	}
+}
+
+.fb-hotspot {
+	position: absolute;
+	z-index: 10;
+	transform: translate(-50%, -50%);
+
+	&__pin {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: var(--fb-hotspot-pin-size, 28px);
+		height: var(--fb-hotspot-pin-size, 28px);
+		padding: 0;
+		border: 2px solid #fff;
+		border-radius: 50%;
+		background: var(--fb-hotspot-pin-color, var(--fb-accent, #d1372d));
+		color: #fff;
+		cursor: pointer;
+		outline: none;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+		transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+		&:hover,
+		&:focus {
+			transform: scale(1.18);
+		}
+	}
+
+	&__pin-pulse {
+		position: absolute;
+		inset: -6px;
+		border-radius: 50%;
+		background: var(--fb-hotspot-pin-color, rgba(209, 55, 45, 0.45));
+		opacity: 0.5;
+		animation: fb-hotspot-pulse 2s infinite;
+		pointer-events: none;
+	}
+
+	&__pin-icon {
+		font-size: 16px;
+		font-weight: 700;
+		line-height: 1;
+	}
+
+	&__popover {
+		position: absolute;
+		bottom: calc(100% + 10px);
+		left: 50%;
+		transform: translateX(-50%);
+		width: 220px;
+		padding: 12px 14px;
+		background: var(--fb-hotspot-tooltip-bg, #141414);
+		color: var(--fb-hotspot-tooltip-color, #fff);
+		border-radius: 8px;
+		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+		border: 1px solid rgba(255, 255, 255, 0.15);
+		z-index: 20;
+		font-size: 0.85rem;
+
+		&[hidden] {
+			display: none !important;
+		}
+
+		&::after {
+			content: "";
+			position: absolute;
+			top: 100%;
+			left: 50%;
+			transform: translateX(-50%);
+			border-width: 6px;
+			border-style: solid;
+			border-color: var(--fb-hotspot-tooltip-bg, #141414) transparent transparent transparent;
+		}
+	}
+
+	&__title {
+		margin: 0 0 4px;
+		font-size: 0.95rem;
+		font-weight: 600;
+		color: var(--fb-hotspot-tooltip-color, #fff);
+	}
+
+	&__content {
+		margin: 0 0 8px;
+		opacity: 0.85;
+		line-height: 1.4;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	&__link {
+		display: inline-block;
+		color: #58a6ff;
+		font-size: 0.8rem;
+		font-weight: 600;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}
+
+@keyframes fb-hotspot-pulse {
+
+	0% {
+		transform: scale(0.95);
+		opacity: 0.8;
+	}
+
+	70% {
+		transform: scale(1.6);
+		opacity: 0;
+	}
+
+	100% {
+		transform: scale(0.95);
+		opacity: 0;
+	}
+}

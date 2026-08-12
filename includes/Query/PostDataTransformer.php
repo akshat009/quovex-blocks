@@ -13,6 +13,10 @@
 
 namespace FluxBlocks\Query;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
 /**
  * Turns a WP_Post into the plain array shape templates/REST responses use.
  */
@@ -37,6 +41,7 @@ class PostDataTransformer {
 			'author'    => get_the_author_meta( 'display_name', $post->post_author ),
 			'date'      => get_the_date( '', $post ),
 			'terms'     => $this->primary_terms( $post ),
+			'term_ids'  => $this->all_term_ids( $post ),
 		);
 	}
 
@@ -48,6 +53,26 @@ class PostDataTransformer {
 	 */
 	public function transform_many( array $posts ): array {
 		return array_map( array( $this, 'transform' ), $posts );
+	}
+
+	/**
+	 * All term IDs for a post across all public taxonomies.
+	 *
+	 * @param \WP_Post $post Post object.
+	 * @return int[]
+	 */
+	private function all_term_ids( \WP_Post $post ): array {
+		$taxonomies = get_object_taxonomies( $post->post_type, 'names' );
+		$term_ids   = array();
+		foreach ( $taxonomies as $taxonomy ) {
+			$terms = get_the_terms( $post, $taxonomy );
+			if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
+				foreach ( $terms as $term ) {
+					$term_ids[] = (int) $term->term_id;
+				}
+			}
+		}
+		return array_unique( $term_ids );
 	}
 
 	/**

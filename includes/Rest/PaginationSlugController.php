@@ -24,6 +24,10 @@
 
 namespace FluxBlocks\Rest;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
 use FluxBlocks\PaginationEndpoint;
 
 /**

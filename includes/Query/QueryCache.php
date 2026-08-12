@@ -4,8 +4,17 @@
  * signature (post type + normalized args hash).
  *
  * Why: WP_Query + post-data transformation runs on every page load for
- * every Query Grid/Featured CPT Section instance — caching avoids repeating
+ * every Query Grid/Content Showcase instance — caching avoids repeating
  * that work between requests until the underlying content actually changes.
+ * Uses WordPress's own Transients API directly (get_transient()/
+ * set_transient()/delete_transient()) rather than a custom cache-driver
+ * abstraction: the Transients API already transparently uses a persistent
+ * object cache (Redis/Memcached) instead of wp_options when one is active
+ * (wp_using_ext_object_cache()) -- that decision is made INSIDE
+ * WordPress core's own transient functions, so a separate driver class to
+ * pick between "Redis" and "database" would just be redundantly
+ * re-implementing something the Transients API already does for free. See
+ * https://developer.wordpress.org/apis/transients/.
  * Impact of changing: changing the signature format or TTL changes
  * cache-hit behavior for every block instance at once; see CacheInvalidator
  * for how entries get cleared.
@@ -15,25 +24,17 @@
 
 namespace FluxBlocks\Query;
 
-use FluxBlocks\Cache\CacheInterface;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
 
 /**
- * Transient/Redis-backed read-through cache for query results.
+ * Transients-backed read-through cache for query results.
  */
 class QueryCache {
 
 	const TTL             = HOUR_IN_SECONDS;
 	const REGISTRY_PREFIX = '_flux_blocks_cache_keys_';
-
-	/** @var CacheInterface */
-	private $driver;
-
-	/**
-	 * @param CacheInterface|null $driver Cache driver implementation.
-	 */
-	public function __construct( ?CacheInterface $driver = null ) {
-		$this->driver = $driver ?? \FluxBlocks\Services::cache_driver();
-	}
 
 	/**
 	 * Get a cached value, or compute + cache it via the callback.
@@ -45,14 +46,20 @@ class QueryCache {
 	 */
 	public function remember( string $post_type, string $signature, callable $callback ) {
 		$key    = 'fb_q_' . md5( $signature );
-		$cached = $this->driver->get( $key );
+		$cached = get_transient( $key );
 
-		if ( false !== $cached ) {
-			return $cached;
+		// Wrapped in array('value' => ...) rather than storing $value
+		// directly -- get_transient() returns bare `false` on BOTH "cache
+		// miss" and "the cached value legitimately IS false", with no way
+		// to tell them apart. Wrapping guarantees a hit is always an array
+		// (even when $value itself is false/null/0/''), so `false !==
+		// $cached` alone can never misreport a real cache hit as a miss.
+		if ( is_array( $cached ) && array_key_exists( 'value', $cached ) ) {
+			return $cached['value'];
 		}
 
 		$value = $callback();
-		$this->driver->set( $key, $value, self::TTL );
+		set_transient( $key, array( 'value' => $value ), self::TTL );
 		$this->register_key( $post_type, $key );
 
 		return $value;
@@ -87,7 +94,7 @@ class QueryCache {
 		$keys            = get_option( $registry_option, array() );
 
 		foreach ( $keys as $key ) {
-			$this->driver->delete( $key );
+			delete_transient( $key );
 		}
 
 		delete_option( $registry_option );

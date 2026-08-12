@@ -1,0 +1,198 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "flux-blocks/content-showcase",
+	"version": "0.1.0",
+	"title": "Content Showcase",
+	"category": "flux-blocks",
+	"icon": "media-interactive",
+	"description": "A magazine-style posts showcase with four distinct layouts -- Magazine (1 large + 3 small cards), Split (alternating text/image rows), Overlay (text floating on the image), and Two-Thirds/One-Third (1 large + smaller posts stacked beside it).",
+
+	"attributes": {
+		"postType": {
+			"type": "string",
+			"default": "post"
+		},
+		"postCount": {
+			"type": "number",
+			"default": 3
+		},
+		"orderBy": {
+			"type": "string",
+			"default": "date"
+		},
+		"order": {
+			"type": "string",
+			"default": "desc"
+		},
+		"showExploreButton": {
+			"type": "boolean",
+			"default": false
+		},
+		"exploreButtonText": {
+			"type": "string",
+			"default": "Explore More"
+		},
+		"exploreButtonUrl": {
+			"type": "string",
+			"default": ""
+		},
+		"enableHotspots": {
+			"type": "boolean",
+			"default": false
+		},
+		"hotspots": {
+			"type": "array",
+			"default": []
+		},
+		"hotspotPinColor": {
+			"type": "string",
+			"default": "#d1372d"
+		},
+		"hotspotTooltipBg": {
+			"type": "string",
+			"default": "#141414"
+		},
+		"hotspotTooltipTextColor": {
+			"type": "string",
+			"default": "#ffffff"
+		},
+		"hotspotPinSize": {
+			"type": "number",
+			"default": 28
+		},
+		"showHeading": {
+			"type": "boolean",
+			"default": false
+		},
+		"heading": {
+			"type": "string",
+			"default": ""
+		},
+		"headingAccent": {
+			"type": "string",
+			"default": ""
+		},
+		"headingTitleColor": {
+			"type": "string",
+			"default": ""
+		},
+		"headingAccentColor": {
+			"type": "string",
+			"default": ""
+		},
+		"subheading": {
+			"type": "string",
+			"default": ""
+		},
+		"subheadingColor": {
+			"type": "string",
+			"default": ""
+		},
+		"taxonomyFilter": {
+			"type": "object",
+			"default": {}
+		},
+		"post1Image": {
+			"type": "boolean",
+			"default": true
+		},
+		"post1Date": {
+			"type": "boolean",
+			"default": true
+		},
+		"post1Excerpt": {
+			"type": "boolean",
+			"default": true
+		},
+		"post2Image": {
+			"type": "boolean",
+			"default": true
+		},
+		"post2Date": {
+			"type": "boolean",
+			"default": true
+		},
+		"post2Excerpt": {
+			"type": "boolean",
+			"default": false
+		},
+		"post3Image": {
+			"type": "boolean",
+			"default": true
+		},
+		"post3Date": {
+			"type": "boolean",
+			"default": true
+		},
+		"post3Excerpt": {
+			"type": "boolean",
+			"default": false
+		},
+		"manualPost1": {
+			"type": "number",
+			"default": 0
+		},
+		"manualPost2": {
+			"type": "number",
+			"default": 0
+		},
+		"manualPost3": {
+			"type": "number",
+			"default": 0
+		},
+		"enableManualSelection": {
+			"type": "boolean",
+			"default": false
+		},
+		"exploreButtonTextColor": {
+			"type": "string",
+			"default": ""
+		},
+		"exploreButtonBgColor": {
+			"type": "string",
+			"default": ""
+		},
+		"exploreButtonHoverBg": {
+			"type": "string",
+			"default": ""
+		},
+		"cardTitleColor": {
+			"type": "string",
+			"default": ""
+		},
+		"cardTitleHoverColor": {
+			"type": "string",
+			"default": ""
+		},
+		"cardDateColor": {
+			"type": "string",
+			"default": ""
+		},
+		"cardExcerptColor": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"supports": {
+		"html": false,
+		"interactivity": true,
+		"align": [ "wide", "full" ],
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+	"styles": [
+		{ "name": "magazine", "label": "Magazine", "isDefault": true },
+		{ "name": "split", "label": "Split" },
+		{ "name": "overlay", "label": "Overlay" },
+		{ "name": "two-thirds", "label": "Two-Thirds/One-Third" }
+	],
+	"textdomain": "flux-blocks",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"render": "file:./render.php",
+	"viewScriptModule": "file:./view.js"
+}

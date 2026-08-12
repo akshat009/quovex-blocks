@@ -195,12 +195,18 @@
 
 			a {
 				text-decoration: none;
-				color: inherit;
+				color: var(--fb-card-title-color, inherit);
+				transition: color 0.15s ease;
+
+				&:hover {
+					color: var(--fb-card-title-hover-color, var(--fb-card-title-color, inherit));
+				}
 			}
 		}
 
 		&-excerpt {
 			margin: 0 0 0.75em;
+			color: var(--fb-card-excerpt-color, inherit);
 			opacity: 0.8;
 			font-size: 0.9em;
 		}
@@ -209,6 +215,12 @@
 			font-size: 0.85em;
 			font-weight: 600;
 			text-decoration: none;
+			color: var(--fb-read-more-color, var(--fb-active-accent, #d1372d));
+			transition: color 0.15s ease;
+
+			&:hover {
+				color: var(--fb-read-more-hover-color, var(--fb-read-more-color, var(--fb-active-accent, #d1372d)));
+			}
 		}
 
 		&-author {

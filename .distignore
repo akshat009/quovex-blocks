@@ -1,0 +1,55 @@
+# What this file is for: `.gitignore` controls what goes into the GITHUB
+# repo (excludes vendor/build since developers regenerate those themselves
+# via `composer install`/`npm run build`). This file controls the OPPOSITE
+# direction -- what goes INTO the packaged plugin shipped to WordPress.org
+# (SVN "trunk" / the downloadable zip). End users installing from
+# WordPress.org never run composer/npm, so `vendor/` and `build/` MUST be
+# INCLUDED here (they are the actual runtime code) -- only development-only
+# files get excluded below.
+
+# Version control / CI
+.git
+.github
+.gitignore
+.gitattributes
+.distignore
+
+# Dev dependencies -- node_modules is never needed at runtime (build/ already
+# has the compiled output); PHP dev tools (phpcs/phpunit/brain-monkey) are
+# require-dev only, not needed by the running plugin either.
+node_modules
+
+# Uncompiled block source -- build/ is what WordPress actually loads
+# (see flux-blocks.php's wp_register_block_types_from_metadata_collection()
+# call, which points at build/, never src/).
+src
+
+# Tests -- not part of the running plugin.
+tests
+phpunit.xml.dist
+.phpunit.result.cache
+
+# Internal planning docs -- see .gitignore's own note; not meant for the
+# public plugin package either.
+docs
+
+# Dev tooling configs -- meaningless without the dev dependencies above.
+phpcs.xml.dist
+.eslintrc*
+eslint.config.*
+.stylelintrc*
+.editorconfig
+composer.json
+composer.lock
+package.json
+package-lock.json
+
+# Packaged plugin zip (from `npm run plugin-zip`) -- don't ship a zip inside a zip.
+*.zip
+
+# OS/editor junk
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode
+.idea

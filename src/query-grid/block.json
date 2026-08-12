@@ -7,7 +7,7 @@
 	"category": "flux-blocks",
 	"icon": "media-interactive",
 	"description": "A filterable, paginated grid of posts with search and category chips.",
-	"example": {},
+
 	"attributes": {
 		"showHeading": {
 			"type": "boolean",
@@ -90,6 +90,12 @@
 			"default": {
 				"titleColor": "",
 				"accentColor": "",
+				"subheadingColor": "",
+				"cardTitleColor": "",
+				"cardTitleHoverColor": "",
+				"cardExcerptColor": "",
+				"readMoreColor": "",
+				"readMoreHoverColor": "",
 				"activeAccent": "",
 				"disabledNav": "",
 				"inactivePillBg": "",
@@ -104,6 +110,7 @@
 		}
 	},
 	"supports": {
+		"html": false,
 		"interactivity": true,
 		"align": [ "wide", "full" ],
 		"spacing": {

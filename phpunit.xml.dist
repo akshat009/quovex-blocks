@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Why no full WordPress test suite (WP_UnitTestCase/wp-phpunit): everything
+	tested here is deliberately isolated, mostly pure PHP logic (see
+	tests/TestCase.php). Brain Monkey mocks the handful of WP core
+	functions each class calls, instead of paying for a real WP install
+	just to run these. Renderer/REST classes that genuinely need a live
+	WP_Query/DB (already verified via live smoke tests through this
+	project's development, not automated here) are out of scope for this
+	suite on purpose, see tests/README.md.
+-->
+
+<phpunit
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+	bootstrap="tests/bootstrap.php"
+	colors="true"
+>
+	<testsuites>
+		<testsuite name="Flux Blocks Unit Tests">
+			<directory>tests/Unit</directory>
+		</testsuite>
+	</testsuites>
+
+	<coverage>
+		<include>
+			<directory suffix=".php">includes</directory>
+		</include>
+	</coverage>
+</phpunit>

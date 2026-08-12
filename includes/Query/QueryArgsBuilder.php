@@ -4,13 +4,17 @@
  *
  * Why: single source of truth for query logic — both block renderers and
  * the REST controller call this, so query behavior only lives in one place.
- * Impact of changing: affects Query Grid, Featured CPT Section, AND the
- * /flux-blocks/v1/query REST response simultaneously (see docs/architecture.md).
+ * Impact of changing: affects Query Grid, Content Showcase, AND the
+ * /flux-blocks/v1/query REST response simultaneously.
  *
  * @package FluxBlocks
  */
 
 namespace FluxBlocks\Query;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
 
 /**
  * Turns block attributes into WP_Query args.
@@ -33,8 +37,11 @@ class QueryArgsBuilder {
 			$post_type = 'post';
 		}
 
-		// Manual selection (Featured CPT Section's "manual" mode) bypasses
-		// ordering/pagination entirely — it's an explicit, fixed list.
+		// Manual selection (an explicit `manualIds` list) bypasses ordering/
+		// pagination entirely -- a general capability of this builder, not
+		// currently exercised by either shipped block: Content Showcase's
+		// manual-selection UI (manualPost1/2/3) is a separate mechanism
+		// layered on top in its own Renderer::query(), not this attribute.
 		if ( ! empty( $attributes['manualIds'] ) && is_array( $attributes['manualIds'] ) ) {
 			return array(
 				'post_type'      => $post_type,

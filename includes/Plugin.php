@@ -12,6 +12,10 @@
 
 namespace FluxBlocks;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
 use FluxBlocks\Query\CacheInvalidator;
 use FluxBlocks\Rest\QueryController;
 use FluxBlocks\Rest\PaginationSlugController;
@@ -26,7 +30,7 @@ final class Plugin {
 	 */
 	public static function boot(): void {
 		( new BlockCategory() )->init_hooks();
-		( new CacheInvalidator( Services::query_cache() ) )->init_hooks();
+		( new CacheInvalidator( Services::query_cache(), Services::logger() ) )->init_hooks();
 		( new PaginationEndpoint() )->init_hooks();
 
 		( new QueryController( Services::query_grid_renderer(), Services::query_args_builder() ) )->init_hooks();

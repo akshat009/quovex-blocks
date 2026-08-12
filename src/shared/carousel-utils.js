@@ -1,7 +1,8 @@
 /**
- * Shared carousel index math — used by both Query Grid's Carousel layout
- * and Featured CPT Section's carousel nav, so the "what's the next index"
- * logic only exists once.
+ * Shared carousel index math, used by Query Grid's Carousel layout (see
+ * query-grid/view.js) -- kept in its own file rather than inline so the
+ * "what's the next index" logic has one obvious home if any other block
+ * ever needs the same carousel wrap-around behavior.
  *
  * Plain-JS equivalent: `next = (current + 1) % total` is the same wrap-
  * around math you'd write for a plain `<div>` slider with vanilla JS +

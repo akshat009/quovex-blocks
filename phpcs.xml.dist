@@ -14,6 +14,14 @@
 	<exclude-pattern>/build/*</exclude-pattern>
 	<exclude-pattern>/node_modules/*</exclude-pattern>
 	<exclude-pattern>/vendor/*</exclude-pattern>
+	<!--
+		tests/ is PHPUnit fixtures/mocks/stubs, not production code shipped
+		to WordPress.org. tests/stubs.php intentionally holds multiple
+		bare-bones WP-core-class stand-ins in one file (Generic.Files.
+		OneObjectStructurePerFile would otherwise flag that), and mock
+		classes don't need full production docblock coverage.
+	-->
+	<exclude-pattern>/tests/*</exclude-pattern>
 
 	<arg value="sp"/>
 	<arg name="extensions" value="php"/>
