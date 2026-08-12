@@ -54,14 +54,19 @@ class QueryArgsBuilder implements ArgsBuilderInterface {
 		}
 
 		// "Show all posts" (no pagination) ignores `postCount` entirely and
-		// uses its own bounded cap instead of a literal `-1` -- an
-		// editor-configured toggle is safer than the old unconditional-50
-		// cap, but a site with thousands of posts in one Query Grid would
-		// still be a real performance/Plugin-Check concern with a truly
-		// unlimited query. 200 is generous enough to read as "all" for any
-		// normal blog/portfolio while staying bounded.
+		// defaults to a bounded cap instead of a literal `-1` -- a site
+		// with thousands of posts in one Query Grid would otherwise be a
+		// real performance/Plugin-Check concern from a truly unlimited
+		// query. 200 is generous enough to read as "all" for any normal
+		// blog/portfolio while staying bounded BY DEFAULT.
+		// Filterable (not just a bigger hardcoded number) because the
+		// right cap is a site-specific call only the site owner can make
+		// -- e.g. `add_filter( 'flux_blocks_show_all_posts_limit', fn() =>
+		// -1 )` for a site that genuinely wants every post and knows its
+		// own server can take an unbounded query. New/typical sites who
+		// never touch this filter stay on the safe default.
 		if ( ! empty( $attributes['showAllPosts'] ) ) {
-			$per_page = 200;
+			$per_page = (int) apply_filters( 'flux_blocks_show_all_posts_limit', 200 );
 		} else {
 			$per_page = isset( $attributes['postCount'] ) ? max( 1, absint( $attributes['postCount'] ) ) : 9;
 			// REST callers can request a page size, but never past this hard

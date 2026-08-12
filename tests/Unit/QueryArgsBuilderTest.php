@@ -32,6 +32,9 @@ class QueryArgsBuilderTest extends TestCase {
 		Functions\when( 'get_post_type_object' )->alias(
 			fn( $post_type ) => new WP_Post_Type( $post_type, true )
 		);
+		// Matches real apply_filters() behavior when nothing has hooked
+		// into it: returns the value being filtered (arg #2) unchanged.
+		Functions\when( 'apply_filters' )->returnArg( 2 );
 	}
 
 	public function test_defaults_to_post_type_post_when_not_given(): void {
@@ -85,6 +88,20 @@ class QueryArgsBuilderTest extends TestCase {
 			)
 		);
 		$this->assertSame( 200, $args['posts_per_page'] );
+	}
+
+	/**
+	 * Regression test for the audit fix: the "Show all posts" cap used to
+	 * be a hardcoded 200 with no way to change it short of editing plugin
+	 * code -- now a site can raise it (or even opt into a literal -1,
+	 * truly-unlimited query) via this filter.
+	 */
+	public function test_show_all_posts_bound_is_overridable_via_filter(): void {
+		Functions\when( 'apply_filters' )->justReturn( -1 );
+
+		$args = $this->builder->build( array( 'showAllPosts' => true ) );
+
+		$this->assertSame( -1, $args['posts_per_page'] );
 	}
 
 	public function test_manual_ids_bypasses_ordering_and_pagination_entirely(): void {
