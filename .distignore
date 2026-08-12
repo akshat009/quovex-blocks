@@ -33,6 +33,13 @@ phpunit.xml.dist
 # public plugin package either.
 docs
 
+# WordPress.org plugin-directory listing images (icon/banner/screenshots)
+# and the script that generated them -- these belong in WP.org's SVN
+# `assets/` directory (a sibling of `trunk/`, uploaded separately), not
+# inside the plugin package itself; the running plugin never reads them.
+assets
+generate_plugin_icon.py
+
 # Dev tooling configs -- meaningless without the dev dependencies above.
 phpcs.xml.dist
 .eslintrc*

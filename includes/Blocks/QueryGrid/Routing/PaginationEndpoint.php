@@ -47,7 +47,7 @@
  * @package FluxBlocks
  */
 
-namespace FluxBlocks;
+namespace FluxBlocks\Blocks\QueryGrid\Routing;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

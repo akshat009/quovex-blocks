@@ -10,7 +10,7 @@
  * @package FluxBlocks
  */
 
-namespace FluxBlocks\Query;
+namespace FluxBlocks\QueryEngine;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

@@ -17,11 +17,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use FluxBlocks\Query\QueryArgsBuilder;
-use FluxBlocks\Query\QueryCache;
-use FluxBlocks\Query\PostDataTransformer;
-use FluxBlocks\Blocks\QueryGrid\Renderer as QueryGridRenderer;
-use FluxBlocks\Blocks\ContentShowcase\Renderer as ContentShowcaseRenderer;
+use FluxBlocks\QueryEngine\QueryArgsBuilder;
+use FluxBlocks\Cache\QueryCache;
+use FluxBlocks\QueryEngine\PostDataTransformer;
+use FluxBlocks\Blocks\QueryGrid\Render\Renderer as QueryGridRenderer;
+use FluxBlocks\Blocks\ContentShowcase\Render\Renderer as ContentShowcaseRenderer;
 use FluxBlocks\Logger\LoggerInterface;
 use FluxBlocks\Logger\FileLogger;
 use FluxBlocks\Logger\NullLogger;
@@ -44,7 +44,7 @@ final class Services {
 	 * @return QueryCache
 	 */
 	public static function query_cache(): QueryCache {
-		return self::once( __METHOD__, fn() => new QueryCache() );
+		return self::once( __METHOD__, fn() => new QueryCache( self::logger() ) );
 	}
 
 	/**

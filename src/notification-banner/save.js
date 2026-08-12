@@ -1,4 +1,20 @@
+import { __ } from '@wordpress/i18n';
 import { useBlockProps, RichText } from '@wordpress/block-editor';
+
+/**
+ * Only these URL schemes (plus scheme-less relative/anchor links) are
+ * allowed through to the saved `href` -- WordPress's own KSES filtering on
+ * post save already strips `javascript:`/similar for anyone without
+ * `unfiltered_html`, but that is a server-side safety net for the
+ * capability-restricted majority of users, not a reason to skip validating
+ * here too (an `unfiltered_html` user, e.g. most single-site admins,
+ * doesn't get that net at all).
+ */
+const ALLOWED_URL_SCHEMES = /^(https?:|mailto:|tel:|#|\/)/i;
+
+function safeButtonUrl( url ) {
+	return ALLOWED_URL_SCHEMES.test( url ) ? url : '#';
+}
 
 /**
  * SVG icon markup strings (raw HTML, not React components).
@@ -148,7 +164,7 @@ export default function save( { attributes } ) {
 				<div className="fb-notification-banner__actions">
 					{ showButton && buttonText && (
 						<a
-							href={ buttonUrl }
+							href={ safeButtonUrl( buttonUrl ) }
 							target={ target }
 							className="fb-notification-banner__btn"
 							{ ...( buttonTarget
@@ -163,7 +179,7 @@ export default function save( { attributes } ) {
 						<button
 							type="button"
 							className="fb-notification-banner__dismiss"
-							aria-label="Dismiss notice"
+							aria-label={ __( 'Dismiss notice', 'flux-blocks' ) }
 						>
 							✕
 						</button>

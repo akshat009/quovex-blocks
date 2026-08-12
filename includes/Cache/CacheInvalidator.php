@@ -13,7 +13,7 @@
  * @package FluxBlocks
  */
 
-namespace FluxBlocks\Query;
+namespace FluxBlocks\Cache;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

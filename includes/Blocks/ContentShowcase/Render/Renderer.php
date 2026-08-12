@@ -11,16 +11,16 @@
  * @package FluxBlocks
  */
 
-namespace FluxBlocks\Blocks\ContentShowcase;
+namespace FluxBlocks\Blocks\ContentShowcase\Render;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use FluxBlocks\Blocks\AbstractRenderer;
-use FluxBlocks\Query\QueryArgsBuilder;
-use FluxBlocks\Query\QueryCache;
-use FluxBlocks\Query\PostDataTransformer;
+use FluxBlocks\Blocks\View\AbstractRenderer;
+use FluxBlocks\QueryEngine\QueryArgsBuilder;
+use FluxBlocks\Cache\QueryCache;
+use FluxBlocks\QueryEngine\PostDataTransformer;
 
 /**
  * Builds the Content Showcase query and renders one of its layouts.

@@ -1,4 +1,5 @@
 import { __ } from '@wordpress/i18n';
+import { useEffect } from '@wordpress/element';
 import {
 	useBlockProps,
 	InspectorControls,
@@ -15,7 +16,7 @@ import {
 } from '@wordpress/components';
 import { useIconLibraries, svgIcons } from './hooks/useIconLibraries';
 
-export default function Edit( { attributes, setAttributes } ) {
+export default function Edit( { attributes, setAttributes, clientId } ) {
 	const {
 		preset = 'announcement',
 		styleVariation = 'gradient-bg',
@@ -30,6 +31,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		buttonTarget = false,
 		allowDismiss = true,
 		rememberDismiss = true,
+		bannerId = '',
 		bgColor = '',
 		textColor = '',
 		accentColor = '',
@@ -39,6 +41,20 @@ export default function Edit( { attributes, setAttributes } ) {
 		borderRadius = 12,
 		alignment = 'left',
 	} = attributes;
+
+	// A stable, unique bannerId, generated once and persisted into the
+	// attribute -- same pattern query-grid/edit.js uses for its queryId.
+	// Without this, "Remember Dismissal" has nothing to key the
+	// localStorage entry on (bannerId defaults to '', and view.js's
+	// `remember && bannerId` check is always false), so it silently never
+	// remembers anything.
+	useEffect( () => {
+		if ( ! bannerId ) {
+			setAttributes( {
+				bannerId: `nb${ clientId.replace( /-/g, '' ).slice( 0, 10 ) }`,
+			} );
+		}
+	}, [] ); // eslint-disable-line react-hooks/exhaustive-deps -- run once on mount only, matching query-grid/edit.js's identical queryId pattern.
 
 	const { libraries, emojiList, dashiconList, svgList } = useIconLibraries();
 

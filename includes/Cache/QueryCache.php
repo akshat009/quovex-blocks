@@ -22,11 +22,13 @@
  * @package FluxBlocks
  */
 
-namespace FluxBlocks\Query;
+namespace FluxBlocks\Cache;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
+
+use FluxBlocks\Logger\LoggerInterface;
 
 /**
  * Transients-backed read-through cache for query results.
@@ -35,6 +37,16 @@ class QueryCache {
 
 	const TTL             = HOUR_IN_SECONDS;
 	const REGISTRY_PREFIX = '_flux_blocks_cache_keys_';
+
+	/** @var LoggerInterface|null */
+	private $logger;
+
+	/**
+	 * @param LoggerInterface|null $logger Logger instance.
+	 */
+	public function __construct( ?LoggerInterface $logger = null ) {
+		$this->logger = $logger;
+	}
 
 	/**
 	 * Get a cached value, or compute + cache it via the callback.
@@ -55,7 +67,14 @@ class QueryCache {
 		// (even when $value itself is false/null/0/''), so `false !==
 		// $cached` alone can never misreport a real cache hit as a miss.
 		if ( is_array( $cached ) && array_key_exists( 'value', $cached ) ) {
+			if ( $this->logger ) {
+				$this->logger->log( 'Cache hit for key: ' . $key . ' (postType: ' . $post_type . ')' );
+			}
 			return $cached['value'];
+		}
+
+		if ( $this->logger ) {
+			$this->logger->log( 'Cache miss for key: ' . $key . ' (postType: ' . $post_type . '). Re-evaluating query.' );
 		}
 
 		$value = $callback();

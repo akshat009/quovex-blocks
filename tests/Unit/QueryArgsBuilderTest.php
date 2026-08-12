@@ -6,12 +6,12 @@
 namespace FluxBlocks\Tests\Unit;
 
 use Brain\Monkey\Functions;
-use FluxBlocks\Query\QueryArgsBuilder;
+use FluxBlocks\QueryEngine\QueryArgsBuilder;
 use FluxBlocks\Tests\TestCase;
 use WP_Post_Type;
 
 /**
- * @covers \FluxBlocks\Query\QueryArgsBuilder
+ * @covers \FluxBlocks\QueryEngine\QueryArgsBuilder
  */
 class QueryArgsBuilderTest extends TestCase {
 

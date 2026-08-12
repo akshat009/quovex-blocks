@@ -5,7 +5,7 @@
 	"version": "0.1.0",
 	"title": "Query Grid",
 	"category": "flux-blocks",
-	"icon": "media-interactive",
+	"icon": { "src": "grid-view", "foreground": "#d1372d" },
 	"description": "A filterable, paginated grid of posts with search and category chips.",
 
 	"attributes": {

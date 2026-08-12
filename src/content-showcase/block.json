@@ -5,7 +5,7 @@
 	"version": "0.1.0",
 	"title": "Content Showcase",
 	"category": "flux-blocks",
-	"icon": "media-interactive",
+	"icon": { "src": "cover-image", "foreground": "#d1372d" },
 	"description": "A magazine-style posts showcase with four distinct layouts -- Magazine (1 large + 3 small cards), Split (alternating text/image rows), Overlay (text floating on the image), and Two-Thirds/One-Third (1 large + smaller posts stacked beside it).",
 
 	"attributes": {

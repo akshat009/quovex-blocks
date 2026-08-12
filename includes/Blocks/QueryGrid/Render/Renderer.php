@@ -8,17 +8,17 @@
  * @package FluxBlocks
  */
 
-namespace FluxBlocks\Blocks\QueryGrid;
+namespace FluxBlocks\Blocks\QueryGrid\Render;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use FluxBlocks\Blocks\AbstractRenderer;
-use FluxBlocks\Query\QueryArgsBuilder;
-use FluxBlocks\Query\QueryCache;
-use FluxBlocks\Query\PostDataTransformer;
-use FluxBlocks\PaginationEndpoint;
+use FluxBlocks\Blocks\View\AbstractRenderer;
+use FluxBlocks\QueryEngine\QueryArgsBuilder;
+use FluxBlocks\Cache\QueryCache;
+use FluxBlocks\QueryEngine\PostDataTransformer;
+use FluxBlocks\Blocks\QueryGrid\Routing\PaginationEndpoint;
 
 /**
  * Builds the Query Grid query, transforms results, and renders a layout.

@@ -7,14 +7,14 @@ namespace FluxBlocks\Tests\Unit;
 
 use Brain\Monkey\Functions;
 use FluxBlocks\Logger\LoggerInterface;
-use FluxBlocks\Query\CacheInvalidator;
-use FluxBlocks\Query\QueryCache;
+use FluxBlocks\Cache\CacheInvalidator;
+use FluxBlocks\Cache\QueryCache;
 use FluxBlocks\Tests\TestCase;
 use Mockery;
 use WP_Post;
 
 /**
- * @covers \FluxBlocks\Query\CacheInvalidator
+ * @covers \FluxBlocks\Cache\CacheInvalidator
  */
 class CacheInvalidatorTest extends TestCase {
 

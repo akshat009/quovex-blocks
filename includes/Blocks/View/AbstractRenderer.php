@@ -1,7 +1,7 @@
 <?php
 /**
- * Shared base class for every block's Renderer (QueryGrid\Renderer,
- * ContentShowcase\Renderer, ...).
+ * Shared base class for every block's Renderer (QueryGrid\Render\Renderer,
+ * ContentShowcase\Render\Renderer, ...).
  *
  * Why an ABSTRACT CLASS and not an interface: an interface could only
  * force every Renderer to HAVE a render() method with the right signature
@@ -22,14 +22,14 @@
  * @package FluxBlocks
  */
 
-namespace FluxBlocks\Blocks;
+namespace FluxBlocks\Blocks\View;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Base class every block's Renderer extends.
+ * Base class every block's Renderer extends for HTML view rendering.
  */
 abstract class AbstractRenderer {
 

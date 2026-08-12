@@ -6,11 +6,11 @@
 namespace FluxBlocks\Tests\Unit;
 
 use Brain\Monkey\Functions;
-use FluxBlocks\Query\QueryCache;
+use FluxBlocks\Cache\QueryCache;
 use FluxBlocks\Tests\TestCase;
 
 /**
- * @covers \FluxBlocks\Query\QueryCache
+ * @covers \FluxBlocks\Cache\QueryCache
  */
 class QueryCacheTest extends TestCase {
 

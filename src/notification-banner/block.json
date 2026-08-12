@@ -5,7 +5,7 @@
 	"version": "0.1.0",
 	"title": "Notification & Announcement Banner",
 	"category": "flux-blocks",
-	"icon": "megaphone",
+	"icon": { "src": "megaphone", "foreground": "#3b82f6" },
 	"description": "An eye-catching alert box, announcement bar, or notice banner with dismiss options and CTA button.",
 
 	"supports": {

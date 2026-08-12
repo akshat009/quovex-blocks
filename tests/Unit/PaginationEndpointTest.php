@@ -6,11 +6,11 @@
 namespace FluxBlocks\Tests\Unit;
 
 use Brain\Monkey\Functions;
-use FluxBlocks\PaginationEndpoint;
+use FluxBlocks\Blocks\QueryGrid\Routing\PaginationEndpoint;
 use FluxBlocks\Tests\TestCase;
 
 /**
- * @covers \FluxBlocks\PaginationEndpoint
+ * @covers \FluxBlocks\Blocks\QueryGrid\Routing\PaginationEndpoint
  */
 class PaginationEndpointTest extends TestCase {
 

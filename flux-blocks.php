@@ -62,7 +62,7 @@ add_action( 'init', array( \FluxBlocks\Plugin::class, 'boot' ) );
 register_activation_hook(
 	__FILE__,
 	function () {
-		( new \FluxBlocks\PaginationEndpoint() )->add_endpoint();
+		( new \FluxBlocks\Blocks\QueryGrid\Routing\PaginationEndpoint() )->add_endpoint();
 		flush_rewrite_rules();
 	}
 );

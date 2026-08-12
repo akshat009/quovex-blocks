@@ -13,14 +13,15 @@
  * @package FluxBlocks
  */
 
-namespace FluxBlocks\Rest;
+namespace FluxBlocks\Blocks\QueryGrid\Rest;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use FluxBlocks\Blocks\QueryGrid\Renderer;
-use FluxBlocks\Query\QueryArgsBuilder;
+use FluxBlocks\Blocks\QueryGrid\Render\Renderer;
+use FluxBlocks\QueryEngine\QueryArgsBuilder;
+use FluxBlocks\Logger\LoggerInterface;
 
 /**
  * REST route Query Grid's frontend calls for paginated/filtered fetches.
@@ -35,13 +36,18 @@ class QueryController {
 	/** @var QueryArgsBuilder */
 	private $args_builder;
 
+	/** @var LoggerInterface|null */
+	private $logger;
+
 	/**
-	 * @param Renderer         $renderer     Query Grid renderer -- reused for query() + render_items().
-	 * @param QueryArgsBuilder $args_builder Used only for its is_public_post_type() permission check.
+	 * @param Renderer             $renderer     Query Grid renderer -- reused for query() + render_items().
+	 * @param QueryArgsBuilder     $args_builder Used only for its is_public_post_type() permission check.
+	 * @param LoggerInterface|null $logger       Optional logger instance.
 	 */
-	public function __construct( Renderer $renderer, QueryArgsBuilder $args_builder ) {
+	public function __construct( Renderer $renderer, QueryArgsBuilder $args_builder, ?LoggerInterface $logger = null ) {
 		$this->renderer     = $renderer;
 		$this->args_builder = $args_builder;
+		$this->logger       = $logger;
 	}
 
 	/**
@@ -152,6 +158,10 @@ class QueryController {
 		);
 
 		$page = max( 1, absint( $request->get_param( 'page' ) ) );
+
+		if ( $this->logger ) {
+			$this->logger->log( 'REST query endpoint request: postType=' . $attributes['postType'] . ', page=' . $page . ', search=' . $attributes['search'] );
+		}
 		// The real page URL the visitor is looking at, sent by view.js
 		// (window.location.href) -- see render_pagination()'s docblock for
 		// why this can't just fall back to the current REQUEST_URI here

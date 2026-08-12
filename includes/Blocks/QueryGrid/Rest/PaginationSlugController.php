@@ -22,13 +22,14 @@
  * @package FluxBlocks
  */
 
-namespace FluxBlocks\Rest;
+namespace FluxBlocks\Blocks\QueryGrid\Rest;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use FluxBlocks\PaginationEndpoint;
+use FluxBlocks\Blocks\QueryGrid\Routing\PaginationEndpoint;
+use FluxBlocks\Logger\LoggerInterface;
 
 /**
  * REST route the Query Grid editor reads/writes the pagination URL slug through.
@@ -36,6 +37,16 @@ use FluxBlocks\PaginationEndpoint;
 class PaginationSlugController {
 
 	const NAMESPACE_ = 'flux-blocks/v1';
+
+	/** @var LoggerInterface|null */
+	private $logger;
+
+	/**
+	 * @param LoggerInterface|null $logger Optional logger instance.
+	 */
+	public function __construct( ?LoggerInterface $logger = null ) {
+		$this->logger = $logger;
+	}
 
 	/**
 	 * Register the WordPress hook.
@@ -102,6 +113,9 @@ class PaginationSlugController {
 		// onto) when the value actually CHANGES -- saving the same slug
 		// twice in a row correctly does not re-flush.
 		update_option( PaginationEndpoint::OPTION, $slug );
+		if ( $this->logger ) {
+			$this->logger->log( 'Pagination URL segment slug updated to: ' . $slug );
+		}
 		return new \WP_REST_Response( array( 'slug' => $slug ) );
 	}
 }
