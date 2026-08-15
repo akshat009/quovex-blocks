@@ -1,14 +1,8 @@
 <?php
 /**
  * Contract for a read-through cache keyed by post type + query signature.
- *
- * Why: QueryGrid\Render\Renderer and ContentShowcase\Render\Renderer both
- * depended on the CONCRETE QueryCache class directly -- neither actually
- * needs to know it's transient-backed specifically, only that it can
- * remember/forget query results. Depending on this interface instead
- * means a future alternate cache implementation (e.g. a Redis-specific
- * driver, or a no-op cache for tests) could be swapped in without
- * touching either Renderer.
+ * Lets both Renderers depend on this abstraction instead of the concrete
+ * QueryCache class.
  *
  * @package FluxBlocks
  */

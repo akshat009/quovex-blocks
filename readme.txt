@@ -8,7 +8,7 @@ Stable tag:         0.1.0
 License:            GPL-2.0-or-later
 License URI:        https://www.gnu.org/licenses/gpl-2.0.html
 
-A filterable Query Grid, a Content Showcase, and a Notification Banner block, built with the native block editor.
+Three native Gutenberg blocks for showcasing content: a filterable Query Grid, a magazine-style Content Showcase, and a dismissible Notification Banner.
 
 == Description ==
 
@@ -16,11 +16,12 @@ Flux Blocks adds three focused, modern Gutenberg blocks to the native block edit
 
 = Why this plugin? =
 
-* **No separate builder layer:** everything is a native block, edited with the block editor you already use -- no new page-building interface to learn.
-* **Works with any post type:** pick Posts, Pages, or any custom post type registered on your site, right from the block's own settings.
-* **Real interactivity, no jQuery:** search, filtering, pagination, carousels, and image hotspots are all built on WordPress's own Interactivity API -- lightweight, no extra JS framework loaded.
+* **No separate builder layer:** everything is a native block, edited with the block editor you already use -- no new page-building interface to learn, no plugin-specific UI to fight.
+* **Works with any post type:** pick Posts, Pages, or any custom post type registered on your site, right from the block's own settings -- not hardcoded to Posts.
+* **Real interactivity, no jQuery:** search, filtering, pagination, carousels, and image hotspots are all built on WordPress's own Interactivity API -- lightweight, no extra JS framework loaded on your frontend.
 * **SEO-friendly pagination:** Query Grid's numbered pagination uses real, crawlable links with a configurable URL segment (e.g. `/your-site/flux-page/2/`) -- not JavaScript-only buttons search engines can't follow.
-* **Cache-aware by design:** every query is cached and automatically invalidated the moment a post is created, edited, or deleted -- fast without ever showing stale content.
+* **Cache-aware by design:** every query is cached and automatically invalidated the moment a post, category, or tag changes -- fast without ever showing stale content.
+* **Clean uninstall:** deactivating leaves your data untouched; deleting the plugin removes every option and cached value it created. Nothing lingers in your database.
 
 == Blocks ==
 
@@ -86,6 +87,14 @@ Up to three -- it's designed as a compact, curated showcase rather than a full l
 = What are Content Showcase's image hotspots? =
 
 Small clickable pins you position anywhere on a post's image, each opening a popover with its own title, description, and an optional link -- useful for calling out a detail in the photo without cluttering the card itself.
+
+= Will this slow down my site? =
+
+No. Query results are cached automatically (and cleared the moment relevant content changes), and the frontend uses the lightweight Interactivity API instead of loading jQuery or another JS framework. Nothing is loaded on pages that don't use these blocks.
+
+= What happens to my data if I delete the plugin? =
+
+Everything Flux Blocks created -- cached query results and the pagination URL setting -- is removed on deletion. Deactivating the plugin, on the other hand, leaves everything untouched in case you reactivate later.
 
 = Is there a Pro version? =
 

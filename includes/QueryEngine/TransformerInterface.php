@@ -1,10 +1,8 @@
 <?php
 /**
- * Contract for turning WP_Post objects into template-ready arrays.
- *
- * Why: same reasoning as ArgsBuilderInterface -- both Renderers only ever
- * call transform()/transform_many() on whatever's injected, never
- * anything PostDataTransformer-specific.
+ * Contract for turning WP_Post objects into template-ready arrays. Lets
+ * both Renderers depend on this abstraction instead of the concrete
+ * PostDataTransformer class.
  *
  * @package FluxBlocks
  */

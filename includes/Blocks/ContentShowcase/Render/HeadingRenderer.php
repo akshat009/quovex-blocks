@@ -19,14 +19,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 class HeadingRenderer {
 
 	/**
-	 * Renders section heading with title/accent color + title font support.
-	 * The accent span deliberately only takes a color, not its own font --
-	 * it is an inline highlight of the same heading text, not a separate
-	 * element, so it always inherits the title's font-family/font-weight.
+	 * Renders the section heading, wrapping $accent (if present) in its own
+	 * span -- the accent span only takes a color, inheriting the title's font.
 	 *
 	 * @param string       $heading Full heading text.
 	 * @param string       $accent  Substring of $heading to wrap in an accent span.
-	 * @param HeadingStyle $style    Title/accent color + title font.
+	 * @param HeadingStyle $style   Title/accent color + title font.
 	 * @return string Escaped HTML.
 	 */
 	public function render_heading( string $heading, string $accent, HeadingStyle $style ): string {
@@ -57,10 +55,9 @@ class HeadingRenderer {
 	}
 
 	/**
-	 * Builds an escaped ` style="..."` attribute (with leading space) from a
-	 * property => value map, skipping any empty values. Returns '' if every
-	 * value is empty, so callers can echo it directly onto a tag with no
-	 * extra empty `style=""` cruft.
+	 * Builds an escaped ` style="..."` attribute (leading space included)
+	 * from a property => value map, skipping empty values. Returns '' if
+	 * all values are empty.
 	 *
 	 * @param array<string,string> $properties CSS property => value map.
 	 * @return string

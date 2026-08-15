@@ -1,16 +1,7 @@
 /**
- * Editor-side hook: lists every public post type for the CPT picker.
- *
- * Why: the PRD requires letting the editor choose ANY public post type at
- * edit time, not a hardcoded list — this queries the `core` data store
- * (the same source the block editor itself uses) instead of baking in
- * ['post', 'page', ...].
- * Plain-JS equivalent: this replaces a manual
- * `fetch('/wp-json/wp/v2/types').then(r => r.json())` + `useState` +
- * `useEffect` — `useSelect` just re-runs the selector and re-renders
- * whenever the underlying `core` store data changes, no manual wiring.
- * Impact of changing: both Query Grid's and Content Showcase's CPT
- * picker import this — a bug here affects both blocks' post type dropdown.
+ * Editor-side hook: lists every public post type for the CPT picker, via
+ * the `core` data store rather than a hardcoded list. Used by both blocks'
+ * post type dropdown.
  */
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';

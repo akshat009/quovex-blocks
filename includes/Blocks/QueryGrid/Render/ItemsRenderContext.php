@@ -1,12 +1,7 @@
 <?php
 /**
- * Groups the 8 loose values render_items_and_nav() previously took as
- * separate positional parameters into one named object ("Introduce
- * Parameter Object" refactor) -- they all travel together as one
- * meaningful concept ("everything needed to render this page's items +
- * nav"), so a caller passing them individually was easy to get wrong
- * (e.g. swap two same-typed args) with no error until the wrong thing
- * rendered.
+ * Parameter object for ItemsRenderer::render_items_and_nav() -- groups
+ * everything needed to render one page's items + nav.
  *
  * @package FluxBlocks
  */

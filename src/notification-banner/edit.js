@@ -41,12 +41,8 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		alignment = 'left',
 	} = attributes;
 
-	// A stable, unique bannerId, generated once and persisted into the
-	// attribute -- same pattern query-grid/edit.js uses for its queryId.
-	// Without this, "Remember Dismissal" has nothing to key the
-	// localStorage entry on (bannerId defaults to '', and view.js's
-	// `remember && bannerId` check is always false), so it silently never
-	// remembers anything.
+	// Stable bannerId, persisted once (same pattern as query-grid's
+	// queryId) -- "Remember Dismissal" needs this to key localStorage on.
 	useEffect( () => {
 		if ( ! bannerId ) {
 			setAttributes( {
@@ -57,14 +53,10 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 
 	const { libraries, emojiList, dashiconList, svgList } = useIconLibraries();
 
-	// Theme-provided font choices (theme.json's settings.typography.fontFamilies)
-	// -- never a hardcoded Google Fonts list: those would need to be
-	// enqueued/loaded ourselves to actually work, whereas whatever the theme
-	// declares here is guaranteed already loaded by the theme itself.
+	// Theme-provided fonts (theme.json), not a hardcoded list -- guaranteed
+	// already loaded by the theme itself.
 	const [ rawThemeFontFamilies ] = useSettings( 'typography.fontFamilies' );
-	// Some themes return this as an array; others (e.g. no theme.json entry)
-	// return `false`/`undefined`/a non-array shape -- guard so `.map()` below
-	// never blows up regardless of what the active theme provides.
+	// Guards against non-array shapes some themes/no-theme.json return.
 	const themeFontFamilies = Array.isArray( rawThemeFontFamilies )
 		? rawThemeFontFamilies
 		: [];

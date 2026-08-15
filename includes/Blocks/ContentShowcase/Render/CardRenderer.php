@@ -1,9 +1,9 @@
 <?php
 /**
- * Renders Content Showcase's per-layout card markup -- Magazine/Two-Thirds
- * (featured + list), Split (alternating text/image rows), and Overlay
- * (text floating on the image) -- plus the per-post visibility rules
- * (image/date/excerpt) every layout shares.
+ * Renders Content Showcase's per-layout card markup -- Magazine/Two-Thirds,
+ * Split, and Overlay -- plus the per-post visibility rules (image/date/
+ * excerpt) every layout shares. String-return, matching ItemsRenderer's
+ * contract (the equivalent class for Query Grid).
  *
  * @package FluxBlocks
  */
@@ -35,21 +35,24 @@ class CardRenderer {
 	 * @param array[] $items      Transformed post data.
 	 * @param string  $variant    'magazine' or 'two-thirds'.
 	 * @param array   $attributes Block attributes.
+	 * @return string Escaped HTML.
 	 */
-	public function render_featured_plus_list( array $items, string $variant, array $attributes ): void {
+	public function render_featured_plus_list( array $items, string $variant, array $attributes ): string {
 		$featured = array_shift( $items );
+		ob_start();
 		?>
 		<div class="fb-content-showcase__<?php echo esc_attr( $variant ); ?>">
-			<?php $this->render_card( $featured, 'featured', 0, $attributes ); ?>
+			<?php echo $this->render_card( $featured, 'featured', 0, $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_card() escapes per field. ?>
 			<?php if ( $items ) : ?>
 				<div class="fb-content-showcase__<?php echo esc_attr( $variant ); ?>-list">
 					<?php foreach ( $items as $index => $item ) : ?>
-						<?php $this->render_card( $item, 'small', $index + 1, $attributes ); ?>
+						<?php echo $this->render_card( $item, 'small', $index + 1, $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_card() escapes per field. ?>
 					<?php endforeach; ?>
 				</div>
 			<?php endif; ?>
 		</div>
 		<?php
+		return ob_get_clean();
 	}
 
 	/**
@@ -57,8 +60,10 @@ class CardRenderer {
 	 *
 	 * @param array[] $items      Transformed post data.
 	 * @param array   $attributes Block attributes.
+	 * @return string Escaped HTML.
 	 */
-	public function render_split( array $items, array $attributes ): void {
+	public function render_split( array $items, array $attributes ): string {
+		ob_start();
 		?>
 		<div class="fb-content-showcase__split">
 			<?php foreach ( $items as $index => $item ) : ?>
@@ -69,7 +74,7 @@ class CardRenderer {
 							<a class="fb-content-showcase__split-image" href="<?php echo esc_url( $item['permalink'] ); ?>">
 								<img src="<?php echo esc_url( $item['image'] ); ?>" alt="<?php echo esc_attr( $item['imageAlt'] ); ?>" loading="lazy" />
 							</a>
-							<?php $this->hotspots->render_hotspots_for_post( $index, $attributes ); ?>
+							<?php echo $this->hotspots->render_hotspots_for_post( $index, $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_hotspots_for_post() escapes per field. ?>
 						</div>
 					<?php endif; ?>
 					<div class="fb-content-showcase__split-text">
@@ -85,6 +90,7 @@ class CardRenderer {
 			<?php endforeach; ?>
 		</div>
 		<?php
+		return ob_get_clean();
 	}
 
 	/**
@@ -92,8 +98,10 @@ class CardRenderer {
 	 *
 	 * @param array[] $items      Transformed post data.
 	 * @param array   $attributes Block attributes.
+	 * @return string Escaped HTML.
 	 */
-	public function render_overlay( array $items, array $attributes ): void {
+	public function render_overlay( array $items, array $attributes ): string {
+		ob_start();
 		?>
 		<div class="fb-content-showcase__overlay-grid">
 			<?php foreach ( $items as $index => $item ) : ?>
@@ -116,11 +124,12 @@ class CardRenderer {
 							<?php endif; ?>
 						</span>
 					</a>
-					<?php $this->hotspots->render_hotspots_for_post( $index, $attributes ); ?>
+					<?php echo $this->hotspots->render_hotspots_for_post( $index, $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_hotspots_for_post() escapes per field. ?>
 				</div>
 			<?php endforeach; ?>
 		</div>
 		<?php
+		return ob_get_clean();
 	}
 
 	/**
@@ -130,9 +139,11 @@ class CardRenderer {
 	 * @param string $size       'featured' or 'small'.
 	 * @param int    $index      Post index.
 	 * @param array  $attributes Block attributes.
+	 * @return string Escaped HTML.
 	 */
-	private function render_card( array $item, string $size, int $index, array $attributes ): void {
+	private function render_card( array $item, string $size, int $index, array $attributes ): string {
 		$vis = $this->get_post_visibility( $index, $attributes );
+		ob_start();
 		?>
 		<article class="fb-content-showcase__card fb-content-showcase__card--<?php echo esc_attr( $size ); ?>">
 			<?php if ( $vis['show_image'] && $item['image'] ) : ?>
@@ -140,7 +151,7 @@ class CardRenderer {
 					<a class="fb-content-showcase__card-image" href="<?php echo esc_url( $item['permalink'] ); ?>">
 						<img src="<?php echo esc_url( $item['image'] ); ?>" alt="<?php echo esc_attr( $item['imageAlt'] ); ?>" loading="lazy" />
 					</a>
-					<?php $this->hotspots->render_hotspots_for_post( $index, $attributes ); ?>
+					<?php echo $this->hotspots->render_hotspots_for_post( $index, $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_hotspots_for_post() escapes per field. ?>
 				</div>
 			<?php endif; ?>
 			<div class="fb-content-showcase__card-body">
@@ -156,6 +167,7 @@ class CardRenderer {
 			</div>
 		</article>
 		<?php
+		return ob_get_clean();
 	}
 
 	/**

@@ -21,11 +21,14 @@ class HotspotRenderer {
 	 *
 	 * @param int   $post_index Zero-based post index in the layout.
 	 * @param array $attributes Block attributes.
+	 * @return string Escaped HTML, '' if hotspots are off or none target this post.
 	 */
-	public function render_hotspots_for_post( int $post_index, array $attributes ): void {
+	public function render_hotspots_for_post( int $post_index, array $attributes ): string {
 		if ( empty( $attributes['enableHotspots'] ) || empty( $attributes['hotspots'] ) || ! is_array( $attributes['hotspots'] ) ) {
-			return;
+			return '';
 		}
+
+		ob_start();
 
 		$pin_color  = ! empty( $attributes['hotspotPinColor'] ) ? $attributes['hotspotPinColor'] : '#d1372d';
 		$tooltip_bg = ! empty( $attributes['hotspotTooltipBg'] ) ? $attributes['hotspotTooltipBg'] : '#141414';
@@ -91,5 +94,6 @@ class HotspotRenderer {
 			</div>
 			<?php
 		}
+		return ob_get_clean();
 	}
 }

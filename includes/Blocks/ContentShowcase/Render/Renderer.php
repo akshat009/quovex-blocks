@@ -1,18 +1,9 @@
 <?php
 /**
- * Orchestrates the Content Showcase block: runs the query (via the
- * injected collaborators), resolves layout/heading/style attributes, and
- * assembles the final markup by delegating to StyleBuilder (wrapper CSS
- * custom properties), HeadingRenderer (section heading + accent),
- * CardRenderer (Magazine/Two-Thirds/Split/Overlay layouts, which in turn
- * delegates hotspot pins to HotspotRenderer), and ExploreButtonRenderer.
- *
- * Why split this way: same reasoning as QueryGrid\Render\Renderer's
- * docblock -- this class used to own ALL of that rendering logic itself
- * (580+ lines, one class doing querying and several unrelated pieces of
- * HTML templating). Splitting it doesn't change any OUTPUT (see the
- * live-render snapshot diff run before/after this refactor), only which
- * class each piece of logic lives in.
+ * Orchestrates the Content Showcase block: runs the query, resolves
+ * layout/heading/style attributes, and assembles markup by delegating to
+ * StyleBuilder, HeadingRenderer, CardRenderer (which delegates hotspot
+ * pins to HotspotRenderer), and ExploreButtonRenderer.
  *
  * @package FluxBlocks
  */
@@ -59,10 +50,8 @@ class Renderer extends AbstractRenderer {
 
 	/**
 	 * StyleBuilder/HeadingRenderer/CardRenderer/ExploreButtonRenderer are
-	 * composed internally (not constructor-injected) -- they're pure view
-	 * helpers with no external dependencies of their own, so injecting
-	 * them here would just re-introduce a long-parameter-list constructor
-	 * to fix the exact code smell this refactor is removing elsewhere.
+	 * composed internally, not constructor-injected -- they're pure view
+	 * helpers with no external dependencies of their own.
 	 *
 	 * @param ArgsBuilderInterface $args_builder Turns attributes into WP_Query args.
 	 * @param CacheInterface       $cache        Read-through query cache.
@@ -141,15 +130,15 @@ class Renderer extends AbstractRenderer {
 						<p class="fb-content-showcase__empty"><?php esc_html_e( 'No posts found.', 'flux-blocks' ); ?></p>
 					<?php else : ?>
 						<?php if ( 'split' === $layout ) : ?>
-							<?php $this->cards->render_split( $items, $attributes ); ?>
+							<?php echo $this->cards->render_split( $items, $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CardRenderer::render_split() escapes per field. ?>
 						<?php elseif ( 'overlay' === $layout ) : ?>
-							<?php $this->cards->render_overlay( $items, $attributes ); ?>
+							<?php echo $this->cards->render_overlay( $items, $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CardRenderer::render_overlay() escapes per field. ?>
 						<?php elseif ( 'two-thirds' === $layout ) : ?>
-							<?php $this->cards->render_featured_plus_list( $items, 'two-thirds', $attributes ); ?>
+							<?php echo $this->cards->render_featured_plus_list( $items, 'two-thirds', $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CardRenderer::render_featured_plus_list() escapes per field. ?>
 						<?php else : ?>
-							<?php $this->cards->render_featured_plus_list( $items, 'magazine', $attributes ); ?>
+							<?php echo $this->cards->render_featured_plus_list( $items, 'magazine', $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CardRenderer::render_featured_plus_list() escapes per field. ?>
 						<?php endif; ?>
-						<?php $this->explore_button->render( $attributes ); ?>
+						<?php echo $this->explore_button->render( $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- ExploreButtonRenderer::render() escapes per field. ?>
 					<?php endif; ?>
 				</div>
 				<?php
@@ -205,15 +194,9 @@ class Renderer extends AbstractRenderer {
 				for ( $i = 0; $i < 3; $i++ ) {
 					if ( isset( $manual_ids[ $i ] ) && $manual_ids[ $i ] > 0 ) {
 						$manual_post = get_post( $manual_ids[ $i ] );
-						// $post_type cross-check: a manually-picked post ID
-						// can go stale if the block's postType is changed
-						// AFTER picking (edit.js now resets the picks when
-						// that happens, but this is the safety net for any
-						// already-saved content from before that fix, or
-						// attributes edited outside the editor UI). A
-						// stale/mismatched id falls through to the
-						// automatic query below instead of rendering the
-						// wrong post type.
+						// Safety net for a stale manual pick (postType changed
+						// after picking) -- falls through to the automatic
+						// query below instead of rendering the wrong post type.
 						if ( $manual_post instanceof \WP_Post && $post_type === $manual_post->post_type ) {
 							$final_posts[] = $manual_post;
 							continue;

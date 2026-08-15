@@ -6,7 +6,6 @@
 namespace FluxBlocks\Tests\Unit;
 
 use Brain\Monkey\Functions;
-use FluxBlocks\Logger\LoggerInterface;
 use FluxBlocks\Cache\CacheInvalidator;
 use FluxBlocks\Cache\QueryCache;
 use FluxBlocks\Tests\TestCase;
@@ -27,10 +26,9 @@ class CacheInvalidatorTest extends TestCase {
 		Functions\when( 'wp_is_post_autosave' )->justReturn( $is_autosave );
 		Functions\when( 'wp_is_post_revision' )->justReturn( $is_revision );
 
-		$cache  = Mockery::mock( QueryCache::class );
-		$logger = Mockery::mock( LoggerInterface::class )->shouldIgnoreMissing();
+		$cache = Mockery::mock( QueryCache::class );
 
-		return array( new CacheInvalidator( $cache, $logger ), $cache );
+		return array( new CacheInvalidator( $cache ), $cache );
 	}
 
 	public function test_handle_save_clears_the_cache_for_a_normal_post(): void {
@@ -129,5 +127,31 @@ class CacheInvalidatorTest extends TestCase {
 
 		$invalidator->handle_save( 1 ); // post_type 'post'
 		$invalidator->handle_save( 2 ); // post_type 'page'
+	}
+
+	/**
+	 * Regression test for the audit fix: term add/rename/delete used to
+	 * fire no invalidation hooks at all, so FacetRenderer's cached facet
+	 * term lists stayed stale until TTL after e.g. a category rename.
+	 */
+	public function test_handle_term_change_clears_the_cache_for_every_post_type_the_taxonomy_is_registered_against(): void {
+		[ $invalidator, $cache ] = $this->make_invalidator();
+		Functions\when( 'get_taxonomy' )->justReturn(
+			(object) array( 'object_type' => array( 'post', 'page' ) )
+		);
+
+		$cache->shouldReceive( 'forget_for_post_type' )->once()->with( 'post' );
+		$cache->shouldReceive( 'forget_for_post_type' )->once()->with( 'page' );
+
+		$invalidator->handle_term_change( 3, 3, 'category' );
+	}
+
+	public function test_handle_term_change_does_nothing_for_an_unregistered_taxonomy(): void {
+		[ $invalidator, $cache ] = $this->make_invalidator();
+		Functions\when( 'get_taxonomy' )->justReturn( false );
+
+		$cache->shouldNotReceive( 'forget_for_post_type' );
+
+		$invalidator->handle_term_change( 3, 3, 'not-a-real-taxonomy' );
 	}
 }

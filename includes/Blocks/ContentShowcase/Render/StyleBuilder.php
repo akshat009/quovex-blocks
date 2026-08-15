@@ -3,11 +3,6 @@
  * Builds Content Showcase's wrapper-level CSS custom properties from block
  * attributes.
  *
- * Why its own class: this was 11 near-identical `if ( ! empty( $attributes[...] ) )`
- * blocks sitting inline inside Renderer::render() -- pure "resolve some
- * attributes into a CSS string" logic with nothing to do with querying,
- * caching, or HTML templating.
- *
  * @package FluxBlocks
  */
 
@@ -27,9 +22,8 @@ class StyleBuilder {
 	 * @return string CSS custom properties, semicolon-separated, no trailing semicolon (may be '').
 	 */
 	public function build_inline_style( array $attributes ): string {
-		// Font-family values come from the active theme's own theme.json
-		// (see edit.js's useSettings('typography.fontFamilies')) -- never a
-		// hardcoded list this plugin would need to load/enqueue itself.
+		// Font families come from the active theme's theme.json (see
+		// edit.js's useSettings('typography.fontFamilies')).
 		$property_map = array(
 			'headingAccentColor'    => '--fb-accent',
 			'cardTitleColor'        => '--fb-card-title-color',
@@ -46,11 +40,23 @@ class StyleBuilder {
 
 		$inline_styles = array();
 		foreach ( $property_map as $key => $css_var ) {
-			if ( ! empty( $attributes[ $key ] ) ) {
+			// esc_attr() doesn't escape `;` -- see QueryGrid\Render\StyleBuilder::looks_like_css_color().
+			if ( ! empty( $attributes[ $key ] ) && $this->looks_like_css_color( $attributes[ $key ] ) ) {
 				$inline_styles[] = $css_var . ':' . esc_attr( $attributes[ $key ] );
 			}
 		}
 
 		return implode( ';', $inline_styles );
+	}
+
+	/**
+	 * Rejects anything that isn't a plausible CSS color value -- blocks
+	 * `;`, which esc_attr() doesn't escape.
+	 *
+	 * @param string $value Color value from the block's attributes.
+	 * @return bool
+	 */
+	private function looks_like_css_color( string $value ): bool {
+		return (bool) preg_match( '/^[#a-zA-Z0-9(),.%\s-]+$/', $value );
 	}
 }

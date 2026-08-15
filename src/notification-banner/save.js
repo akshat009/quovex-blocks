@@ -2,13 +2,9 @@ import { __ } from '@wordpress/i18n';
 import { useBlockProps, RichText } from '@wordpress/block-editor';
 
 /**
- * Only these URL schemes (plus scheme-less relative/anchor links) are
- * allowed through to the saved `href` -- WordPress's own KSES filtering on
- * post save already strips `javascript:`/similar for anyone without
- * `unfiltered_html`, but that is a server-side safety net for the
- * capability-restricted majority of users, not a reason to skip validating
- * here too (an `unfiltered_html` user, e.g. most single-site admins,
- * doesn't get that net at all).
+ * Allowed URL schemes for the saved `href` -- WordPress's KSES filtering
+ * on save isn't a substitute for this: `unfiltered_html` users (most
+ * single-site admins) don't get that safety net at all.
  */
 const ALLOWED_URL_SCHEMES = /^(https?:|mailto:|tel:|#|\/)/i;
 
@@ -74,9 +70,8 @@ export default function save( { attributes } ) {
 	if ( textColor ) {
 		styleVars[ '--fb-nb-custom-text' ] = textColor;
 	}
-	// Font-family values come from the active theme's own theme.json (see
-	// edit.js's useSettings('typography.fontFamilies')) -- never a hardcoded
-	// list this plugin would need to load/enqueue itself.
+	// Font families come from the active theme's theme.json (see edit.js's
+	// useSettings('typography.fontFamilies')).
 	if ( textFontFamily ) {
 		styleVars[ '--fb-nb-text-font-family' ] = textFontFamily;
 	}

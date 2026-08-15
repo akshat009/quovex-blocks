@@ -1,17 +1,10 @@
 /**
- * Query Grid — frontend + editor shared styles.
- *
- * Why: layout switching (Grid/List/Masonry/Carousel/Spotlight) is a native
- * block Style Variation -- WordPress adds `is-style-<name>` to the wrapper
- * itself (see block.json's `styles` + Renderer::layout_from_class_name()),
- * so `.fb-query-grid--<layout>` below is driven by that class, not a custom
- * attribute. Colors are CSS custom properties set inline by PHP
- * (Renderer::build_inline_style()) from the block's `colors` attribute,
- * each with a fallback here via var(--x, #default) so unset colors still
- * look intentional.
- * Impact of changing: custom property names like --fb-cols-mobile and
- * --fb-title-color are shared with includes/Blocks/QueryGrid/Renderer.php --
- * renaming one without the other silently breaks that property.
+ * Query Grid — frontend + editor shared styles. Layout switching (Grid/
+ * List/Masonry/Carousel) is a native Style Variation -- WordPress adds
+ * `is-style-<name>` to the wrapper (see block.json's `styles` +
+ * Renderer::layout_from_class_name()). Colors are CSS custom properties
+ * set inline by StyleBuilder::build_inline_style(), each with a var(--x,
+ * #default) fallback here; property names must stay in sync with that file.
  */
 
 .fb-query-grid {
@@ -381,7 +374,7 @@
 
 	/* Now real <a href> elements (page numbers/Prev/Next) or <span> (the
 	   current page, and disabled Prev/Next) instead of <button> -- see
-	   Renderer::render_pagination()'s docblock for why (SEO/crawlability).
+	   ItemsRenderer::render_pagination()'s docblock for why (SEO/crawlability).
 	   `<a>`/`<span>` are inline by default, so width/height/min-width
 	   below would otherwise be ignored -- inline-flex both makes those
 	   apply AND centers the page number text without a separate rule. */

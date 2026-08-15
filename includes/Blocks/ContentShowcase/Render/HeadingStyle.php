@@ -1,11 +1,7 @@
 <?php
 /**
- * Groups the 4 loose color/font values render_heading() previously took
- * as separate positional parameters into one named object ("Introduce
- * Parameter Object" refactor) -- they all describe one thing (how the
- * heading's title text looks), so passing them as 4 same-typed strings in
- * a row was easy to get wrong at the call site with no error until the
- * wrong style rendered.
+ * Parameter object for HeadingRenderer::render_heading() -- groups the
+ * title's color/font values.
  *
  * @package FluxBlocks
  */

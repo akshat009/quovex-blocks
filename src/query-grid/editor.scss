@@ -1,10 +1,7 @@
 /**
- * Query Grid -- editor-only styles.
- *
- * Why: the canvas itself is a ServerSideRender preview of render.php's real
- * output (see edit.js), so it already picks up style.scss's frontend
- * classes -- only the Inspector's layout-picker buttons need editor-only
- * styling here.
+ * Query Grid -- editor-only styles. The canvas itself is a ServerSideRender
+ * preview (see edit.js), so it already picks up style.scss's frontend
+ * classes; only the Inspector's layout-picker buttons need styling here.
  */
 
 .fb-layout-picker {

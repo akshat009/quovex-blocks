@@ -1,14 +1,8 @@
 <?php
 /**
- * Hooks post write events and clears the query cache for the affected
- * post type.
- *
- * Why: cached query results (QueryCache) go stale the moment a post of
- * that type is created, edited, deleted, or changes status — this is what
- * keeps the cache correct instead of just fast.
- * Impact of changing: removing/narrowing these hooks risks blocks showing
- * stale content after edits; widening them (e.g. to every post type on
- * every save) makes the cache effectively useless.
+ * Clears the query cache when a post is saved/deleted/status-changed, or
+ * a term is added/renamed/deleted (FacetRenderer caches term lists through
+ * the same QueryCache, so term changes need invalidating too).
  *
  * @package FluxBlocks
  */
@@ -19,8 +13,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use FluxBlocks\Logger\LoggerInterface;
-
 /**
  * Clears cached query results when a post changes.
  */
@@ -29,29 +21,19 @@ class CacheInvalidator {
 	/** @var QueryCache */
 	private $cache;
 
-	/** @var LoggerInterface */
-	private $logger;
-
 	/**
-	 * Post types already cleared during THIS request -- both `save_post`
-	 * AND `transition_post_status` legitimately fire for one status-
-	 * changing save (see forget()'s docblock for why we keep both hooks
-	 * rather than dropping one). This is a plain instance property, not
-	 * static -- CacheInvalidator itself is only ever constructed once per
-	 * request (Plugin::boot() runs once, on 'init'), so it naturally
-	 * starts empty every request without needing to reset it manually.
+	 * Post types already cleared during this request -- see forget()'s
+	 * docblock for why de-duping matters.
 	 *
 	 * @var array<string, true>
 	 */
 	private $cleared_this_request = array();
 
 	/**
-	 * @param QueryCache      $cache  Cache instance to invalidate against.
-	 * @param LoggerInterface $logger Where invalidation events get logged (see Services::logger()).
+	 * @param QueryCache $cache Cache instance to invalidate against.
 	 */
-	public function __construct( QueryCache $cache, LoggerInterface $logger ) {
-		$this->cache  = $cache;
-		$this->logger = $logger;
+	public function __construct( QueryCache $cache ) {
+		$this->cache = $cache;
 	}
 
 	/**
@@ -61,6 +43,9 @@ class CacheInvalidator {
 		add_action( 'save_post', array( $this, 'handle_save' ) );
 		add_action( 'before_delete_post', array( $this, 'handle_delete' ) );
 		add_action( 'transition_post_status', array( $this, 'handle_status_transition' ), 10, 3 );
+		add_action( 'created_term', array( $this, 'handle_term_change' ), 10, 3 );
+		add_action( 'edited_term', array( $this, 'handle_term_change' ), 10, 3 );
+		add_action( 'delete_term', array( $this, 'handle_term_change' ), 10, 3 );
 	}
 
 	/**
@@ -72,14 +57,13 @@ class CacheInvalidator {
 		}
 		$post = get_post( $post_id );
 		if ( $post ) {
-			$this->forget( $post->post_type, 'save_post' );
+			$this->forget( $post->post_type );
 		}
 	}
 
 	/**
-	 * Handles the `before_delete_post` hook, which fires while the post row
-	 * still exists -- the `deleted_post` hook fires after, by which point
-	 * get_post() here would already return null.
+	 * Hooked to `before_delete_post` (not `deleted_post`) -- the post row
+	 * still exists here, so get_post() can resolve its post_type.
 	 *
 	 * @param int $post_id Post ID.
 	 */
@@ -89,7 +73,7 @@ class CacheInvalidator {
 		}
 		$post = get_post( $post_id );
 		if ( $post ) {
-			$this->forget( $post->post_type, 'before_delete_post' );
+			$this->forget( $post->post_type );
 		}
 	}
 
@@ -100,18 +84,31 @@ class CacheInvalidator {
 	 */
 	public function handle_status_transition( string $new_status, string $old_status, \WP_Post $post ): void {
 		if ( $new_status !== $old_status && ! $this->should_skip( $post->ID ) ) {
-			$this->forget( $post->post_type, 'transition_post_status' );
+			$this->forget( $post->post_type );
 		}
 	}
 
 	/**
-	 * Autosaves and revisions fire the same hooks as a real save (with
-	 * post_type 'revision', which Query Grid never queries) -- an editor
-	 * drafting a new post autosaves every ~10-60s, and every normal save
-	 * creates a revision row, so without this guard a single "click
-	 * Publish" clears the cache for a post type TWICE more than needed via
-	 * a completely wasted 'revision' post-type invalidation. See audit
-	 * notes (session log) for the measured hook-fire counts.
+	 * Clears every post type the changed taxonomy is registered against.
+	 *
+	 * @param int    $term_id  Unused -- the whole taxonomy is cleared, not just this term.
+	 * @param int    $tt_id    Unused, same reason.
+	 * @param string $taxonomy Taxonomy slug.
+	 */
+	public function handle_term_change( int $term_id, int $tt_id, string $taxonomy ): void {
+		$taxonomy_object = get_taxonomy( $taxonomy );
+		if ( ! $taxonomy_object ) {
+			return;
+		}
+		foreach ( (array) $taxonomy_object->object_type as $post_type ) {
+			$this->forget( $post_type );
+		}
+	}
+
+	/**
+	 * Skips autosaves and revisions -- both fire the same save/delete
+	 * hooks as a real save but would otherwise waste an invalidation on
+	 * post_type 'revision', which nothing queries.
 	 *
 	 * @param int $post_id Post ID.
 	 */
@@ -120,34 +117,20 @@ class CacheInvalidator {
 	}
 
 	/**
-	 * Clears a post type's cache and logs why -- shared by all three
-	 * handlers above so the log line only needs writing once.
-	 *
-	 * Why de-duped per request: `save_post` and `transition_post_status`
-	 * both legitimately fire for one ordinary status-changing save (e.g.
-	 * clicking Publish) -- clearing the SAME post type's cache twice in
-	 * one request is pure waste, the second clear finds nothing new.
-	 * `transition_post_status` still can't just be dropped to avoid this:
-	 * a scheduled post going live via WP-Cron calls wp_publish_post()
-	 * directly, which fires `transition_post_status` WITHOUT `save_post`
-	 * -- dropping it would leave that case's cache stale until TTL expiry.
+	 * Clears a post type's cache, de-duped per request -- `save_post` and
+	 * `transition_post_status` both fire for one ordinary status change,
+	 * but `transition_post_status` alone also covers WP-Cron publishing a
+	 * scheduled post (which skips `save_post` entirely), so neither hook
+	 * can just be dropped.
 	 *
 	 * @param string $post_type Post type slug.
-	 * @param string $trigger   Which WordPress hook caused this (for the log line).
 	 */
-	private function forget( string $post_type, string $trigger ): void {
+	private function forget( string $post_type ): void {
 		if ( isset( $this->cleared_this_request[ $post_type ] ) ) {
 			return;
 		}
 		$this->cleared_this_request[ $post_type ] = true;
 
 		$this->cache->forget_for_post_type( $post_type );
-		$this->logger->log(
-			'Query cache cleared for post type.',
-			array(
-				'post_type' => $post_type,
-				'trigger'   => $trigger,
-			)
-		);
 	}
 }

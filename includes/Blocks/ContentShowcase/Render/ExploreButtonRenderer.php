@@ -18,10 +18,11 @@ class ExploreButtonRenderer {
 
 	/**
 	 * @param array $attributes Block attributes.
+	 * @return string Escaped HTML, '' if the button is off or has no URL.
 	 */
-	public function render( array $attributes ): void {
+	public function render( array $attributes ): string {
 		if ( empty( $attributes['showExploreButton'] ) || empty( $attributes['exploreButtonUrl'] ) ) {
-			return;
+			return '';
 		}
 		$text        = ! empty( $attributes['exploreButtonText'] ) ? $attributes['exploreButtonText'] : __( 'Explore More', 'flux-blocks' );
 		$text_color  = $attributes['exploreButtonTextColor'] ?? '';
@@ -51,6 +52,7 @@ class ExploreButtonRenderer {
 		}
 
 		$style_attr = ! empty( $styles ) ? ' style="' . esc_attr( implode( ';', $styles ) ) . '"' : '';
+		ob_start();
 		?>
 		<p class="fb-content-showcase__explore">
 			<a class="fb-content-showcase__explore-button" href="<?php echo esc_url( $attributes['exploreButtonUrl'] ); ?>"<?php echo $style_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
@@ -58,5 +60,6 @@ class ExploreButtonRenderer {
 			</a>
 		</p>
 		<?php
+		return ob_get_clean();
 	}
 }

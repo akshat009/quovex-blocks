@@ -147,7 +147,12 @@ class ItemsRenderer {
 	}
 
 	/**
-	 * Renders Prev / page-number / Next controls.
+	 * Renders Prev / page-number / Next controls as real `<a href>` links
+	 * (crawlable, unlike a client-only control) and fully server-rendered
+	 * rather than a client `state` getter -- the Interactivity API
+	 * evaluates `data-wp-bind` server-side too, and a JS-only derived
+	 * getter resolves to `undefined` there, breaking first paint (see
+	 * view.js's file docblock for the incident this avoids).
 	 *
 	 * @param int    $current_page Page currently displayed.
 	 * @param int    $total_pages  Total pages.

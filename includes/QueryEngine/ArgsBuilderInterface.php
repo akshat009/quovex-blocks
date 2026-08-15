@@ -1,13 +1,8 @@
 <?php
 /**
- * Contract for turning block attributes into WP_Query args.
- *
- * Why: both Renderers only ever call build()/is_public_post_type() on
- * whatever they're given -- they never need QueryArgsBuilder's concrete
- * implementation details. Depending on this interface instead of the
- * concrete class is what lets a Renderer's constructor param count stay
- * meaningful ("I need something that builds query args", not "I need
- * THIS specific class").
+ * Contract for turning block attributes into WP_Query args. Lets both
+ * Renderers depend on this abstraction instead of the concrete
+ * QueryArgsBuilder class.
  *
  * @package FluxBlocks
  */

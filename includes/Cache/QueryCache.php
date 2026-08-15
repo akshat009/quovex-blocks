@@ -1,23 +1,10 @@
 <?php
 /**
  * Transient-backed read-through cache for query results, keyed by a
- * signature (post type + normalized args hash).
- *
- * Why: WP_Query + post-data transformation runs on every page load for
- * every Query Grid/Content Showcase instance — caching avoids repeating
- * that work between requests until the underlying content actually changes.
- * Uses WordPress's own Transients API directly (get_transient()/
- * set_transient()/delete_transient()) rather than a custom cache-driver
- * abstraction: the Transients API already transparently uses a persistent
- * object cache (Redis/Memcached) instead of wp_options when one is active
- * (wp_using_ext_object_cache()) -- that decision is made INSIDE
- * WordPress core's own transient functions, so a separate driver class to
- * pick between "Redis" and "database" would just be redundantly
- * re-implementing something the Transients API already does for free. See
- * https://developer.wordpress.org/apis/transients/.
- * Impact of changing: changing the signature format or TTL changes
- * cache-hit behavior for every block instance at once; see CacheInvalidator
- * for how entries get cleared.
+ * signature (post type + normalized args hash). Uses WordPress's
+ * Transients API directly rather than a custom driver -- it already picks
+ * Redis/Memcached over wp_options transparently when available. See
+ * CacheInvalidator for how entries get cleared.
  *
  * @package FluxBlocks
  */
@@ -28,8 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use FluxBlocks\Logger\LoggerInterface;
-
 /**
  * Transients-backed read-through cache for query results.
  */
@@ -38,16 +23,6 @@ class QueryCache implements CacheInterface {
 	const TTL               = HOUR_IN_SECONDS;
 	const REGISTRY_PREFIX   = '_flux_blocks_cache_keys_';
 	const MAX_REGISTRY_SIZE = 200;
-
-	/** @var LoggerInterface|null */
-	private $logger;
-
-	/**
-	 * @param LoggerInterface|null $logger Logger instance.
-	 */
-	public function __construct( ?LoggerInterface $logger = null ) {
-		$this->logger = $logger;
-	}
 
 	/**
 	 * Get a cached value, or compute + cache it via the callback.
@@ -61,21 +36,11 @@ class QueryCache implements CacheInterface {
 		$key    = 'fb_q_' . md5( $signature );
 		$cached = get_transient( $key );
 
-		// Wrapped in array('value' => ...) rather than storing $value
-		// directly -- get_transient() returns bare `false` on BOTH "cache
-		// miss" and "the cached value legitimately IS false", with no way
-		// to tell them apart. Wrapping guarantees a hit is always an array
-		// (even when $value itself is false/null/0/''), so `false !==
-		// $cached` alone can never misreport a real cache hit as a miss.
+		// Wrapped in array('value' => ...) -- get_transient() returns bare
+		// `false` for both "miss" and "cached value is legitimately false",
+		// and wrapping is what tells them apart.
 		if ( is_array( $cached ) && array_key_exists( 'value', $cached ) ) {
-			if ( $this->logger ) {
-				$this->logger->log( 'Cache hit for key: ' . $key . ' (postType: ' . $post_type . ')' );
-			}
 			return $cached['value'];
-		}
-
-		if ( $this->logger ) {
-			$this->logger->log( 'Cache miss for key: ' . $key . ' (postType: ' . $post_type . '). Re-evaluating query.' );
 		}
 
 		$value = $callback();
@@ -86,21 +51,12 @@ class QueryCache implements CacheInterface {
 	}
 
 	/**
-	 * Record a cache key against its post type so CacheInvalidator can find
-	 * it later — a targeted alternative to a `LIKE`-based transient sweep,
-	 * which silently misses sites where transients live in a persistent
-	 * object cache (Redis/Memcached) rather than wp_options.
-	 *
-	 * Capped at MAX_REGISTRY_SIZE, oldest-first -- every unique query
-	 * signature (different filter/search/pagination combo) for a post
-	 * type adds one entry here, and a busy site can accumulate many
-	 * between full forget_for_post_type() wipes. Dropping the oldest
-	 * entries once over the cap is safe: every transient still has its
-	 * own TTL (self::TTL) regardless of whether this registry remembers
-	 * it, so a dropped key just means that one (already old, already
-	 * cooling-off) query shape's transient lingers until its own TTL
-	 * expiry instead of being proactively cleared on the next post
-	 * save/delete -- never a correctness issue, only a bounded delay.
+	 * Records a cache key against its post type so CacheInvalidator can
+	 * find it later -- a targeted alternative to a `LIKE`-based transient
+	 * sweep, which misses sites using a persistent object cache. Capped at
+	 * MAX_REGISTRY_SIZE, oldest-first; a dropped key just means that
+	 * transient lingers until its own TTL instead of being proactively
+	 * cleared -- a bounded delay, not a correctness issue.
 	 *
 	 * @param string $post_type Post type slug.
 	 * @param string $key       Transient key that was just written.
