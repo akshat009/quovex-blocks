@@ -488,13 +488,45 @@
 			   (e.g. a long facet pill label or the items grid inside it)
 			   -- on a full-width block that is exactly what causes the
 			   whole page to gain a horizontal scrollbar on mobile instead
-			   of the column actually shrinking to fit. */
-			grid-template-columns: 16em minmax(0, 1fr);
+			   of the column actually shrinking to fit.
+			   min(16em, 260px), not bare 16em: `em` is relative to the
+			   INHERITED font-size, not a fixed 16px root -- themes with a
+			   larger fluid body font-size (confirmed with Twenty
+			   Twenty-Five) can blow this column out past 340px, squeezing
+			   main into 2-3 unreadably thin card columns. Capping at 260px
+			   keeps the sidebar a sane fixed width regardless of theme
+			   typography, while still shrinking further on any theme
+			   whose 16em is actually smaller than that. */
+			grid-template-columns: min(16em, 260px) minmax(0, 1fr);
 			gap: 2em;
 			align-items: start;
 
 			@media (max-width: 782px) {
 				grid-template-columns: minmax(0, 1fr);
+			}
+		}
+
+		/* The item grid's own --fb-cols-tablet/--fb-cols-desktop counts
+		   (set above, default 2/3) assume a FULL-width block -- once the
+		   sidebar sits side-by-side with main (from 782px, matching the
+		   breakpoint above), main is only a fraction of that width, and
+		   the same column count squeezes into unreadably thin cards.
+		   min() caps the default down by one at each breakpoint while
+		   still respecting a user-configured SMALLER count (it only ever
+		   narrows the value, never widens it). Below 782px this doesn't
+		   apply -- sidebar and main stack into one full-width column
+		   there, so the un-capped default is correct again. */
+		@media (min-width: 782px) {
+
+			.fb-query-grid__items {
+				grid-template-columns: repeat(min(var(--fb-cols-tablet), 2), minmax(0, 1fr));
+			}
+		}
+
+		@media (min-width: 960px) {
+
+			.fb-query-grid__items {
+				grid-template-columns: repeat(min(var(--fb-cols-desktop), 2), minmax(0, 1fr));
 			}
 		}
 
@@ -505,12 +537,13 @@
 		}
 
 		/* Vertical pill stacking only makes sense while the sidebar is the
-		   narrow 16em column above (each pill has the full column width to
-		   itself, wrapping would look cramped) -- once the layout collapses
-		   to one full-width column below 782px (see .fb-query-grid__layout
-		   above), that same full width fits several pills per row easily,
-		   so stacking one-per-line there was just wasting scroll height for
-		   no reason. Revert to the default wrapping row at that breakpoint. */
+		   narrow min(16em, 260px) column above (each pill has the full
+		   column width to itself, wrapping would look cramped) -- once the
+		   layout collapses to one full-width column below 782px (see
+		   .fb-query-grid__layout above), that same full width fits several
+		   pills per row easily, so stacking one-per-line there was just
+		   wasting scroll height for no reason. Revert to the default
+		   wrapping row at that breakpoint. */
 		.fb-query-grid__filters {
 			flex-direction: column;
 			align-items: flex-start;
@@ -542,7 +575,7 @@
 	// the same, only which side each pane renders on changes) via `order`
 	// rather than re-declaring grid-template-columns in reverse.
 	&--sidebar-right .fb-query-grid__layout {
-		grid-template-columns: minmax(0, 1fr) 16em;
+		grid-template-columns: minmax(0, 1fr) min(16em, 260px);
 
 		.fb-query-grid__sidebar {
 			order: 2;

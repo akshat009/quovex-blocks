@@ -104,8 +104,19 @@ Not currently -- every feature described above is included.
 
 1. Query Grid in the Grid layout, with search and category filter pills.
 2. Query Grid in the Carousel style.
-3. Content Showcase in the Magazine layout.
-4. Content Showcase's image hotspot popover.
+3. Query Grid in the Masonry style.
+4. Query Grid in the List style.
+5. Query Grid with the filter sidebar layout.
+6. Query Grid with Load More pagination.
+7. Content Showcase in the Magazine layout.
+8. Content Showcase in the Split layout.
+9. Content Showcase in the Overlay layout.
+10. Content Showcase in the Two-Thirds layout.
+11. Content Showcase's image hotspot popover.
+12. Notification Banner, default style.
+13. Notification Banner with the Warning preset and Glassmorphism style.
+14. Notification Banner with the Success preset and Left Border Accent style.
+15. Query Grid's block editor panel -- layout styles, spacing, and color controls.
 
 == Changelog ==
 

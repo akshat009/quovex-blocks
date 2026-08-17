@@ -31,6 +31,11 @@ SOURCE_FILE = ASSETS_DIR / "design.html"
 TARGETS = [
 	("icon-gif-256", "icon-256x256.gif"),
 	("icon-gif-128", "icon-128x128.gif"),
+	# WP.org's asset docs only list jpg/png for banners, but ps.w.org does
+	# serve/accept animated banner GIFs in practice (confirmed against a
+	# live plugin listing) -- see chat/commit log for the reference.
+	("banner-gif-772", "banner-772x250.gif"),
+	("banner-gif-1544", "banner-1544x500.gif"),
 ]
 
 CYCLE_MS = 2000  # must match the CSS animation-duration on the #icon-gif-* rects

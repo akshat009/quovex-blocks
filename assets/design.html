@@ -67,17 +67,17 @@
 	#icon-256 { width: 256px; height: 256px; }
 	#icon-128 { width: 128px; height: 128px; }
 
-	#banner-772 { width: 772px; height: 250px; }
-	#banner-772 .motif-col { width: 220px; }
-	#banner-772 .text-col { padding: 0 32px 0 8px; }
-	#banner-772 .wordmark { font-size: 40px; }
-	#banner-772 .tagline { font-size: 15px; margin-top: 10px; }
+	#banner-772, #banner-gif-772 { width: 772px; height: 250px; }
+	#banner-772 .motif-col, #banner-gif-772 .motif-col { width: 220px; }
+	#banner-772 .text-col, #banner-gif-772 .text-col { padding: 0 32px 0 8px; }
+	#banner-772 .wordmark, #banner-gif-772 .wordmark { font-size: 40px; }
+	#banner-772 .tagline, #banner-gif-772 .tagline { font-size: 15px; margin-top: 10px; }
 
-	#banner-1544 { width: 1544px; height: 500px; }
-	#banner-1544 .motif-col { width: 440px; }
-	#banner-1544 .text-col { padding: 0 64px 0 16px; }
-	#banner-1544 .wordmark { font-size: 80px; }
-	#banner-1544 .tagline { font-size: 30px; margin-top: 20px; }
+	#banner-1544, #banner-gif-1544 { width: 1544px; height: 500px; }
+	#banner-1544 .motif-col, #banner-gif-1544 .motif-col { width: 440px; }
+	#banner-1544 .text-col, #banner-gif-1544 .text-col { padding: 0 64px 0 16px; }
+	#banner-1544 .wordmark, #banner-gif-1544 .wordmark { font-size: 80px; }
+	#banner-1544 .tagline, #banner-gif-1544 .tagline { font-size: 30px; margin-top: 20px; }
 
 	#github-preview { width: 1280px; height: 640px; background: #0d1117; }
 	#github-preview .motif-col { width: 100%; padding-top: 90px; }
@@ -103,6 +103,21 @@
 	#icon-gif-256 rect:nth-child(1), #icon-gif-128 rect:nth-child(1) { animation-delay: 0s; }
 	#icon-gif-256 rect:nth-child(2), #icon-gif-128 rect:nth-child(2) { animation-delay: 0.15s; }
 	#icon-gif-256 rect:nth-child(3), #icon-gif-128 rect:nth-child(3) { animation-delay: 0.3s; }
+
+	/* -- Animated banners (for the GIF capture) -- same #banner-772/1544
+	 * sizing above, just the motif rects get the same pop-cycle animation
+	 * used for the icon GIFs. WP.org's own asset docs don't document GIF
+	 * banners, but ps.w.org DOES serve/accept them (confirmed against a
+	 * live plugin listing that ships one). */
+	#banner-gif-772, #banner-gif-1544 { background: #ffffff; }
+	#banner-gif-772 rect, #banner-gif-1544 rect {
+		transform-origin: center;
+		transform-box: fill-box;
+		animation: pop-cycle 2s ease-in-out infinite;
+	}
+	#banner-gif-772 rect:nth-child(1), #banner-gif-1544 rect:nth-child(1) { animation-delay: 0s; }
+	#banner-gif-772 rect:nth-child(2), #banner-gif-1544 rect:nth-child(2) { animation-delay: 0.15s; }
+	#banner-gif-772 rect:nth-child(3), #banner-gif-1544 rect:nth-child(3) { animation-delay: 0.3s; }
 	@keyframes pop-cycle {
 		0%   { opacity: 0; transform: scale(0.6); }
 		15%  { opacity: 1; transform: scale(1.08); }
@@ -164,6 +179,35 @@
 </div>
 
 <div class="card banner" id="banner-1544">
+	<div class="motif-col">
+		<svg width="240" height="240" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<rect x="10" y="10" width="80" height="180" rx="20" fill="#2b2b2b"/>
+			<rect x="110" y="10" width="80" height="80" rx="20" fill="#2b2b2b"/>
+			<rect x="110" y="110" width="80" height="80" rx="20" fill="#d1372d"/>
+		</svg>
+	</div>
+	<div class="text-col">
+		<div class="wordmark">Flux <span class="accent">Blocks</span></div>
+		<div class="tagline">Query Grid &middot; Content Showcase &middot; Notification Banner</div>
+	</div>
+</div>
+
+<!-- Animated banner variants, source for banner-*.gif (scripts/capture-gif.py) -->
+<div class="card banner" id="banner-gif-772">
+	<div class="motif-col">
+		<svg width="120" height="120" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<rect x="10" y="10" width="80" height="180" rx="20" fill="#2b2b2b"/>
+			<rect x="110" y="10" width="80" height="80" rx="20" fill="#2b2b2b"/>
+			<rect x="110" y="110" width="80" height="80" rx="20" fill="#d1372d"/>
+		</svg>
+	</div>
+	<div class="text-col">
+		<div class="wordmark">Flux <span class="accent">Blocks</span></div>
+		<div class="tagline">Query Grid &middot; Content Showcase &middot; Notification Banner</div>
+	</div>
+</div>
+
+<div class="card banner" id="banner-gif-1544">
 	<div class="motif-col">
 		<svg width="240" height="240" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<rect x="10" y="10" width="80" height="180" rx="20" fill="#2b2b2b"/>
