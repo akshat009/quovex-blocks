@@ -13,7 +13,7 @@
 /**
  * External dependencies
  */
-import fixture from '../../../tests/fixtures/pagination-paths.json';
+const fixture = require( '../../../tests/fixtures/pagination-paths.json' );
 
 /**
  * Internal dependencies

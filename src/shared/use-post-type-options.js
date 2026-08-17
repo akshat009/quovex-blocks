@@ -12,7 +12,7 @@ import { store as coreStore } from '@wordpress/core-data';
 export default function usePostTypeOptions() {
 	return useSelect( ( select ) => {
 		const { getPostTypes, isResolving } = select( coreStore );
-		const types = getPostTypes( { per_page: -1 } ) || [];
+		const types = getPostTypes() || [];
 
 		const options = types
 			.filter( ( type ) => type.viewable && type.slug !== 'attachment' )
@@ -23,7 +23,7 @@ export default function usePostTypeOptions() {
 
 		return {
 			options,
-			isResolving: isResolving( 'getPostTypes', [ { per_page: -1 } ] ),
+			isResolving: isResolving( 'getPostTypes', [] ),
 		};
 	}, [] );
 }

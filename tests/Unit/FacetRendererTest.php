@@ -29,6 +29,7 @@ class FacetRendererTest extends TestCase {
 
 		Functions\when( 'esc_attr' )->returnArg();
 		Functions\when( 'esc_html' )->returnArg();
+		Functions\when( 'esc_url' )->returnArg();
 		Functions\when( 'esc_attr_e' )->alias(
 			function ( $text ) {
 				echo $text;
@@ -135,22 +136,25 @@ class FacetRendererTest extends TestCase {
 		Functions\when( 'get_object_taxonomies' )->justReturn(
 			array(
 				'category' => (object) array(
-					'name'   => 'category',
-					'public' => true,
+					'name'         => 'category',
+					'public'       => true,
+					'hierarchical' => true,
 				),
 				'post_tag' => (object) array(
-					'name'   => 'post_tag',
-					'public' => true,
+					'name'         => 'post_tag',
+					'public'       => true,
+					'hierarchical' => false,
 				),
 				'internal' => (object) array(
-					'name'   => 'internal',
-					'public' => false,
+					'name'         => 'internal',
+					'public'       => false,
+					'hierarchical' => true,
 				),
 			)
 		);
 
 		$result = $this->renderer->resolve_facet_taxonomies( 'post', array() );
 
-		$this->assertSame( array( 'category', 'post_tag' ), $result, 'Only public taxonomies should be included.' );
+		$this->assertSame( array( 'category' ), $result, 'Only public hierarchical taxonomies should be included by default.' );
 	}
 }

@@ -158,7 +158,7 @@ export default function save( { attributes } ) {
 					) }
 					{ message && (
 						<RichText.Content
-							tagName="div"
+							tagName="p"
 							className="fb-notification-banner__message"
 							value={ message }
 						/>

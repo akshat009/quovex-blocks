@@ -17,12 +17,13 @@ export default function useTaxonomyOptions( postType ) {
 			const taxonomies =
 				select( coreStore ).getTaxonomies( {
 					type: postType,
-					per_page: -1,
 				} ) || [];
 
 			const taxonomyOptions = taxonomies
 				.filter(
-					( taxonomy ) => taxonomy.visibility?.publicly_queryable
+					( taxonomy ) =>
+						taxonomy.visibility?.publicly_queryable ||
+						taxonomy.types?.includes( postType )
 				)
 				.map( ( taxonomy ) => ( {
 					label: taxonomy.name,

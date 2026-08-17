@@ -33,6 +33,14 @@ abstract class TestCase extends PHPUnitTestCase {
 	protected function setUp(): void {
 		parent::setUp();
 		Monkey\setUp();
+
+		Monkey\Functions\stubs(
+			array(
+				'home_url'                         => 'https://example.com',
+				'rest_url'                         => 'https://example.com/wp-json/flux-blocks/v1/query',
+				'wp_interactivity_data_wp_context' => fn( $ctx ) => 'data-wp-context="' . htmlspecialchars( (string) wp_json_encode( $ctx ) ) . '"',
+			)
+		);
 	}
 
 	protected function tearDown(): void {

@@ -11,6 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use FluxBlocks\Utils\StyleSanitizer;
+
 /**
  * Renders clickable hotspot pins + their popovers for one post's image.
  */
@@ -30,9 +32,13 @@ class HotspotRenderer {
 
 		ob_start();
 
-		$pin_color  = ! empty( $attributes['hotspotPinColor'] ) ? $attributes['hotspotPinColor'] : '#d1372d';
-		$tooltip_bg = ! empty( $attributes['hotspotTooltipBg'] ) ? $attributes['hotspotTooltipBg'] : '#141414';
-		$text_color = ! empty( $attributes['hotspotTooltipTextColor'] ) ? $attributes['hotspotTooltipTextColor'] : '#ffffff';
+		$raw_pin_color  = (string) ( $attributes['hotspotPinColor'] ?? '#d1372d' );
+		$raw_tooltip_bg = (string) ( $attributes['hotspotTooltipBg'] ?? '#141414' );
+		$raw_text_color = (string) ( $attributes['hotspotTooltipTextColor'] ?? '#ffffff' );
+
+		$pin_color  = StyleSanitizer::is_valid_css_color( $raw_pin_color ) ? $raw_pin_color : '#d1372d';
+		$tooltip_bg = StyleSanitizer::is_valid_css_color( $raw_tooltip_bg ) ? $raw_tooltip_bg : '#141414';
+		$text_color = StyleSanitizer::is_valid_css_color( $raw_text_color ) ? $raw_text_color : '#ffffff';
 		$pin_size   = ! empty( $attributes['hotspotPinSize'] ) ? (int) $attributes['hotspotPinSize'] : 28;
 
 		foreach ( $attributes['hotspots'] as $hs ) {

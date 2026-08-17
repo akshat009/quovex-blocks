@@ -12,6 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+use FluxBlocks\Utils\StyleSanitizer;
+
 /**
  * Resolves Query Grid's color/typography attributes into CSS custom properties.
  */
@@ -77,15 +79,13 @@ class StyleBuilder {
 		);
 
 		foreach ( self::COLOR_PROPERTY_MAP as $key => $css_var ) {
-			// esc_attr() doesn't escape `;` -- validate the value looks
-			// like a CSS color first to block declaration injection.
-			if ( ! empty( $colors[ $key ] ) && $this->looks_like_css_color( $colors[ $key ] ) ) {
+			if ( ! empty( $colors[ $key ] ) && StyleSanitizer::is_valid_css_color( (string) $colors[ $key ] ) ) {
 				$style .= sprintf( '%s:%s;', $css_var, esc_attr( $colors[ $key ] ) );
 			}
 		}
 
 		foreach ( self::TYPOGRAPHY_PROPERTY_MAP as $key => $css_var ) {
-			if ( ! empty( $typography[ $key ] ) ) {
+			if ( ! empty( $typography[ $key ] ) && StyleSanitizer::is_valid_css_typography( (string) $typography[ $key ] ) ) {
 				$style .= sprintf( '%s:%s;', $css_var, esc_attr( $typography[ $key ] ) );
 			}
 		}

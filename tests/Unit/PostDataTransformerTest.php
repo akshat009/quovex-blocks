@@ -43,7 +43,7 @@ class PostDataTransformerTest extends TestCase {
 		// full get_object_taxonomies() + get_the_terms() loop on every post
 		// to compute a value nothing read.
 		$this->assertSame(
-			array( 'title', 'excerpt', 'permalink', 'image', 'imageAlt', 'author', 'date' ),
+			array( 'title', 'excerpt', 'permalink', 'imageId', 'image', 'imageAlt', 'author', 'date' ),
 			array_keys( $data )
 		);
 	}

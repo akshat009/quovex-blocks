@@ -122,8 +122,15 @@ class ItemsRenderer {
 			<?php endif; ?>
 		>
 			<a href="<?php echo esc_url( $item['permalink'] ); ?>" class="fb-query-grid__item-image">
-				<?php if ( $item['image'] ) : ?>
-					<img src="<?php echo esc_url( $item['image'] ); ?>" alt="<?php echo esc_attr( $item['imageAlt'] ); ?>" loading="lazy" />
+				<?php if ( ! empty( $item['imageId'] ) ) : ?>
+					<?php
+					$img_attr = 0 === $index
+						? array( 'fetchpriority' => 'high' )
+						: array( 'loading' => 'lazy' );
+					echo wp_get_attachment_image( (int) $item['imageId'], 'large', false, $img_attr ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_get_attachment_image escapes internally.
+					?>
+				<?php elseif ( $item['image'] ) : ?>
+					<img src="<?php echo esc_url( $item['image'] ); ?>" alt="<?php echo esc_attr( $item['imageAlt'] ); ?>" <?php echo 0 === $index ? 'fetchpriority="high"' : 'loading="lazy"'; ?> />
 				<?php else : ?>
 					<span class="fb-query-grid__item-image-placeholder" aria-hidden="true"></span>
 				<?php endif; ?>
@@ -251,8 +258,9 @@ class ItemsRenderer {
 			$path = trailingslashit( $path . $slug . '/' . $page );
 		}
 
+		$port   = isset( $parsed['port'] ) ? ':' . $parsed['port'] : '';
 		$origin = ( isset( $parsed['scheme'], $parsed['host'] ) )
-			? $parsed['scheme'] . '://' . $parsed['host']
+			? $parsed['scheme'] . '://' . $parsed['host'] . $port
 			: home_url();
 		$url    = $origin . $path;
 		if ( ! empty( $parsed['query'] ) ) {

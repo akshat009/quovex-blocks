@@ -146,10 +146,19 @@ class CardRenderer {
 		ob_start();
 		?>
 		<article class="fb-content-showcase__card fb-content-showcase__card--<?php echo esc_attr( $size ); ?>">
-			<?php if ( $vis['show_image'] && $item['image'] ) : ?>
+			<?php if ( $vis['show_image'] && ( ! empty( $item['imageId'] ) || $item['image'] ) ) : ?>
 				<div class="fb-content-showcase__image-wrap">
 					<a class="fb-content-showcase__card-image" href="<?php echo esc_url( $item['permalink'] ); ?>">
-						<img src="<?php echo esc_url( $item['image'] ); ?>" alt="<?php echo esc_attr( $item['imageAlt'] ); ?>" loading="lazy" />
+						<?php if ( ! empty( $item['imageId'] ) ) : ?>
+							<?php
+							$img_attr = 0 === $index
+								? array( 'fetchpriority' => 'high' )
+								: array( 'loading' => 'lazy' );
+							echo wp_get_attachment_image( (int) $item['imageId'], 'large', false, $img_attr ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_get_attachment_image escapes internally.
+							?>
+						<?php else : ?>
+							<img src="<?php echo esc_url( $item['image'] ); ?>" alt="<?php echo esc_attr( $item['imageAlt'] ); ?>" <?php echo 0 === $index ? 'fetchpriority="high"' : 'loading="lazy"'; ?> />
+						<?php endif; ?>
 					</a>
 					<?php echo $this->hotspots->render_hotspots_for_post( $index, $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_hotspots_for_post() escapes per field. ?>
 				</div>

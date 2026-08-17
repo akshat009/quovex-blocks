@@ -57,50 +57,54 @@ class QueryController implements UsesQueryGridNamespace {
 				'callback'            => array( $this, 'handle_request' ),
 				'permission_callback' => array( $this, 'check_permission' ),
 				'args'                => array(
-					'postType' => array(
+					'postType'             => array(
 						'type'     => 'string',
 						'required' => true,
 					),
-					'page'     => array(
+					'page'                 => array(
 						'type'    => 'integer',
 						'default' => 1,
 					),
-					'perPage'  => array(
+					'perPage'              => array(
 						'type'    => 'integer',
 						'default' => 9,
 					),
-					'orderby'  => array(
+					'orderby'              => array(
 						'type'    => 'string',
 						'default' => 'date',
 					),
-					'order'    => array(
+					'order'                => array(
 						'type'    => 'string',
 						'default' => 'desc',
 					),
-					'taxonomy' => array(
+					'taxonomy'             => array(
 						'type'     => 'string',
 						'required' => false,
 					),
-					'terms'    => array(
+					'terms'                => array(
 						'type'     => 'array',
 						'required' => false,
 						'items'    => array( 'type' => 'integer' ),
 					),
-					'layout'   => array(
+					'layout'               => array(
 						'type'    => 'string',
 						'default' => 'grid',
 					),
-					'search'   => array(
+					'search'               => array(
 						'type'     => 'string',
 						'required' => false,
 					),
-					'showAll'  => array(
+					'showAll'              => array(
 						'type'    => 'boolean',
 						'default' => false,
 					),
-					'pageUrl'  => array(
+					'pageUrl'              => array(
 						'type'     => 'string',
 						'required' => false,
+					),
+					'carouselItemsPerView' => array(
+						'type'    => 'integer',
+						'default' => 3,
 					),
 				),
 			)
@@ -123,8 +127,9 @@ class QueryController implements UsesQueryGridNamespace {
 	 * @return \WP_REST_Response
 	 */
 	public function handle_request( \WP_REST_Request $request ) {
-		$layout   = sanitize_key( (string) $request->get_param( 'layout' ) );
-		$show_all = (bool) $request->get_param( 'showAll' );
+		$layout                  = sanitize_key( (string) $request->get_param( 'layout' ) );
+		$show_all                = (bool) $request->get_param( 'showAll' );
+		$carousel_items_per_view = max( 1, absint( $request->get_param( 'carouselItemsPerView' ) ? $request->get_param( 'carouselItemsPerView' ) : 3 ) );
 
 		$attributes = array(
 			'postType'       => sanitize_key( (string) $request->get_param( 'postType' ) ),
@@ -141,16 +146,21 @@ class QueryController implements UsesQueryGridNamespace {
 			'showAllPosts'   => $show_all,
 		);
 
-		$page = max( 1, absint( $request->get_param( 'page' ) ) );
+		$requested_page = max( 1, absint( $request->get_param( 'page' ) ) );
 
 		// Real page URL the visitor is looking at (sent by view.js) -- can't
 		// fall back to REQUEST_URI here, that would point at this endpoint.
 		$page_url = esc_url_raw( (string) $request->get_param( 'pageUrl' ) );
-		$result   = $this->renderer->query( $attributes, $page );
+		if ( ! empty( $page_url ) && 0 !== strpos( $page_url, home_url() ) ) {
+			$page_url = home_url();
+		}
+
+		$result = $this->renderer->query( $attributes, $requested_page );
+		$page   = min( $requested_page, $result['total_pages'] );
 
 		return new \WP_REST_Response(
 			array(
-				'html'       => $this->renderer->render_items( $result['items'], $layout ),
+				'html'       => $this->renderer->render_items( $result['items'], $layout, $carousel_items_per_view ),
 				// Show-all mode has no pagination nav (see
 				// ItemsRenderer::render_items_and_nav()) -- empty, not stale.
 				'pagination' => $show_all ? '' : $this->renderer->render_pagination( $page, $result['total_pages'], $page_url ),

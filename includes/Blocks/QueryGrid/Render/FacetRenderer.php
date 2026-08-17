@@ -34,16 +34,17 @@ class FacetRenderer {
 	public function render_search_form(): string {
 		ob_start();
 		?>
-		<form class="fb-query-grid__search" data-wp-on--submit="actions.onSearchSubmit">
+		<form action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get" class="fb-query-grid__search" data-wp-on--submit="actions.onSearchSubmit">
 			<input
 				type="search"
+				name="s"
 				class="fb-query-grid__search-input"
 				placeholder="<?php esc_attr_e( 'Search Here', 'flux-blocks' ); ?>"
 				aria-label="<?php esc_attr_e( 'Search', 'flux-blocks' ); ?>"
 				data-wp-bind--value="context.searchQuery"
 				data-wp-on--input="actions.onSearchInput"
 			/>
-			<button type="submit" class="fb-query-grid__search-btn" aria-label="<?php esc_attr_e( 'Search', 'flux-blocks' ); ?>">&#128269;</button>
+			<button type="submit" class="fb-query-grid__search-btn" aria-label="<?php esc_attr_e( 'Search', 'flux-blocks' ); ?>"><span aria-hidden="true">&#128269;</span></button>
 		</form>
 		<?php
 		return ob_get_clean();
@@ -99,7 +100,7 @@ class FacetRenderer {
 	}
 
 	/**
-	 * Returns terms attached to published posts.
+	 * Returns terms attached to published posts without -1 post scans.
 	 *
 	 * @param string $taxonomy  Taxonomy slug.
 	 * @param string $post_type Post type slug.
@@ -111,24 +112,12 @@ class FacetRenderer {
 		return $this->cache->remember(
 			$post_type,
 			$signature,
-			function () use ( $taxonomy, $post_type ) {
-				$post_ids = get_posts(
-					array(
-						'post_type'      => $post_type,
-						'post_status'    => 'publish',
-						'posts_per_page' => -1,
-						'fields'         => 'ids',
-					)
-				);
-
-				if ( empty( $post_ids ) ) {
-					return array();
-				}
-
+			function () use ( $taxonomy ) {
 				$terms = get_terms(
 					array(
 						'taxonomy'   => $taxonomy,
-						'object_ids' => $post_ids,
+						'hide_empty' => true,
+						'number'     => 100,
 					)
 				);
 
@@ -152,7 +141,7 @@ class FacetRenderer {
 
 		$taxonomies = array();
 		foreach ( get_object_taxonomies( $post_type, 'objects' ) as $taxonomy ) {
-			if ( $taxonomy->public ) {
+			if ( ! empty( $taxonomy->public ) && ! empty( $taxonomy->hierarchical ) ) {
 				$taxonomies[] = $taxonomy->name;
 			}
 		}

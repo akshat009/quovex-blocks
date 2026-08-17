@@ -31,6 +31,7 @@ class PostDataTransformer implements TransformerInterface {
 			'title'     => get_the_title( $post ),
 			'excerpt'   => wp_trim_words( wp_strip_all_tags( get_the_excerpt( $post ) ), 24 ),
 			'permalink' => get_permalink( $post ),
+			'imageId'   => $image_id ? (int) $image_id : 0,
 			'image'     => $image_id ? wp_get_attachment_image_url( $image_id, 'large' ) : null,
 			'imageAlt'  => $image_id ? get_post_meta( $image_id, '_wp_attachment_image_alt', true ) : '',
 			'author'    => get_the_author_meta( 'display_name', $post->post_author ),

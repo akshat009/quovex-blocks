@@ -41,6 +41,7 @@ import { buildPaginatedPath } from './pagination-url';
  * @type {Map<string, {rootEl: HTMLElement, context: Object}>}
  */
 const instancesByQueryId = new Map();
+const activeFetchControllers = new Map();
 
 /**
  * Core fetch + DOM update logic, shared by the directive-driven actions
@@ -53,9 +54,12 @@ const instancesByQueryId = new Map();
  * @param {boolean}     append  true = grow items (load-more); false = replace (pagination/search/filter).
  */
 async function fetchAndApply( rootEl, context, page, append ) {
-	if ( context.isLoading ) {
-		return;
+	if ( activeFetchControllers.has( context.queryId ) ) {
+		activeFetchControllers.get( context.queryId ).abort();
 	}
+	const controller = new AbortController();
+	activeFetchControllers.set( context.queryId, controller );
+
 	context.isLoading = true;
 
 	try {
@@ -63,6 +67,7 @@ async function fetchAndApply( rootEl, context, page, append ) {
 			postType: context.postType,
 			page,
 			layout: context.layout,
+			carouselItemsPerView: context.carouselItemsPerView || 3,
 			// ItemsRenderer::render_pagination() needs the REAL page URL
 			// (not the REST endpoint's own) to build correct `<a href>`s
 			// when pagination gets re-rendered here -- see its docblock.
@@ -84,13 +89,22 @@ async function fetchAndApply( rootEl, context, page, append ) {
 			params.set( 'showAll', '1' );
 		}
 
+		const baseUrl = context.restUrl || '/wp-json/flux-blocks/v1/query';
 		const response = await fetch(
-			`/wp-json/flux-blocks/v1/query?${ params.toString() }`
+			`${ baseUrl }${
+				baseUrl.includes( '?' ) ? '&' : '?'
+			}${ params.toString() }`,
+			{ signal: controller.signal }
 		);
+
+		if ( ! response.ok ) {
+			return;
+		}
+
 		const data = await response.json();
 
 		const itemsEl = rootEl.querySelector( '.fb-query-grid__items' );
-		if ( itemsEl ) {
+		if ( itemsEl && data?.html ) {
 			if ( append ) {
 				itemsEl.insertAdjacentHTML( 'beforeend', data.html );
 			} else {
@@ -107,7 +121,7 @@ async function fetchAndApply( rootEl, context, page, append ) {
 
 		// Load-more never shows numbered pagination, so there is no slot
 		// to refresh in that mode.
-		if ( ! append ) {
+		if ( ! append && data?.pagination !== undefined ) {
 			const paginationEl = rootEl.querySelector(
 				'.fb-query-grid__pagination-slot'
 			);
@@ -117,10 +131,27 @@ async function fetchAndApply( rootEl, context, page, append ) {
 		}
 
 		context.page = page;
-		context.hasMore = data.hasMore;
-		context.totalPages = data.totalPages;
+		context.hasMore = !! data?.hasMore;
+		context.totalPages = data?.totalPages || 1;
+
+		let statusEl = rootEl.querySelector( '.fb-query-grid__status' );
+		if ( ! statusEl ) {
+			statusEl = document.createElement( 'div' );
+			statusEl.className = 'fb-query-grid__status screen-reader-text';
+			statusEl.setAttribute( 'role', 'status' );
+			statusEl.setAttribute( 'aria-live', 'polite' );
+			rootEl.appendChild( statusEl );
+		}
+		statusEl.textContent = `${ data?.totalPages || 1 } page(s) loaded.`;
+	} catch ( err ) {
+		if ( err.name !== 'AbortError' ) {
+			// Ignore aborts, handle other errors gracefully
+		}
 	} finally {
-		context.isLoading = false;
+		if ( activeFetchControllers.get( context.queryId ) === controller ) {
+			activeFetchControllers.delete( context.queryId );
+			context.isLoading = false;
+		}
 	}
 }
 
@@ -396,7 +427,12 @@ function applyCarouselVisibility( rootEl, context ) {
  */
 function scrollFirstItemIntoView( rootEl ) {
 	const firstItem = rootEl?.querySelector( '.fb-query-grid__item' );
-	firstItem?.scrollIntoView( { behavior: 'smooth', block: 'start' } );
+	if ( firstItem ) {
+		firstItem.scrollIntoView( { behavior: 'smooth', block: 'start' } );
+		const focusTarget = firstItem.querySelector( 'a, button' ) || firstItem;
+		focusTarget.setAttribute( 'tabindex', '-1' );
+		focusTarget.focus( { preventScroll: true } );
+	}
 }
 
 /**

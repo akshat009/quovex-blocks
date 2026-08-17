@@ -2,17 +2,17 @@
  * Front-end view script for Notification & Announcement Banner block.
  * Handles client-side dismiss with optional localStorage persistence.
  */
-document.addEventListener( 'DOMContentLoaded', () => {
+function initNotificationBanners() {
 	const banners = document.querySelectorAll(
 		'.fb-notification-banner[data-banner-id]'
 	);
 
 	banners.forEach( ( banner ) => {
-		const bannerId = banner.getAttribute( 'data-banner-id' );
+		const bannerId = banner.getAttribute( 'data-banner-id' )?.trim();
 		const remember =
 			banner.getAttribute( 'data-remember-dismiss' ) === 'true';
 
-		// Check if previously dismissed
+		// Only use localStorage if a non-empty bannerId is assigned
 		if (
 			remember &&
 			bannerId &&
@@ -41,4 +41,10 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			} );
 		}
 	} );
-} );
+}
+
+if ( document.readyState === 'loading' ) {
+	document.addEventListener( 'DOMContentLoaded', initNotificationBanners );
+} else {
+	initNotificationBanners();
+}

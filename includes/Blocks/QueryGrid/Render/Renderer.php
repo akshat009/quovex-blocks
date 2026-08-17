@@ -142,6 +142,7 @@ class Renderer extends AbstractRenderer {
 			'searchQuery'          => '',
 			'activeFacetTaxonomy'  => '',
 			'activeTermIds'        => array(),
+			'restUrl'              => rest_url( 'flux-blocks/v1/query' ),
 		);
 
 		$items_and_nav = $this->items->render_items_and_nav(
@@ -262,12 +263,12 @@ class Renderer extends AbstractRenderer {
 	 * @return array{items:array[],has_more:bool,total_pages:int}
 	 */
 	public function query( array $attributes, int $page ): array {
-		$post_type = $attributes['postType'] ?? 'post';
-		$args      = $this->args_builder->build( $attributes, $page );
-		$signature = $post_type . '|grid|' . wp_json_encode( $args );
+		$args               = $this->args_builder->build( $attributes, $page );
+		$resolved_post_type = is_string( $args['post_type'] ?? null ) ? $args['post_type'] : 'post';
+		$signature          = $resolved_post_type . '|grid|' . wp_json_encode( $args );
 
 		return $this->cache->remember(
-			$post_type,
+			$resolved_post_type,
 			$signature,
 			function () use ( $args ) {
 				$query = new \WP_Query( $args );
