@@ -80,8 +80,10 @@
 
 	// Shared card (Magazine's + Two-Thirds' featured/small cards).
 	&__card {
+		position: relative;
 		display: flex;
 		flex-direction: column;
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
 
 		p {
 			color: var(--fb-card-excerpt-color, inherit);
@@ -124,6 +126,13 @@
 		text-decoration: none;
 		color: var(--fb-card-title-color, inherit);
 		transition: color 0.15s ease;
+
+		&::after {
+			content: "";
+			position: absolute;
+			inset: 0;
+			z-index: 1;
+		}
 
 		&:hover {
 			color: var(--fb-card-title-hover-color, var(--fb-card-title-color, inherit));

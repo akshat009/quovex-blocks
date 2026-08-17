@@ -151,9 +151,16 @@
 	   .fb-query-grid__item rule declared before anything more specific that
 	   also targets it). */
 	&__item {
+		position: relative;
 		border: 1px solid #eee;
 		border-radius: 6px;
 		overflow: hidden;
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+		&:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+		}
 
 		&-image {
 			display: block;
@@ -198,6 +205,13 @@
 				text-decoration: none;
 				color: var(--fb-card-title-color, inherit);
 				transition: color 0.15s ease;
+
+				&::after {
+					content: "";
+					position: absolute;
+					inset: 0;
+					z-index: 1;
+				}
 
 				&:hover {
 					color: var(--fb-card-title-hover-color, var(--fb-card-title-color, inherit));
