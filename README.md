@@ -24,6 +24,7 @@ Three native Gutenberg blocks for showcasing content: a filterable **Query Grid*
 A filterable, paginated grid of posts.
 
 - Four layouts as native Style Variations: Grid, List, Masonry, Carousel.
+- Works with any post type -- Posts, Pages, or any custom post type registered on your site.
 - Optional search bar and category/taxonomy filter pills.
 - Optional sidebar layout for search + filters, either side.
 - Numbered pagination or a "Load more" button.
@@ -34,6 +35,7 @@ A filterable, paginated grid of posts.
 A magazine-style showcase of up to three posts, automatic or hand-picked.
 
 - Four layouts as native Style Variations: Magazine, Split, Overlay, Two-Thirds/One-Third.
+- Works with any post type -- Posts, Pages, or any custom post type registered on your site.
 - Automatic mode (latest posts, optionally filtered) or manual mode (hand-pick each slot).
 - Interactive image hotspots -- clickable pins with their own popover, title, text, and link.
 - Optional "Explore More" CTA button.
@@ -56,13 +58,13 @@ A dismissible announcement bar or alert box.
 
 | List | Sidebar filters | Load more |
 |---|---|---|
-| ![Query Grid -- List style](assets/screenshot-4.png) | ![Query Grid -- Sidebar layout](assets/screenshot-5.png) | ![Query Grid -- Load more pagination](assets/screenshot-6.png) |
+| ![Query Grid -- List style](assets/screenshot-4.png) | ![Query Grid -- Sidebar layout](assets/screenshot-5.png) | ![Query Grid -- Load more button](assets/screenshot-6.png) |
 
 ### Content Showcase
 
-| Magazine | Split | Overlay |
+| Magazine, with Explore More button | Split | Overlay |
 |---|---|---|
-| ![Content Showcase -- Magazine layout](assets/screenshot-7.png) | ![Content Showcase -- Split layout](assets/screenshot-8.png) | ![Content Showcase -- Overlay layout](assets/screenshot-9.png) |
+| ![Content Showcase -- Magazine layout with Explore More button](assets/screenshot-7.png) | ![Content Showcase -- Split layout](assets/screenshot-8.png) | ![Content Showcase -- Overlay layout](assets/screenshot-9.png) |
 
 | Two-Thirds | Image hotspot popover |
 |---|---|
@@ -76,7 +78,9 @@ A dismissible announcement bar or alert box.
 
 ### Block editor
 
-![Query Grid's block editor panel](assets/screenshot-15.png)
+| Query Grid Settings | Content Showcase Settings | Notification Banner Settings |
+|---|---|---|
+| ![Query Grid's block editor Settings panel](assets/screenshot-15.png) | ![Content Showcase's block editor Settings panel](assets/screenshot-16.png) | ![Notification Banner's block editor Settings panel](assets/screenshot-17.png) |
 
 ## Installation
 

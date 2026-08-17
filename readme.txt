@@ -30,6 +30,7 @@ Flux Blocks adds three focused, modern Gutenberg blocks to the native block edit
 A filterable, paginated grid of posts.
 
 * Four layouts as native Style Variations: Grid, List, Masonry, and Carousel.
+* Works with any public post type -- Posts, Pages, or any custom post type registered on your site.
 * Optional search bar and category/taxonomy filter pills (multi-select within a taxonomy).
 * Optional sidebar layout for search + filters, with left/right placement.
 * Numbered pagination or a "Load more" button -- your choice.
@@ -42,6 +43,7 @@ A filterable, paginated grid of posts.
 A magazine-style showcase of up to three posts, automatic or hand-picked.
 
 * Four layouts as native Style Variations: Magazine (one large card + smaller ones beside it), Split (alternating text/image rows), Overlay (text floating on the image), and Two-Thirds/One-Third (a large featured post beside a stacked column, divided by a vertical rule).
+* Works with any public post type -- Posts, Pages, or any custom post type registered on your site.
 * Automatic mode (latest posts, optionally filtered by category/taxonomy) or manual mode (hand-pick a specific post for each slot).
 * Optional section heading with a colored accent word and a subheading.
 * Per-slot control over which post shows its image, date, and excerpt.
@@ -107,8 +109,8 @@ Not currently -- every feature described above is included.
 3. Query Grid in the Masonry style.
 4. Query Grid in the List style.
 5. Query Grid with the filter sidebar layout.
-6. Query Grid with Load More pagination.
-7. Content Showcase in the Magazine layout.
+6. Query Grid with the "Load more" button.
+7. Content Showcase in the Magazine layout, with the "Explore More" button.
 8. Content Showcase in the Split layout.
 9. Content Showcase in the Overlay layout.
 10. Content Showcase in the Two-Thirds layout.
@@ -116,7 +118,9 @@ Not currently -- every feature described above is included.
 12. Notification Banner, default style.
 13. Notification Banner with the Warning preset and Glassmorphism style.
 14. Notification Banner with the Success preset and Left Border Accent style.
-15. Query Grid's block editor panel -- layout styles, spacing, and color controls.
+15. Query Grid's block editor Settings panel -- post type, pagination, and column controls.
+16. Content Showcase's block editor Settings panel -- manual post selection.
+17. Notification Banner's block editor Settings panel -- title, message, and icon picker.
 
 == Changelog ==
 
