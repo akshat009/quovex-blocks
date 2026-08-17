@@ -121,6 +121,9 @@ Not currently -- every feature described above is included.
 15. Query Grid's block editor Settings panel -- post type, pagination, and column controls.
 16. Content Showcase's block editor Settings panel -- manual post selection.
 17. Notification Banner's block editor Settings panel -- title, message, and icon picker.
+18. Query Grid's block editor Styles panel -- the Grid/List/Masonry/Carousel picker.
+19. Content Showcase's block editor Styles panel -- the layout picker.
+20. Notification Banner's Preset Theme & Style Variation picker.
 
 == Changelog ==
 

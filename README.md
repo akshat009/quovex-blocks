@@ -82,6 +82,10 @@ A dismissible announcement bar or alert box.
 |---|---|---|
 | ![Query Grid's block editor Settings panel](assets/screenshot-15.png) | ![Content Showcase's block editor Settings panel](assets/screenshot-16.png) | ![Notification Banner's block editor Settings panel](assets/screenshot-17.png) |
 
+| Query Grid Styles | Content Showcase Styles | Notification Banner presets |
+|---|---|---|
+| ![Query Grid's Styles panel -- layout picker](assets/screenshot-18.png) | ![Content Showcase's Styles panel -- layout picker](assets/screenshot-19.png) | ![Notification Banner's Preset Theme and Style Variation picker](assets/screenshot-20.png) |
+
 ## Installation
 
 1. Upload the plugin to `/wp-content/plugins/flux-blocks`, or install it through the WordPress Plugins screen.
