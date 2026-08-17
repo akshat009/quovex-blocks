@@ -184,7 +184,14 @@ export default function Edit( { attributes, setAttributes } ) {
 				fontWeightOptions={ fontWeightOptions }
 			/>
 
-			<div { ...blockProps }>
+			<div
+				{ ...blockProps }
+				onClickCapture={ ( e ) => {
+					if ( e.target.closest( 'a' ) ) {
+						e.preventDefault();
+					}
+				} }
+			>
 				{ /* ServerSideRender calls the real render.php path (see includes/Blocks/ContentShowcase/Render/Renderer.php) so the editor always matches the frontend. */ }
 				<ServerSideRender
 					block="flux-blocks/content-showcase"

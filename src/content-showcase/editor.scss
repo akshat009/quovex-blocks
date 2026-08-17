@@ -4,6 +4,14 @@
  * Replace them with your own styles or remove the file completely.
  */
 
+.wp-block-flux-blocks-content-showcase {
+
+	a {
+		pointer-events: none;
+		cursor: default;
+	}
+}
+
 .block-editor-block-styles__item-preview {
 	overflow: hidden !important;
 	height: 140px !important;

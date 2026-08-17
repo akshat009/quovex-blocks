@@ -213,7 +213,14 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				/>
 			</InspectorControls>
 
-			<div { ...blockProps }>
+			<div
+				{ ...blockProps }
+				onClickCapture={ ( e ) => {
+					if ( e.target.closest( 'a' ) ) {
+						e.preventDefault();
+					}
+				} }
+			>
 				{ /* ServerSideRender calls the real render.php path so the editor always matches the frontend; interactive behavior (pagination/search/filter/carousel) doesn't run in this preview. */ }
 				<ServerSideRender
 					block="flux-blocks/query-grid"

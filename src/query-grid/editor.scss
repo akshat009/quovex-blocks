@@ -4,6 +4,14 @@
  * classes; only the Inspector's layout-picker buttons need styling here.
  */
 
+.wp-block-flux-blocks-query-grid {
+
+	a {
+		pointer-events: none;
+		cursor: default;
+	}
+}
+
 .fb-layout-picker {
 	display: flex;
 	flex-wrap: wrap;
