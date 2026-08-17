@@ -102,7 +102,7 @@ Not currently -- every feature described above is included.
 
 == Screenshots ==
 
-1. Query Grid in the Grid layout, with search and category filter pills.
+1. Query Grid in the Grid layout, with search, category filter pills, and numbered SEO-friendly pagination.
 2. Query Grid in the Carousel style.
 3. Query Grid in the Masonry style.
 4. Query Grid in the List style.
