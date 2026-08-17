@@ -5,10 +5,11 @@
 <title>Flux Blocks -- brand assets source</title>
 <style>
 	/*
-	 * Source file for the plugin icon, WP.org banners, and GitHub social
-	 * preview -- rendered to exact-pixel PNGs via scripts/capture-assets.py
-	 * (Playwright element screenshots, one per #id below). Edit here, then
-	 * re-run the script; never hand-edit the PNGs.
+	 * Design source for the plugin icon, WP.org banners, and GitHub social
+	 * preview -- each #id below was captured as an exact-pixel PNG/GIF via
+	 * a local Playwright screenshot script (not committed to this repo).
+	 * Kept here as the editable reference; never hand-edit the PNGs/GIFs
+	 * directly, regenerate them from this markup instead.
 	 *
 	 * Motif: three rounded blocks in an asymmetric layout (a stand-in for
 	 * the plugin's own grid/showcase blocks) -- one tall block, two square
@@ -146,7 +147,7 @@
 	</svg>
 </div>
 
-<!-- Animated variants, source for the looping GIFs (scripts/capture-gif.py) -->
+<!-- Animated variants, source for the looping icon GIFs -->
 <div class="card icon" id="icon-gif-256">
 	<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
 		<rect x="10" y="10" width="80" height="180" rx="20" fill="#2b2b2b"/>
@@ -192,7 +193,7 @@
 	</div>
 </div>
 
-<!-- Animated banner variants, source for banner-*.gif (scripts/capture-gif.py) -->
+<!-- Animated banner variants, source for banner-*.gif -->
 <div class="card banner" id="banner-gif-772">
 	<div class="motif-col">
 		<svg width="120" height="120" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
