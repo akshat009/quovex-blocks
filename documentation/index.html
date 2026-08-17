@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Flux Blocks -- Documentation</title>
+<style>
+	:root {
+		--accent: #d1372d;
+		--ink: #1e1e1e;
+		--muted: #6b6b6b;
+		--border: #e5e5e7;
+		--bg-soft: #f7f7f8;
+		--sidebar-w: 260px;
+	}
+	* { box-sizing: border-box; }
+	body {
+		margin: 0;
+		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+		color: var(--ink);
+		line-height: 1.6;
+		background: #fff;
+	}
+	a { color: var(--accent); }
+
+	/* -- Layout ------------------------------------------------------ */
+	.shell { display: flex; min-height: 100vh; }
+	.sidebar {
+		flex: 0 0 var(--sidebar-w);
+		background: var(--bg-soft);
+		border-right: 1px solid var(--border);
+		padding: 28px 20px;
+		position: sticky;
+		top: 0;
+		height: 100vh;
+		overflow-y: auto;
+	}
+	.sidebar .brand {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin-bottom: 24px;
+	}
+	.sidebar .brand svg { flex: 0 0 auto; }
+	.sidebar .brand-text { font-weight: 700; font-size: 17px; }
+	.sidebar .brand-text .accent { color: var(--accent); }
+	.sidebar nav a {
+		display: block;
+		padding: 7px 10px;
+		border-radius: 6px;
+		color: var(--ink);
+		text-decoration: none;
+		font-size: 14px;
+	}
+	.sidebar nav a:hover { background: #ececee; }
+	.sidebar nav .group-label {
+		font-size: 11px;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--muted);
+		font-weight: 700;
+		margin: 18px 10px 6px;
+	}
+	.sidebar nav .group-label:first-child { margin-top: 0; }
+
+	.content { flex: 1 1 auto; padding: 48px 56px 96px; max-width: 880px; }
+
+	/* -- Typography ---------------------------------------------------- */
+	h1 { font-size: 34px; margin: 0 0 6px; }
+	h2 {
+		font-size: 24px;
+		margin: 56px 0 14px;
+		padding-top: 8px;
+		border-top: 1px solid var(--border);
+	}
+	h2:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
+	h3 { font-size: 17px; margin: 28px 0 8px; }
+	p { color: #333; }
+	.lede { font-size: 17px; color: var(--muted); margin-top: 0; }
+	.tagline { color: var(--muted); font-size: 15px; margin: 0 0 32px; }
+
+	code {
+		background: var(--bg-soft);
+		border: 1px solid var(--border);
+		border-radius: 4px;
+		padding: 1px 6px;
+		font-size: 0.9em;
+		font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	}
+
+	/* -- Cards / callouts ------------------------------------------------ */
+	.callout {
+		background: var(--bg-soft);
+		border: 1px solid var(--border);
+		border-left: 3px solid var(--accent);
+		border-radius: 8px;
+		padding: 14px 18px;
+		margin: 18px 0;
+		font-size: 14.5px;
+	}
+	.callout strong { color: var(--accent); }
+
+	.steps { padding-left: 22px; }
+	.steps li { margin-bottom: 8px; }
+
+	.shot {
+		width: 100%;
+		border-radius: 10px;
+		border: 1px solid var(--border);
+		margin: 16px 0 8px;
+		display: block;
+	}
+	.shot-caption {
+		font-size: 13px;
+		color: var(--muted);
+		margin: 0 0 24px;
+	}
+
+	.feature-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 10px 24px;
+		margin: 16px 0 24px;
+		padding: 0;
+		list-style: none;
+	}
+	.feature-grid li {
+		font-size: 14.5px;
+		padding-left: 20px;
+		position: relative;
+	}
+	.feature-grid li::before {
+		content: "";
+		position: absolute;
+		left: 0;
+		top: 8px;
+		width: 7px;
+		height: 7px;
+		border-radius: 50%;
+		background: var(--accent);
+	}
+
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 14px;
+		margin: 16px 0 28px;
+	}
+	th, td {
+		text-align: left;
+		padding: 9px 12px;
+		border-bottom: 1px solid var(--border);
+	}
+	th { color: var(--muted); font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.03em; }
+
+	.faq-item { margin-bottom: 22px; }
+	.faq-item .q { font-weight: 600; margin-bottom: 4px; }
+	.faq-item .a { color: #333; margin: 0; }
+
+	footer {
+		margin-top: 64px;
+		padding-top: 24px;
+		border-top: 1px solid var(--border);
+		font-size: 13px;
+		color: var(--muted);
+	}
+
+	@media (max-width: 860px) {
+		.shell { flex-direction: column; }
+		.sidebar { position: static; height: auto; width: auto; flex: none; border-right: none; border-bottom: 1px solid var(--border); }
+		.content { padding: 32px 24px 64px; }
+		.feature-grid { grid-template-columns: 1fr; }
+	}
+</style>
+</head>
+<body>
+
+<div class="shell">
+	<aside class="sidebar">
+		<div class="brand">
+			<svg width="26" height="26" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<rect x="10" y="10" width="80" height="180" rx="20" fill="#2b2b2b"/>
+				<rect x="110" y="10" width="80" height="80" rx="20" fill="#2b2b2b"/>
+				<rect x="110" y="110" width="80" height="80" rx="20" fill="#d1372d"/>
+			</svg>
+			<span class="brand-text">Flux <span class="accent">Blocks</span></span>
+		</div>
+		<nav>
+			<div class="group-label">Start here</div>
+			<a href="#overview">Overview</a>
+			<a href="#installation">Installation</a>
+			<a href="#getting-started">Getting Started</a>
+
+			<div class="group-label">Blocks</div>
+			<a href="#query-grid">Query Grid</a>
+			<a href="#content-showcase">Content Showcase</a>
+			<a href="#notification-banner">Notification Banner</a>
+
+			<div class="group-label">Reference</div>
+			<a href="#faq">FAQ &amp; Troubleshooting</a>
+			<a href="#changelog">Changelog</a>
+			<a href="#support">Support</a>
+		</nav>
+	</aside>
+
+	<main class="content">
+		<h1 id="overview">Flux Blocks Documentation</h1>
+		<p class="tagline">Version 0.1.0 &middot; Three native Gutenberg blocks: Query Grid, Content Showcase, and Notification Banner.</p>
+
+		<p class="lede">Flux Blocks adds three focused, modern blocks to the WordPress block editor -- a filterable/paginated posts grid, a magazine-style content showcase with interactive image hotspots, and a dismissible notification banner. Everything is a native block: no separate page-builder interface, no plugin-specific settings screen to learn.</p>
+
+		<div class="callout">
+			<strong>No configuration file, no license key needed to use the blocks.</strong> Install, activate, and every block is immediately available from the inserter under the "Flux Blocks" category.
+		</div>
+
+		<h2 id="installation">Installation</h2>
+		<ol class="steps">
+			<li>In your WordPress admin, go to <strong>Plugins &rarr; Add New &rarr; Upload Plugin</strong>.</li>
+			<li>Choose the <code>flux-blocks.zip</code> file included in your download and click <strong>Install Now</strong>.</li>
+			<li>Click <strong>Activate Plugin</strong>.</li>
+		</ol>
+		<p>That's it -- no database setup, no required settings page, no external service to connect. Flux Blocks works on a fresh install with zero configuration.</p>
+
+		<h3>Requirements</h3>
+		<table>
+			<tr><th>WordPress</th><td>6.8 or newer</td></tr>
+			<tr><th>PHP</th><td>7.4 or newer</td></tr>
+			<tr><th>Browser (editor)</th><td>Any modern browser with the block editor enabled</td></tr>
+		</table>
+
+		<h2 id="getting-started">Getting Started</h2>
+		<p>Every Flux Blocks block is added the same way as any core WordPress block:</p>
+		<ol class="steps">
+			<li>Open the block editor on any post or page.</li>
+			<li>Click the <strong>+</strong> inserter, or type <code>/</code> followed by the block name (e.g. <code>/Query Grid</code>).</li>
+			<li>Look under the <strong>Flux Blocks</strong> category, or search by name.</li>
+			<li>Click the block's <strong>Settings</strong> tab (gear icon) in the sidebar for content/behavior options, or the <strong>Styles</strong> tab (circle icon) for the layout picker.</li>
+		</ol>
+
+		<img class="shot" src="../assets/screenshot-15.png" alt="Query Grid Settings panel" />
+		<p class="shot-caption">Every block's Settings tab groups its options into collapsible panels -- click a panel title to expand it.</p>
+
+		<h2 id="query-grid">Query Grid</h2>
+		<p>A filterable, paginated grid of posts -- works with Posts, Pages, or any custom post type registered on your site.</p>
+
+		<img class="shot" src="../assets/screenshot-1.png" alt="Query Grid in the Grid layout with pagination" />
+		<p class="shot-caption">Grid layout with search, category filter pills, and numbered pagination.</p>
+
+		<h3>Layouts</h3>
+		<p>Pick a layout from the block's <strong>Styles</strong> tab -- each is a complete visual treatment, switchable any time without losing your settings.</p>
+		<ul class="feature-grid">
+			<li><strong>Grid</strong> -- an even card grid, responsive column count</li>
+			<li><strong>List</strong> -- a single-column stacked layout</li>
+			<li><strong>Masonry</strong> -- variable-height staggered cards</li>
+			<li><strong>Carousel</strong> -- a swipeable, arrow-navigated slider</li>
+		</ul>
+
+		<img class="shot" src="../assets/screenshot-18.png" alt="Query Grid Styles panel showing the layout picker" />
+		<p class="shot-caption">The Styles tab's layout picker -- Grid, List, Masonry, Carousel.</p>
+
+		<h3>Settings</h3>
+		<table>
+			<tr><th>Post type</th><td>Any public post type registered on your site.</td></tr>
+			<tr><th>Posts per page</th><td>How many posts load per page/screen.</td></tr>
+			<tr><th>Order by</th><td>Newest first, oldest first, or title.</td></tr>
+			<tr><th>Pagination style</th><td>Numbered pages, a "Load more" button, or "show all" (no pagination).</td></tr>
+			<tr><th>Pagination URL segment</th><td>Customize the URL path used for page links, e.g. <code>/your-page/flux-page/2/</code>. Site-wide setting.</td></tr>
+			<tr><th>Search &amp; filters</th><td>Optional search bar and taxonomy filter pills (multi-select within one taxonomy).</td></tr>
+			<tr><th>Sidebar layout</th><td>Move search/filters into a left or right sidebar column.</td></tr>
+			<tr><th>Columns</th><td>Separate column counts for mobile, tablet, and desktop.</td></tr>
+			<tr><th>Colors &amp; fonts</th><td>Full color controls for pills/pagination/meta text; font family + weight pulled from your active theme.</td></tr>
+		</table>
+
+		<div class="callout">
+			<strong>Pagination is real, crawlable HTML</strong> -- not JavaScript-only buttons. Clicking a page number updates the URL and fetches new results without a full page reload, but the link itself is a genuine <code>&lt;a href&gt;</code> a search engine can follow directly.
+		</div>
+
+		<h2 id="content-showcase">Content Showcase</h2>
+		<p>A magazine-style showcase of up to three posts, shown automatically (latest posts) or hand-picked one by one.</p>
+
+		<img class="shot" src="../assets/screenshot-7.png" alt="Content Showcase in the Magazine layout" />
+		<p class="shot-caption">Magazine layout with the optional "Explore More" button.</p>
+
+		<h3>Layouts</h3>
+		<ul class="feature-grid">
+			<li><strong>Magazine</strong> -- one large card + smaller ones beside it</li>
+			<li><strong>Split</strong> -- alternating text/image rows</li>
+			<li><strong>Overlay</strong> -- text floating on the image</li>
+			<li><strong>Two-Thirds</strong> -- a featured post beside a stacked column</li>
+		</ul>
+
+		<h3>Settings</h3>
+		<table>
+			<tr><th>Post type</th><td>Any public post type registered on your site.</td></tr>
+			<tr><th>Mode</th><td>Automatic (latest posts, optionally filtered) or Manual (hand-pick each of the up-to-three slots).</td></tr>
+			<tr><th>Section heading</th><td>Optional heading with a colored accent word and a subheading.</td></tr>
+			<tr><th>Per-slot display</th><td>Control whether each slot shows its image, date, and excerpt.</td></tr>
+			<tr><th>Image hotspots</th><td>Add clickable pins anywhere on a post's image; each opens a small popover with its own title, text, and optional link.</td></tr>
+			<tr><th>Explore button</th><td>Optional CTA button with a custom label, link, and colors.</td></tr>
+		</table>
+
+		<img class="shot" src="../assets/screenshot-11.png" alt="Content Showcase hotspot popover" />
+		<p class="shot-caption">An image hotspot's popover, open on click.</p>
+
+		<h2 id="notification-banner">Notification Banner</h2>
+		<p>A dismissible announcement bar or alert box for promos, notices, and updates.</p>
+
+		<img class="shot" src="../assets/screenshot-14.png" alt="Notification Banner with the Success preset" />
+		<p class="shot-caption">The Success preset with the Left Border Accent style variation.</p>
+
+		<h3>Presets &amp; styles</h3>
+		<p>Combine any of the 4 color presets with any of the 5 visual styles for 20 total looks:</p>
+		<ul class="feature-grid">
+			<li><strong>Presets:</strong> Announcement, Info, Success, Warning</li>
+			<li><strong>Styles:</strong> Gradient Background, Left Accent, Soft Card, Glassmorphism, Outline</li>
+		</ul>
+
+		<img class="shot" src="../assets/screenshot-20.png" alt="Notification Banner Preset Theme and Style Variation picker" />
+		<p class="shot-caption">Preset Theme + Style Variation picker, in the block's Settings tab.</p>
+
+		<h3>Settings</h3>
+		<table>
+			<tr><th>Icon</th><td>Emoji, a built-in dashicon, or a small SVG icon set.</td></tr>
+			<tr><th>Title &amp; message</th><td>Editable text for both.</td></tr>
+			<tr><th>CTA button</th><td>Optional, with its own label, link, and open-in-new-tab option.</td></tr>
+			<tr><th>Dismiss button</th><td>Optional "remember dismissal" -- stored in the visitor's browser so a dismissed banner stays hidden on their next visit.</td></tr>
+			<tr><th>Colors &amp; typography</th><td>Background, text, accent, and button -- font family/weight pulled from your active theme.</td></tr>
+		</table>
+
+		<h2 id="faq">FAQ &amp; Troubleshooting</h2>
+
+		<div class="faq-item">
+			<p class="q">Does this plugin work with custom post types?</p>
+			<p class="a">Yes. Query Grid and Content Showcase both let you choose any public post type registered on your site from the block's own Settings tab -- not just Posts.</p>
+		</div>
+		<div class="faq-item">
+			<p class="q">Does Query Grid's pagination reload the page?</p>
+			<p class="a">No. Clicking a page number fetches and swaps in new results without a full page reload. The address bar still updates to a real, shareable URL, and that URL correctly server-renders the right page if opened directly (e.g. by a search engine crawler or a shared link).</p>
+		</div>
+		<div class="faq-item">
+			<p class="q">Can I change how the pagination URL looks?</p>
+			<p class="a">Yes -- Query Grid's Settings tab has a "Pagination URL Segment" field (shown when Pagination Style is "Page numbers"). It's a site-wide setting: changing it updates every Query Grid block on the site at once.</p>
+		</div>
+		<div class="faq-item">
+			<p class="q">How many posts can Content Showcase display?</p>
+			<p class="a">Up to three -- it's a compact, curated showcase rather than a full listing. Use Query Grid for a larger, paginated set.</p>
+		</div>
+		<div class="faq-item">
+			<p class="q">Will this slow down my site?</p>
+			<p class="a">Query results are cached automatically (and cleared the moment relevant content changes), and the frontend uses the lightweight WordPress Interactivity API instead of jQuery or another JS framework. Nothing is loaded on pages that don't use these blocks.</p>
+		</div>
+		<div class="faq-item">
+			<p class="q">What happens to my data if I delete the plugin?</p>
+			<p class="a">Everything Flux Blocks created -- cached query results and the pagination URL setting -- is removed on deletion. Deactivating the plugin, on the other hand, leaves everything untouched in case you reactivate later.</p>
+		</div>
+		<div class="faq-item">
+			<p class="q">A block isn't showing my styling changes -- what should I check first?</p>
+			<p class="a">Confirm the change was made on the right tab -- content/behavior options live under Settings (gear icon), layout and color/typography controls live under Styles (circle icon). If a change still isn't visible on the frontend, try a hard refresh (some browsers cache stylesheets aggressively).</p>
+		</div>
+
+		<h2 id="changelog">Changelog</h2>
+		<table>
+			<tr><th>Version</th><th>Notes</th></tr>
+			<tr>
+				<td>0.1.0</td>
+				<td>Initial release: Query Grid (Grid/List/Masonry/Carousel layouts, search, taxonomy filters, sidebar layout, numbered/load-more pagination, show-all option, SEO-friendly pagination URLs), Content Showcase (Magazine/Split/Overlay/Two-Thirds layouts, automatic/manual post selection, section heading, image hotspots, Explore More button, color controls), and Notification Banner (4 presets &times; 5 style variations, icon picker, dismiss-and-remember, CTA button).</td>
+			</tr>
+		</table>
+
+		<h2 id="support">Support</h2>
+		<p>Questions, bug reports, or feature requests -- reach out via your CodeCanyon item page's comment section, or the support contact listed on the item page. Please include your WordPress version, PHP version, and the block/setting involved so it can be reproduced quickly.</p>
+
+		<footer>
+			Flux Blocks &middot; built by Akshat &middot; <a href="https://github.com/akshat009" target="_blank" rel="noopener">github.com/akshat009</a>
+		</footer>
+	</main>
+</div>
+
+</body>
+</html>
