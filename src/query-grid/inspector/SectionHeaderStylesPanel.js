@@ -14,10 +14,9 @@ export default function SectionHeaderStylesPanel( {
 	fontFamilyOptions,
 	fontWeightOptions,
 } ) {
-	// No heading is rendered at all when this is off (see
-	// ContentSettingsPanel's "Show Section Heading" toggle) -- showing
-	// color/font controls for text that isn't even on the page would just
-	// be confusing, same as Content Showcase's equivalent panel.
+	// No heading is rendered when this is off (see ContentSettingsPanel's
+	// "Show Section Heading" toggle) -- hide controls for text that isn't
+	// on the page.
 	if ( ! attributes.showHeading ) {
 		return null;
 	}

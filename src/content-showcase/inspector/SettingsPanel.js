@@ -57,11 +57,8 @@ export default function SettingsPanel( {
 							  ]
 					}
 					onChange={ ( value ) =>
-						// Also resets any manually-picked posts back to
-						// "Automatic" -- they belong to the OLD post
-						// type, so keeping their IDs around after
-						// switching would silently show wrong-type
-						// items later (see Renderer.php's matching
+						// Resets manually-picked posts to "Automatic" -- they
+						// belong to the OLD post type (see Renderer.php's
 						// post_type safety check).
 						setAttributes( {
 							postType: value,

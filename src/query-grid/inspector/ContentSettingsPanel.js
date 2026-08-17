@@ -1,9 +1,6 @@
 /**
- * "Section Heading Settings" + "Grid Layout Settings" Inspector panels.
- *
- * Why grouped together: both are content/behavior settings (not colors or
- * typography, which get their own panels) -- this is what used to be the
- * first ~250 lines of edit.js's single InspectorControls block.
+ * "Section Heading Settings" + "Grid Layout Settings" Inspector panels --
+ * content/behavior settings, grouped apart from colors/typography.
  */
 /* eslint-disable @wordpress/no-unsafe-wp-apis -- NumberControl is still
    experimental in @wordpress/components but has no stable alternative for

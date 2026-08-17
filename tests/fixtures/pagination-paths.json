@@ -1,0 +1,68 @@
+{
+	"description": "Shared cases for Query Grid's pagination path-building logic, which exists twice: ItemsRenderer::build_page_url() (PHP, initial render + REST re-render) and buildPaginatedPath()/stripPaginationSuffix() (JS, pagination clicks + browser Back/Forward). Both PaginationUrlSyncTest.php and src/query-grid/test/pagination-url.test.js run every case here against their own implementation -- a case that only one of them gets right means the two have drifted out of sync.",
+	"cases": [
+		{
+			"name": "page 1 on a plain trailing-slash path stays unchanged",
+			"pathname": "/blog/",
+			"slug": "flux-page",
+			"page": 1,
+			"expected": "/blog/"
+		},
+		{
+			"name": "page > 1 appends the slug/page suffix",
+			"pathname": "/blog/",
+			"slug": "flux-page",
+			"page": 3,
+			"expected": "/blog/flux-page/3/"
+		},
+		{
+			"name": "an existing suffix is replaced, not appended to",
+			"pathname": "/blog/flux-page/2/",
+			"slug": "flux-page",
+			"page": 3,
+			"expected": "/blog/flux-page/3/"
+		},
+		{
+			"name": "going back to page 1 strips the suffix entirely",
+			"pathname": "/blog/flux-page/2/",
+			"slug": "flux-page",
+			"page": 1,
+			"expected": "/blog/"
+		},
+		{
+			"name": "works from the site root",
+			"pathname": "/",
+			"slug": "flux-page",
+			"page": 2,
+			"expected": "/flux-page/2/"
+		},
+		{
+			"name": "a non-default slug is honored",
+			"pathname": "/shop/products",
+			"slug": "my-slug",
+			"page": 5,
+			"expected": "/shop/products/my-slug/5/"
+		},
+		{
+			"name": "a missing trailing slash on the suffix is still stripped",
+			"pathname": "/shop/products/my-slug/5",
+			"slug": "my-slug",
+			"page": 1,
+			"expected": "/shop/products/"
+		},
+		{
+			"name": "a missing trailing slash with no suffix still gets one",
+			"pathname": "/blog",
+			"slug": "flux-page",
+			"page": 1,
+			"expected": "/blog/"
+		},
+		{
+			"name": "root path, page 1, is a no-op",
+			"pathname": "/",
+			"slug": "flux-page",
+			"page": 1,
+			"expected": "/"
+		}
+	]
+}

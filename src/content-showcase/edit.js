@@ -1,19 +1,11 @@
 /**
- * Content Showcase editor UI.
+ * Content Showcase editor UI. Two <InspectorControls> groups split into
+ * "Settings" (default) and "Styles" (`group="styles"`) tabs -- native
+ * editor behavior, no custom tab UI needed.
  *
- * Why TWO <InspectorControls> groups: WordPress's block editor supports
- * splitting the Inspector into "Settings" and "Styles" tabs -- the default
- * (no `group` prop) renders into "Settings", `group="styles"` renders into
- * "Styles". This is native editor behavior, no custom tab UI needed.
- *
- * This file is the ORCHESTRATOR only -- it resolves shared/derived state
- * (font option lists, manual-selection query, hotspot add/update/remove
- * handlers, ...) and hands each Inspector panel group to its own component
- * in ./inspector/ (mirrors the same "extract collaborators out of one god
- * file" split already done for the PHP Renderer -- see
- * includes/Blocks/ContentShowcase/Render/Renderer.php's docblock).
- * Splitting it doesn't change any UI -- every panel, label, and control is
- * byte-for-byte the same, just moved into its own file.
+ * Orchestrator only -- resolves shared/derived state and hands each
+ * Inspector panel to its own component in ./inspector/, mirroring the
+ * split already done for the PHP Renderer.
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#inspectorcontrols
@@ -60,14 +52,10 @@ export default function Edit( { attributes, setAttributes } ) {
 	const blockProps = useBlockProps();
 	const { options: postTypeOptions } = usePostTypeOptions();
 
-	// Theme-provided font choices (theme.json's settings.typography.fontFamilies)
-	// -- never a hardcoded Google Fonts list: those would need to be
-	// enqueued/loaded ourselves to actually work, whereas whatever the theme
-	// declares here is guaranteed already loaded by the theme itself.
+	// Theme-provided fonts (theme.json), not a hardcoded list -- guaranteed
+	// already loaded by the theme itself.
 	const [ rawThemeFontFamilies ] = useSettings( 'typography.fontFamilies' );
-	// Some themes return this as an array; others (e.g. no theme.json entry)
-	// return `false`/`undefined`/a non-array shape -- guard so `.map()` below
-	// never blows up regardless of what the active theme provides.
+	// Guards against non-array shapes some themes/no-theme.json return.
 	const themeFontFamilies = Array.isArray( rawThemeFontFamilies )
 		? rawThemeFontFamilies
 		: [];
@@ -87,12 +75,8 @@ export default function Edit( { attributes, setAttributes } ) {
 		{ label: __( 'Extra-Bold (800)', 'flux-blocks' ), value: '800' },
 	];
 
-	// Shared with query-grid/edit.js instead of duplicating the same
-	// taxonomy/terms fetching inline a second time. Also fixes a real
-	// behavior difference from this block's old inline version: that
-	// filtered on `tax.visibility?.show_ui` (has an ADMIN UI); this shared
-	// hook filters on `publicly_queryable` (can actually be QUERIED on the
-	// frontend), which is what a frontend filter control actually needs.
+	// Shared with query-grid/edit.js -- filters on `publicly_queryable`
+	// (frontend-queryable), not `show_ui` (has an admin UI).
 	const { taxonomyOptions } = useTaxonomyOptions( postType );
 
 	const activeTax =
@@ -201,16 +185,7 @@ export default function Edit( { attributes, setAttributes } ) {
 			/>
 
 			<div { ...blockProps }>
-				{ /*
-				 * Why ServerSideRender instead of a plain preview: render.php
-				 * is the only place Content Showcase's markup exists (see
-				 * includes/Blocks/ContentShowcase/Renderer.php) -- SSR calls
-				 * the same PHP render path via the core
-				 * `wp/v2/block-renderer` REST endpoint on every
-				 * attribute change (including a Style Variation switch,
-				 * since that changes `attributes.className`), so the editor
-				 * always shows exactly what the frontend will.
-				 */ }
+				{ /* ServerSideRender calls the real render.php path (see includes/Blocks/ContentShowcase/Render/Renderer.php) so the editor always matches the frontend. */ }
 				<ServerSideRender
 					block="flux-blocks/content-showcase"
 					attributes={ attributes }

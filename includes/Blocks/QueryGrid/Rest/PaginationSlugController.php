@@ -1,29 +1,11 @@
 <?php
 /**
  * REST endpoint backing the "Pagination URL Segment" Inspector control in
- * src/query-grid/edit.js.
- *
- * Why a dedicated route instead of core's `/wp/v2/settings`: that endpoint
- * (and `register_setting()` generally) enforces `manage_options` for
- * BOTH reading and writing every field it exposes, no per-method
- * override. Reading the current slug is harmless (it's just displayed in
- * the Inspector so an Editor knows what it's currently set to), but this
- * setting is SITE-WIDE -- it's the URL segment for every Query Grid
- * instance across the whole site, not something scoped to the one block
- * being edited -- so an Editor able to WRITE it could silently change
- * pagination URLs (and trigger a rewrite-rules flush) for every other
- * Query Grid on the site, including ones on pages they don't otherwise
- * have access to. This route therefore splits the two: GET stays
- * `edit_posts` (matches core's own read-friendliness for low-risk data),
- * POST requires `manage_options` -- the same capability WordPress core's
- * own Permalinks settings screen requires for changing site-wide URL
- * structure.
- * Impact of changing: `update_slug()` is the ONLY place
- * `PaginationEndpoint::OPTION` should ever be written -- writing it any
- * other way skips this route's sanitization AND its automatic
- * `flush_rewrite_rules()` (triggered by PaginationEndpoint::register()'s
- * `update_option_{option}` hook), leaving pagination links pointing at a
- * URL pattern WordPress does not actually have a rewrite rule for yet.
+ * src/query-grid/edit.js. A dedicated route (not core's `/wp/v2/settings`,
+ * which requires `manage_options` for both reading and writing) so GET can
+ * stay `edit_posts` while POST -- which changes a site-wide URL segment
+ * for every Query Grid on the site -- requires `manage_options`, matching
+ * core's own Permalinks screen.
  *
  * @package FluxBlocks
  */
@@ -35,24 +17,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use FluxBlocks\Blocks\QueryGrid\Routing\PaginationEndpoint;
-use FluxBlocks\Logger\LoggerInterface;
 
 /**
  * REST route the Query Grid editor reads/writes the pagination URL slug through.
  */
-class PaginationSlugController {
-
-	const NAMESPACE_ = 'flux-blocks/v1';
-
-	/** @var LoggerInterface|null */
-	private $logger;
-
-	/**
-	 * @param LoggerInterface|null $logger Optional logger instance.
-	 */
-	public function __construct( ?LoggerInterface $logger = null ) {
-		$this->logger = $logger;
-	}
+class PaginationSlugController implements UsesQueryGridNamespace {
 
 	/**
 	 * Register the WordPress hook.
@@ -90,9 +59,8 @@ class PaginationSlugController {
 	}
 
 	/**
-	 * Reading the current slug is low-risk (see this file's docblock) --
-	 * `edit_posts` is the lowest capability that can use the block editor
-	 * at all.
+	 * `edit_posts` -- the lowest capability that can use the block editor;
+	 * reading the slug is low-risk (see this file's docblock).
 	 *
 	 * @return bool
 	 */
@@ -101,9 +69,8 @@ class PaginationSlugController {
 	}
 
 	/**
-	 * Writing changes a SITE-WIDE setting (and triggers a rewrite-rules
-	 * flush) -- `manage_options`, same as core's own Permalinks settings
-	 * screen, not `edit_posts` (see this file's docblock for why).
+	 * `manage_options` -- writing changes a site-wide setting and triggers
+	 * a rewrite-rules flush (see this file's docblock for why).
 	 *
 	 * @return bool
 	 */
@@ -128,13 +95,9 @@ class PaginationSlugController {
 			$slug = 'flux-page';
 		}
 		// update_option() only fires update_option_{option} (which
-		// PaginationEndpoint::register() hooks the rewrite-rules flush
-		// onto) when the value actually CHANGES -- saving the same slug
-		// twice in a row correctly does not re-flush.
+		// PaginationEndpoint::init_hooks() hooks the flush onto) when the
+		// value actually changes -- re-saving the same slug doesn't re-flush.
 		update_option( PaginationEndpoint::OPTION, $slug );
-		if ( $this->logger ) {
-			$this->logger->log( 'Pagination URL segment slug updated to: ' . $slug );
-		}
 		return new \WP_REST_Response( array( 'slug' => $slug ) );
 	}
 }

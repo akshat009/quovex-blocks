@@ -1,20 +1,9 @@
 <?php
 /**
  * Shared "compute once, remember it" helper for classes with only static
- * factory methods.
- *
- * Why a TRAIT and not another abstract class: Services is a `final class`
- * with only `public static` methods -- there's no object to inherit
- * anything through the way QueryGrid\Renderer inherits capture() from
- * AbstractRenderer (see that file). Every one of Services' factory methods
- * was repeating the same "static $instance = null; if ( null === $instance )
- * {...}" boilerplate -- a trait can hand down actual, reusable method CODE
- * (unlike an interface, which could only demand the method exist, never
- * supply this implementation).
- * Impact of changing: every Services factory method depends on once()
- * behaving correctly -- a bug here would make every "singleton" in
- * Services.php stop being one (a new instance on every call instead of one
- * shared instance).
+ * factory methods (e.g. Services, a `final class`, so there's no instance
+ * to inherit through the way Renderers inherit capture() from
+ * AbstractRenderer -- a trait can still hand down real method code here).
  *
  * @package FluxBlocks
  */
@@ -34,20 +23,16 @@ trait MemoizesInstanceTrait {
 	private static $instances = array();
 
 	/**
-	 * Runs $factory the FIRST time a given $key is asked for, then returns
-	 * that same cached value on every later call with the same $key --
-	 * this is what makes Services::query_cache() etc. singletons.
+	 * Runs $factory once per $key, returning the cached value on every
+	 * later call -- what makes Services::query_cache() etc. singletons.
 	 *
-	 * @param string   $key     Unique key for this memoized value (Services passes __METHOD__).
+	 * @param string   $key     Unique key for this memoized value (callers pass __METHOD__).
 	 * @param callable $factory Produces the value on a cache miss.
 	 * @return mixed
 	 */
 	protected static function once( string $key, callable $factory ) {
-		// array_key_exists(), NOT isset() -- isset() returns false for a
-		// stored NULL value, which would make a factory that ever legally
-		// returns null re-run on every single call instead of memoizing
-		// (no current Services.php factory does this, but the trait itself
-		// shouldn't assume that of every future caller).
+		// array_key_exists(), not isset() -- isset() misses a stored NULL
+		// value, which would re-run a factory that legally returns null.
 		if ( ! array_key_exists( $key, self::$instances ) ) {
 			self::$instances[ $key ] = $factory();
 		}
@@ -55,16 +40,11 @@ trait MemoizesInstanceTrait {
 	}
 
 	/**
-	 * Forgets every memoized value (or just one, by key) -- WordPress's
-	 * own per-request PHP process model never needed this in production
-	 * (a new process naturally starts with an empty self::$instances), but
-	 * PHPUnit runs every test in the SAME process: without a way to clear
-	 * memoized state between tests, the first test to call e.g.
-	 * Services::logger() would silently pin its return value for every
-	 * later test too, regardless of what each test itself configures.
-	 * A plain static property, not shared across classes: each class
-	 * `use`-ing this trait gets its OWN copy of self::$instances, so
-	 * Services::reset() only clears Services' own memoized values.
+	 * Forgets every memoized value (or just one, by key) -- needed for
+	 * PHPUnit, which runs every test in the same process, so without this
+	 * the first test to call e.g. Services::query_cache() would pin its
+	 * return value for every later test too. Each class `use`-ing this
+	 * trait gets its own copy of self::$instances.
 	 *
 	 * @param string|null $key Specific memoized key to forget, or null to forget all.
 	 */

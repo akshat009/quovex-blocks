@@ -1,14 +1,10 @@
 <?php
 /**
- * REST endpoint used by Query Grid for paginated/filtered fetches after
- * the initial server render.
- *
- * Why: Query Grid isn't tied to the main WP query (it can appear anywhere,
- * multiple times per page), so it needs its own endpoint rather than core's
- * Query Loop "enhanced pagination" (which only works for the main query).
- * Impact of changing: the response shape (`html`/`pagination`/`hasMore`/
- * `totalPages`) is consumed directly by src/query-grid/view.js — keep them
- * in sync.
+ * REST endpoint Query Grid uses for paginated/filtered fetches after the
+ * initial server render -- needed because Query Grid isn't tied to the
+ * main WP query, unlike core's Query Loop "enhanced pagination". Response
+ * shape (`html`/`pagination`/`hasMore`/`totalPages`) is consumed by
+ * src/query-grid/view.js -- keep them in sync.
  *
  * @package FluxBlocks
  */
@@ -21,14 +17,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use FluxBlocks\Blocks\QueryGrid\Render\Renderer;
 use FluxBlocks\QueryEngine\QueryArgsBuilder;
-use FluxBlocks\Logger\LoggerInterface;
 
 /**
  * REST route Query Grid's frontend calls for paginated/filtered fetches.
  */
-class QueryController {
-
-	const NAMESPACE_ = 'flux-blocks/v1';
+class QueryController implements UsesQueryGridNamespace {
 
 	/** @var Renderer */
 	private $renderer;
@@ -36,18 +29,13 @@ class QueryController {
 	/** @var QueryArgsBuilder */
 	private $args_builder;
 
-	/** @var LoggerInterface|null */
-	private $logger;
-
 	/**
-	 * @param Renderer             $renderer     Query Grid renderer -- reused for query() + render_items().
-	 * @param QueryArgsBuilder     $args_builder Used only for its is_public_post_type() permission check.
-	 * @param LoggerInterface|null $logger       Optional logger instance.
+	 * @param Renderer         $renderer     Query Grid renderer -- reused for query() + render_items().
+	 * @param QueryArgsBuilder $args_builder Used only for its is_public_post_type() permission check.
 	 */
-	public function __construct( Renderer $renderer, QueryArgsBuilder $args_builder, ?LoggerInterface $logger = null ) {
+	public function __construct( Renderer $renderer, QueryArgsBuilder $args_builder ) {
 		$this->renderer     = $renderer;
 		$this->args_builder = $args_builder;
-		$this->logger       = $logger;
 	}
 
 	/**
@@ -102,10 +90,6 @@ class QueryController {
 						'type'    => 'string',
 						'default' => 'grid',
 					),
-					'blockId'  => array(
-						'type'     => 'string',
-						'required' => false,
-					),
 					'search'   => array(
 						'type'     => 'string',
 						'required' => false,
@@ -159,26 +143,16 @@ class QueryController {
 
 		$page = max( 1, absint( $request->get_param( 'page' ) ) );
 
-		if ( $this->logger ) {
-			$this->logger->log( 'REST query endpoint request: postType=' . $attributes['postType'] . ', page=' . $page . ', search=' . $attributes['search'] );
-		}
-		// The real page URL the visitor is looking at, sent by view.js
-		// (window.location.href) -- see render_pagination()'s docblock for
-		// why this can't just fall back to the current REQUEST_URI here
-		// like Renderer::render() does (that would build hrefs pointing at
-		// THIS REST endpoint, not the actual page).
+		// Real page URL the visitor is looking at (sent by view.js) -- can't
+		// fall back to REQUEST_URI here, that would point at this endpoint.
 		$page_url = esc_url_raw( (string) $request->get_param( 'pageUrl' ) );
 		$result   = $this->renderer->query( $attributes, $page );
 
 		return new \WP_REST_Response(
 			array(
 				'html'       => $this->renderer->render_items( $result['items'], $layout ),
-				// Pagination is re-rendered server-side for the requested
-				// page too -- see Renderer::render_pagination()'s docblock
-				// for why it can't be left to a client-only state getter.
-				// Show-all mode has no pagination nav at all (see
-				// Renderer::render_items_and_nav()), so there is nothing to
-				// render here -- an empty slot, not a stale/misleading one.
+				// Show-all mode has no pagination nav (see
+				// ItemsRenderer::render_items_and_nav()) -- empty, not stale.
 				'pagination' => $show_all ? '' : $this->renderer->render_pagination( $page, $result['total_pages'], $page_url ),
 				'hasMore'    => $result['has_more'],
 				'totalPages' => $result['total_pages'],

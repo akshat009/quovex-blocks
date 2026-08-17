@@ -43,3 +43,41 @@ if ( ! class_exists( 'WP_Post' ) ) {
 if ( ! defined( 'HOUR_IN_SECONDS' ) ) {
 	define( 'HOUR_IN_SECONDS', 3600 );
 }
+
+// Minimal WP_REST_* stand-ins -- just enough shape for QueryController/
+// PaginationSlugController's tests to build a request and read a response
+// back, same reasoning as WP_Post/WP_Post_Type above.
+if ( ! class_exists( 'WP_REST_Server' ) ) {
+	class WP_REST_Server {
+		const READABLE = 'GET';
+		const EDITABLE = 'POST';
+	}
+}
+
+if ( ! class_exists( 'WP_REST_Request' ) ) {
+	class WP_REST_Request {
+		private $params;
+
+		public function __construct( array $params = array() ) {
+			$this->params = $params;
+		}
+
+		public function get_param( string $key ) {
+			return $this->params[ $key ] ?? null;
+		}
+	}
+}
+
+if ( ! class_exists( 'WP_REST_Response' ) ) {
+	class WP_REST_Response {
+		private $data;
+
+		public function __construct( $data = null ) {
+			$this->data = $data;
+		}
+
+		public function get_data() {
+			return $this->data;
+		}
+	}
+}

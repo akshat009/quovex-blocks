@@ -3,13 +3,6 @@
  * Builds Query Grid's wrapper-level CSS custom properties from resolved
  * columns/colors/typography maps.
  *
- * Why its own class: this was three private methods living inside
- * Renderer (build_inline_style(), default_colors(), default_typography())
- * that had nothing to do with querying, caching, or HTML templating --
- * pure "resolve some data into a CSS string" logic, which is exactly the
- * kind of thing that's easy to unit test in isolation once it's not
- * entangled with a 700-line class (see tests/Unit/QueryGrid/StyleBuilderTest.php).
- *
  * @package FluxBlocks
  */
 
@@ -23,6 +16,49 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Resolves Query Grid's color/typography attributes into CSS custom properties.
  */
 class StyleBuilder {
+
+	/**
+	 * Attribute key => CSS custom property name, for colors. Single source
+	 * of truth -- default_colors() derives its keys from this.
+	 *
+	 * @var array<string,string>
+	 */
+	private const COLOR_PROPERTY_MAP = array(
+		'titleColor'          => '--fb-title-color',
+		'accentColor'         => '--fb-accent-color',
+		'subheadingColor'     => '--fb-subheading-color',
+		'cardTitleColor'      => '--fb-card-title-color',
+		'cardTitleHoverColor' => '--fb-card-title-hover-color',
+		'cardExcerptColor'    => '--fb-card-excerpt-color',
+		'readMoreColor'       => '--fb-read-more-color',
+		'readMoreHoverColor'  => '--fb-read-more-hover-color',
+		'activeAccent'        => '--fb-active-accent',
+		'disabledNav'         => '--fb-disabled-nav',
+		'inactivePillBg'      => '--fb-inactive-pill-bg',
+		'inactivePillText'    => '--fb-inactive-pill-text',
+		'metaText'            => '--fb-meta-text',
+		'authorText'          => '--fb-author-text',
+	);
+
+	/**
+	 * Attribute key => CSS custom property name, for typography. Font
+	 * families come from the active theme's theme.json (see edit.js's
+	 * useSettings('typography.fontFamilies')), never a hardcoded list.
+	 *
+	 * @var array<string,string>
+	 */
+	private const TYPOGRAPHY_PROPERTY_MAP = array(
+		'headingTitleFontFamily'     => '--fb-title-font-family',
+		'headingTitleFontWeight'     => '--fb-title-font-weight',
+		'cardTitleFontFamily'        => '--fb-card-title-font-family',
+		'cardTitleFontWeight'        => '--fb-card-title-font-weight',
+		'cardExcerptFontFamily'      => '--fb-card-excerpt-font-family',
+		'cardExcerptFontWeight'      => '--fb-card-excerpt-font-weight',
+		'metaFontFamily'             => '--fb-meta-font-family',
+		'metaFontWeight'             => '--fb-meta-font-weight',
+		'filterPaginationFontFamily' => '--fb-filter-pagination-font-family',
+		'filterPaginationFontWeight' => '--fb-filter-pagination-font-weight',
+	);
 
 	/**
 	 * @param array $columns                 Resolved mobile/tablet/desktop column counts.
@@ -40,47 +76,15 @@ class StyleBuilder {
 			absint( $carousel_items_per_view )
 		);
 
-		$property_map = array(
-			'titleColor'          => '--fb-title-color',
-			'accentColor'         => '--fb-accent-color',
-			'subheadingColor'     => '--fb-subheading-color',
-			'cardTitleColor'      => '--fb-card-title-color',
-			'cardTitleHoverColor' => '--fb-card-title-hover-color',
-			'cardExcerptColor'    => '--fb-card-excerpt-color',
-			'readMoreColor'       => '--fb-read-more-color',
-			'readMoreHoverColor'  => '--fb-read-more-hover-color',
-			'activeAccent'        => '--fb-active-accent',
-			'disabledNav'         => '--fb-disabled-nav',
-			'inactivePillBg'      => '--fb-inactive-pill-bg',
-			'inactivePillText'    => '--fb-inactive-pill-text',
-			'metaText'            => '--fb-meta-text',
-			'authorText'          => '--fb-author-text',
-		);
-
-		foreach ( $property_map as $key => $css_var ) {
-			if ( ! empty( $colors[ $key ] ) ) {
+		foreach ( self::COLOR_PROPERTY_MAP as $key => $css_var ) {
+			// esc_attr() doesn't escape `;` -- validate the value looks
+			// like a CSS color first to block declaration injection.
+			if ( ! empty( $colors[ $key ] ) && $this->looks_like_css_color( $colors[ $key ] ) ) {
 				$style .= sprintf( '%s:%s;', $css_var, esc_attr( $colors[ $key ] ) );
 			}
 		}
 
-		// Font-family values come from the active theme's own theme.json
-		// (see edit.js's useSettings('typography.fontFamilies')) -- never a
-		// hardcoded list the plugin would need to load/enqueue itself, so
-		// whatever gets picked here is already available on the frontend.
-		$typography_property_map = array(
-			'headingTitleFontFamily'     => '--fb-title-font-family',
-			'headingTitleFontWeight'     => '--fb-title-font-weight',
-			'cardTitleFontFamily'        => '--fb-card-title-font-family',
-			'cardTitleFontWeight'        => '--fb-card-title-font-weight',
-			'cardExcerptFontFamily'      => '--fb-card-excerpt-font-family',
-			'cardExcerptFontWeight'      => '--fb-card-excerpt-font-weight',
-			'metaFontFamily'             => '--fb-meta-font-family',
-			'metaFontWeight'             => '--fb-meta-font-weight',
-			'filterPaginationFontFamily' => '--fb-filter-pagination-font-family',
-			'filterPaginationFontWeight' => '--fb-filter-pagination-font-weight',
-		);
-
-		foreach ( $typography_property_map as $key => $css_var ) {
+		foreach ( self::TYPOGRAPHY_PROPERTY_MAP as $key => $css_var ) {
 			if ( ! empty( $typography[ $key ] ) ) {
 				$style .= sprintf( '%s:%s;', $css_var, esc_attr( $typography[ $key ] ) );
 			}
@@ -93,39 +97,25 @@ class StyleBuilder {
 	 * @return array<string,string> Default empty color map.
 	 */
 	public function default_colors(): array {
-		return array(
-			'titleColor'          => '',
-			'accentColor'         => '',
-			'subheadingColor'     => '',
-			'cardTitleColor'      => '',
-			'cardTitleHoverColor' => '',
-			'cardExcerptColor'    => '',
-			'readMoreColor'       => '',
-			'readMoreHoverColor'  => '',
-			'activeAccent'        => '',
-			'disabledNav'         => '',
-			'inactivePillBg'      => '',
-			'inactivePillText'    => '',
-			'metaText'            => '',
-			'authorText'          => '',
-		);
+		return array_fill_keys( array_keys( self::COLOR_PROPERTY_MAP ), '' );
 	}
 
 	/**
 	 * @return array<string,string> Default empty font-family/font-weight map.
 	 */
 	public function default_typography(): array {
-		return array(
-			'headingTitleFontFamily'     => '',
-			'headingTitleFontWeight'     => '',
-			'cardTitleFontFamily'        => '',
-			'cardTitleFontWeight'        => '',
-			'cardExcerptFontFamily'      => '',
-			'cardExcerptFontWeight'      => '',
-			'metaFontFamily'             => '',
-			'metaFontWeight'             => '',
-			'filterPaginationFontFamily' => '',
-			'filterPaginationFontWeight' => '',
-		);
+		return array_fill_keys( array_keys( self::TYPOGRAPHY_PROPERTY_MAP ), '' );
+	}
+
+	/**
+	 * Rejects anything that isn't a plausible CSS color value (hex, rgb()/
+	 * rgba(), hsl()/hsla(), named colors) -- blocks `;`, which esc_attr()
+	 * doesn't escape.
+	 *
+	 * @param string $value Color value from the block's `colors` attribute.
+	 * @return bool
+	 */
+	private function looks_like_css_color( string $value ): bool {
+		return (bool) preg_match( '/^[#a-zA-Z0-9(),.%\s-]+$/', $value );
 	}
 }

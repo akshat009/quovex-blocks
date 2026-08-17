@@ -1,23 +1,9 @@
 <?php
 /**
  * Shared base class for every block's Renderer (QueryGrid\Render\Renderer,
- * ContentShowcase\Render\Renderer, ...).
- *
- * Why an ABSTRACT CLASS and not an interface: an interface could only
- * force every Renderer to HAVE a render() method with the right signature
- * -- it can't share actual working code. capture() below IS real,
- * duplicated-until-now code (every Renderer wrote its own ob_start()/
- * ob_get_clean() pair) -- an abstract class can hand that down to every
- * child for free, while still forcing render() itself to be written
- * per-block (each block's HTML is genuinely different, so render() stays
- * `abstract` -- no shared implementation makes sense for it).
- * Modeled on WordPress core's own pattern for a "family of related
- * handler classes with one shared contract" -- e.g. WP_REST_Controller
- * (WP_REST_Posts_Controller, WP_REST_Users_Controller, ... all extend it)
- * or the Walker class (Walker_Category, Walker_Comment, ... extend it).
- * Impact of changing: both Renderer classes extend this -- a signature
- * change to render() here must be mirrored in every child, and a bug in
- * capture() affects every block's markup output at once.
+ * ContentShowcase\Render\Renderer). Provides capture() so neither has to
+ * write its own ob_start()/ob_get_clean() pair; render() stays abstract
+ * since each block's markup is genuinely different.
  *
  * @package FluxBlocks
  */
@@ -34,15 +20,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 abstract class AbstractRenderer {
 
 	/**
-	 * Runs $template (which is expected to `echo`/print HTML directly, the
-	 * same way any `<?php ... ?>` template block does) and returns
-	 * whatever it printed as a string instead of letting it reach the
-	 * browser immediately -- the standard WordPress "capture this template
-	 * into a variable" pattern, previously duplicated as a raw
-	 * ob_start()/ob_get_clean() pair in every Renderer's render() method.
+	 * Captures $template's echoed output into a string.
 	 *
-	 * @param callable $template A function that echoes HTML (usually a `?> ... <?php` block wrapped in a closure).
-	 * @return string Whatever $template printed, captured as a string.
+	 * @param callable $template Function that echoes HTML.
+	 * @return string Whatever $template printed.
 	 */
 	protected function capture( callable $template ): string {
 		ob_start();
@@ -52,19 +33,12 @@ abstract class AbstractRenderer {
 
 	/**
 	 * Reads a block's active Style Variation slug off its `className`
-	 * attribute -- WordPress stores the active Style Variation there as
-	 * `is-style-<slug>` (see block.json's `styles`).
-	 *
-	 * Was previously duplicated as two near-identical private methods (one
-	 * per block's Renderer) with no validation: any regex match was
-	 * returned as-is, so a malformed/unrecognized `is-style-<slug>` value
-	 * would silently flow through into rendering as if it were a real
-	 * layout. $known_layouts closes that gap -- an unrecognized slug now
-	 * explicitly falls back to $fallback instead.
+	 * attribute (`is-style-<slug>`, see block.json's `styles`), falling
+	 * back to $fallback if unset or not in $known_layouts.
 	 *
 	 * @param string   $class_name    Block's className attribute.
-	 * @param string[] $known_layouts Every layout slug this block actually supports.
-	 * @param string   $fallback       Layout slug to use when className has no match, or an unrecognized one.
+	 * @param string[] $known_layouts Every layout slug this block supports.
+	 * @param string   $fallback      Fallback when className has no valid match.
 	 * @return string Layout slug -- always one of $known_layouts.
 	 */
 	protected function layout_from_class_name( string $class_name, array $known_layouts, string $fallback ): string {
@@ -75,10 +49,8 @@ abstract class AbstractRenderer {
 	}
 
 	/**
-	 * Every block's Renderer must implement this with the EXACT signature
-	 * WordPress's dynamic-block `render_callback` requires -- see
-	 * block.json's `"render"` key, which points at a render.php that calls
-	 * this method.
+	 * Renders the block. Signature matches WordPress's dynamic-block
+	 * `render_callback` (see block.json's `"render"` key).
 	 *
 	 * @param array     $attributes Block attributes.
 	 * @param string    $content    Block default content.

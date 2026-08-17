@@ -1,11 +1,7 @@
 <?php
 /**
- * Builds WP_Query args from block attributes.
- *
- * Why: single source of truth for query logic — both block renderers and
- * the REST controller call this, so query behavior only lives in one place.
- * Impact of changing: affects Query Grid, Content Showcase, AND the
- * /flux-blocks/v1/query REST response simultaneously.
+ * Builds WP_Query args from block attributes. Single source of truth for
+ * query logic -- used by both Renderers and the REST controller.
  *
  * @package FluxBlocks
  */
@@ -31,17 +27,16 @@ class QueryArgsBuilder implements ArgsBuilderInterface {
 	public function build( array $attributes, int $page = 1 ): array {
 		$post_type = isset( $attributes['postType'] ) ? sanitize_key( $attributes['postType'] ) : 'post';
 
-		// Guard: only public post types are queryable through this builder —
-		// prevents probing private/internal post types via attributes or REST params.
+		// Only public post types are queryable -- prevents probing
+		// private/internal post types via attributes or REST params.
 		if ( ! $this->is_public_post_type( $post_type ) ) {
 			$post_type = 'post';
 		}
 
-		// Manual selection (an explicit `manualIds` list) bypasses ordering/
-		// pagination entirely -- a general capability of this builder, not
-		// currently exercised by either shipped block: Content Showcase's
-		// manual-selection UI (manualPost1/2/3) is a separate mechanism
-		// layered on top in its own Renderer::query(), not this attribute.
+		// Manual selection (`manualIds`) bypasses ordering/pagination
+		// entirely. Not currently used by either shipped block -- Content
+		// Showcase's manual-pick UI (manualPost1/2/3) is a separate
+		// mechanism layered on top in its own Renderer::query().
 		if ( ! empty( $attributes['manualIds'] ) && is_array( $attributes['manualIds'] ) ) {
 			return array(
 				'post_type'      => $post_type,
@@ -53,27 +48,17 @@ class QueryArgsBuilder implements ArgsBuilderInterface {
 			);
 		}
 
-		// "Show all posts" (no pagination) ignores `postCount` entirely and
-		// defaults to a bounded cap instead of a literal `-1` -- a site
-		// with thousands of posts in one Query Grid would otherwise be a
-		// real performance/Plugin-Check concern from a truly unlimited
-		// query. 200 is generous enough to read as "all" for any normal
-		// blog/portfolio while staying bounded BY DEFAULT.
-		// Filterable (not just a bigger hardcoded number) because the
-		// right cap is a site-specific call only the site owner can make
-		// -- e.g. `add_filter( 'flux_blocks_show_all_posts_limit', fn() =>
-		// -1 )` for a site that genuinely wants every post and knows its
-		// own server can take an unbounded query. New/typical sites who
-		// never touch this filter stay on the safe default.
+		// "Show all posts" ignores `postCount` and defaults to a bounded
+		// 200 instead of a literal -1, to avoid an unbounded query on
+		// large sites. Filterable per site:
+		// `add_filter( 'flux_blocks_show_all_posts_limit', fn() => -1 )`.
 		if ( ! empty( $attributes['showAllPosts'] ) ) {
 			$per_page = (int) apply_filters( 'flux_blocks_show_all_posts_limit', 200 );
 		} else {
 			$per_page = isset( $attributes['postCount'] ) ? max( 1, absint( $attributes['postCount'] ) ) : 9;
-			// REST callers can request a page size, but never past this hard
-			// cap. This only bounds items PER PAGE, not the total pool of
-			// matching posts -- `paged` below already lets pagination reach
-			// every post via WP_Query's own max_num_pages, regardless of
-			// this number.
+			// Hard cap on items PER PAGE, not on the total matching pool --
+			// `paged` below still reaches every post via WP_Query's own
+			// max_num_pages, regardless of this number.
 			$per_page = min( $per_page, 50 );
 		}
 
@@ -108,8 +93,7 @@ class QueryArgsBuilder implements ArgsBuilderInterface {
 			);
 		}
 
-		// Frontend search bar (Query Grid only) -- a visitor-typed query,
-		// not an editor-time attribute default, so it is opt-in per request.
+		// Frontend search bar (Query Grid only) -- opt-in per request.
 		if ( ! empty( $attributes['search'] ) ) {
 			$args['s'] = sanitize_text_field( (string) $attributes['search'] );
 		}

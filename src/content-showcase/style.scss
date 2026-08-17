@@ -1,18 +1,12 @@
 /**
- * Content Showcase — frontend + editor shared styles.
- *
- * Why: layout switching (Magazine/Split/Overlay/Two-Thirds) is a native
- * block Style Variation -- WordPress adds `is-style-<name>` to the wrapper
- * itself (see block.json's `styles` +
- * Renderer::layout_from_class_name()), so `.fb-content-showcase--<layout>`
- * below is driven by that class, not a custom attribute.
- * `min-width: 0` shows up on several flex children below -- flex/grid
- * items default to `min-width: auto`, which refuses to shrink below its
- * content's natural width and breaks full-width blocks on mobile (same
- * fix already applied throughout query-grid/style.scss).
- * Impact of changing: `--fb-accent` is the same red (#d1372d) Query Grid
- * uses for its heading accent -- change both together if the plugin's
- * accent color ever changes.
+ * Content Showcase — frontend + editor shared styles. Layout switching
+ * (Magazine/Split/Overlay/Two-Thirds) is a native Style Variation --
+ * WordPress adds `is-style-<name>` to the wrapper (see block.json's
+ * `styles` + Renderer::layout_from_class_name()). `min-width: 0` on
+ * several flex children below works around flex/grid's default
+ * `min-width: auto`, which breaks full-width blocks on mobile (same fix
+ * as query-grid/style.scss). `--fb-accent` matches Query Grid's heading
+ * accent color -- keep both in sync.
  */
 
 .fb-content-showcase {

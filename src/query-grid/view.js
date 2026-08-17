@@ -1,107 +1,51 @@
 /**
  * Query Grid frontend behavior (Interactivity API).
  *
- * Why: numbered pagination, search, category-facet filtering, and "Load
- * more" (an alternative to numbered pagination, see paginationStyle in
- * Renderer::render()) all fetch from /flux-blocks/v1/query (this block
- * isn't tied to the main WP query, so it can't use core's Query Loop
- * "enhanced pagination"). Pagination/search/filter REPLACE both the
- * `.fb-query-grid__items` AND `.fb-query-grid__pagination-slot` content;
- * "Load more" APPENDS to items instead — see fetchAndApply()'s `append` arg,
- * the one place that distinction lives.
- * Carousel navigation is pure client-side -- every slide is already
- * server-rendered, nav just shows/hides via the `isCurrentSlide` state.
+ * Pagination/search/filter fetch from /flux-blocks/v1/query and REPLACE
+ * `.fb-query-grid__items` + `.fb-query-grid__pagination-slot`; "Load more"
+ * APPENDS instead (see fetchAndApply()'s `append` arg). Carousel nav is
+ * pure client-side -- every slide is already server-rendered.
  *
- * Why pagination is NOT a `state` getter (unlike isCurrentSlide/isActiveTerm):
- * the Interactivity API evaluates `data-wp-bind` directives server-side too,
- * using whatever `wp_interactivity_state()` registered -- a *derived* JS
- * getter has no server equivalent, so it resolves to `undefined` there and
- * `!undefined` hides everything on first paint. That bug shipped once
- * already (see Renderer::render_pagination()'s docblock). Pagination is
- * fully server-rendered instead, both initially and on every fetch here.
+ * Pagination is fully server-rendered, not a `state` getter: the
+ * Interactivity API evaluates `data-wp-bind` server-side too, and a
+ * JS-only derived getter resolves to `undefined` there, hiding everything
+ * on first paint (a bug that shipped once). For the same reason, carousel
+ * slide visibility is a plain DOM toggle (applyCarouselVisibility), not a
+ * `data-wp-bind--hidden` directive.
  *
- * Why the Prev/Next/page-number buttons are NOT wired with `data-wp-on--click`
- * (a *second*, different bug fixed in the same pass as the one above):
- * `.fb-query-grid__pagination-slot`'s innerHTML gets REPLACED on every page
- * change. The Interactivity API only binds `data-wp-on--*` directives during
- * its one-time hydration walk at page load -- HTML injected afterwards via
- * plain `innerHTML`/`insertAdjacentHTML` is invisible to it, so a freshly
- * inserted button's `data-wp-on--click` is inert. That is why clicking
- * "Next" worked once and then silently did nothing on the next click.
- * Fixed with plain event delegation instead: `initPaginationDelegation()`
- * (wired via `data-wp-init` on `.fb-query-grid__pagination-slot`, which is
- * itself never replaced, only its children are) attaches ONE native
- * `addEventListener` that keeps working no matter how many times the
- * buttons underneath it get swapped out.
+ * Pagination buttons use plain event delegation
+ * (initPaginationDelegation), not `data-wp-on--click` --
+ * `.fb-query-grid__pagination-slot`'s innerHTML gets replaced on every
+ * page change, and the Interactivity API only binds directives during its
+ * one-time hydration walk, so a freshly-inserted button's directive would
+ * be inert.
  *
- * Why carousel slide visibility is a plain DOM toggle (applyCarouselVisibility)
- * and NOT a `data-wp-bind--hidden` directive (a *third*, related bug -- the
- * carousel shipped once already with `data-wp-bind--hidden="!state.isCurrentSlide"`
- * and every slide came out hidden, arrows-only, no cards): `WP_Block::render()`
- * calls WordPress's OWN `wp_interactivity_process_directives()` on this
- * block's rendered HTML server-side, which re-evaluates every `data-wp-bind`
- * directive right after Renderer::render_item() runs. A derived `state`
- * getter like `isCurrentSlide` has no server-side registration, so it
- * resolves to `undefined` there; `!undefined` is `true`, so WordPress itself
- * force-added `hidden` back onto every article, overwriting whatever
- * Renderer.php had correctly baked in. There is no directive-based fix for
- * this -- `state` getters are JS-only by design, full stop -- so carousel
- * visibility after the first paint is now handled the same way pagination
- * clicks are: plain DOM manipulation, never a directive WordPress could
- * re-process.
+ * Masonry needs layoutMasonryItems() (a JS row-span calculation) because
+ * pure-CSS `column-count` masonry reads column-major, which breaks
+ * left-to-right reading order for variable-height cards.
  *
- * Why Masonry needs layoutMasonryItems() (a JS row-span calculation, not a
- * pure-CSS layout): plain CSS `column-count` masonry reads column-major
- * (fills column 1 top-to-bottom completely, THEN starts column 2) -- with
- * many posts that puts e.g. post 2 nowhere near post 1 visually, which
- * reads as "wrong order" even though the query itself is correctly sorted.
- * There is no pure-CSS fix that keeps both variable card heights AND
- * left-to-right/row-major reading order (native `grid-template-rows:
- * masonry` isn't baseline yet) -- the standard workaround is CSS Grid
- * with each item's `grid-row-end: span N` set from its OWN measured
- * height, which is what layoutMasonryItems() does. See style.scss's
- * `&--masonry &__items` docblock for why `grid-auto-rows` itself is left
- * at the CSS default there (ServerSideRender's editor preview never runs
- * this file at all) and only overridden here once real JS is running.
- *
- * Plain-JS equivalent: `store()` + `data-wp-*` directives replace what
- * you'd otherwise write as `document.querySelectorAll(...)` +
- * `addEventListener('click', ...)` handlers that manually `fetch()`, set
- * `.innerHTML`, and toggle a `hidden` attribute/class after every state
- * change — the directives just declare "this attribute reflects this
- * state", so the DOM updates automatically whenever the state does. The
- * pagination delegation code is the one place here that IS written the
- * plain-JS way on purpose, for the reason above.
- *
- * Per-instance data (queryId/postType/layout/page/totalPages/searchQuery/
- * activeFacetTaxonomy/activeTermIds/...) lives in Interactivity `context`,
- * seeded by QueryGrid\Renderer::render() — not global `state` — so multiple
- * Query Grid instances on one page stay independent. Nested item/button
- * context (a carousel slide's `slideIndex`, a filter pill's `taxonomy`+
- * `termId`) merges with this parent context automatically, which is how
- * the state getters below can read both.
+ * Per-instance data lives in Interactivity `context` (seeded by
+ * QueryGrid\Renderer::render()), not global `state`, so multiple Query
+ * Grid instances on one page stay independent.
  */
 import { store, getContext, getElement } from '@wordpress/interactivity';
 import { nextIndex, prevIndex } from '../shared/carousel-utils';
+import { buildPaginatedPath } from './pagination-url';
 
 /**
- * Registered by initPaginationDelegation() (one entry per Query Grid
- * instance that has numbered pagination) so the module-level `popstate`
- * listener further down can look an instance up by its queryId and re-sync
- * it after a browser back/forward navigation -- there is no Interactivity
- * API way to reach a specific element's live reactive `context` from
- * outside an action/callback, so this is the plain-JS workaround.
+ * Query Grid instances with numbered pagination, keyed by queryId -- lets
+ * the module-level `popstate` listener re-sync an instance after browser
+ * back/forward, since there's no other way to reach a live `context` from
+ * outside an action/callback.
  *
  * @type {Map<string, {rootEl: HTMLElement, context: Object}>}
  */
 const instancesByQueryId = new Map();
 
 /**
- * Core fetch + DOM update logic, shared between the directive-driven
- * actions below (search/filter/load-more, whose own elements are never
- * replaced so keep working via normal `data-wp-on` binding) and the plain
- * delegated pagination click handler (whose buttons DO get replaced, see
- * the file docblock for why that needs a different wiring approach).
+ * Core fetch + DOM update logic, shared by the directive-driven actions
+ * below and the delegated pagination click handler (see file docblock for
+ * why pagination needs different event wiring).
  *
  * @param {HTMLElement} rootEl  The `.fb-query-grid` root element for this instance.
  * @param {Object}      context This instance's Interactivity context (mutated in place).
@@ -119,10 +63,9 @@ async function fetchAndApply( rootEl, context, page, append ) {
 			postType: context.postType,
 			page,
 			layout: context.layout,
-			blockId: context.queryId,
-			// Renderer::render_pagination() needs the REAL page URL (not
-			// the REST endpoint's own) to build correct `<a href>`s when
-			// pagination gets re-rendered here -- see its docblock.
+			// ItemsRenderer::render_pagination() needs the REAL page URL
+			// (not the REST endpoint's own) to build correct `<a href>`s
+			// when pagination gets re-rendered here -- see its docblock.
 			pageUrl: window.location.href,
 		} );
 		if ( context.searchQuery ) {
@@ -198,12 +141,8 @@ store( 'flux-blocks/query-grid', {
 			const hadQuery = !! context.searchQuery;
 			context.searchQuery = event.target.value;
 
-			// Clearing the field back to empty refetches immediately
-			// instead of waiting for an explicit Enter/submit -- otherwise
-			// the last filtered results stay on screen next to an empty
-			// search box, which reads as "search doesn't come back" when
-			// testing it. Typing (non-empty -> non-empty) still only
-			// searches on submit, so this isn't a fetch-per-keystroke.
+			// Clearing the field refetches immediately (not on submit) so
+			// results don't stay filtered next to an empty search box.
 			if ( hadQuery && ! context.searchQuery ) {
 				const { ref } = getElement();
 				fetchAndApply(
@@ -225,11 +164,9 @@ store( 'flux-blocks/query-grid', {
 			);
 		},
 		/**
-		 * Multiple terms can be toggled on together WITHIN one taxonomy's
-		 * pill group (e.g. two categories at once) -- but clicking a pill
-		 * from a DIFFERENT taxonomy than the currently active one resets
-		 * the selection to just that pill, since only one taxonomy's
-		 * tax_query clause is sent per request (see fetchAndApply()).
+		 * Terms toggle within one taxonomy's pill group; clicking a pill
+		 * from a different taxonomy resets the selection, since only one
+		 * taxonomy's tax_query clause is sent per request.
 		 */
 		onFilterClick() {
 			const context = getContext();
@@ -256,11 +193,9 @@ store( 'flux-blocks/query-grid', {
 			fetchAndApply( ref.closest( '.fb-query-grid' ), context, 1, false );
 		},
 		/**
-		 * "Load more" alternative to numbered pagination: fetches the next
-		 * page and APPENDS it instead of replacing -- see paginationStyle in
-		 * Renderer::render(). The load-more button itself is never replaced
-		 * (only `.fb-query-grid__items` is appended to), so a normal
-		 * `data-wp-on--click` directive stays bound and works indefinitely.
+		 * "Load more" alternative to numbered pagination -- appends the
+		 * next page instead of replacing (see paginationStyle in
+		 * Renderer::render()).
 		 */
 		loadMore() {
 			const context = getContext();
@@ -298,12 +233,10 @@ store( 'flux-blocks/query-grid', {
 	},
 	callbacks: {
 		/**
-		 * Runs once (via `data-wp-init`) on `.fb-query-grid__pagination-slot`
-		 * -- see the file docblock for why pagination clicks need plain
-		 * event delegation instead of `data-wp-on--click`. `context` is
-		 * captured here at hydration time; it stays a valid, live reference
-		 * to this instance's reactive context object even as its properties
-		 * keep changing on every later fetch.
+		 * Attaches ONE delegated click listener on
+		 * `.fb-query-grid__pagination-slot` (see file docblock for why) --
+		 * `context` is captured at hydration but stays live as its
+		 * properties change.
 		 */
 		initPaginationDelegation() {
 			const { ref } = getElement();
@@ -319,7 +252,7 @@ store( 'flux-blocks/query-grid', {
 
 			ref.addEventListener( 'click', ( event ) => {
 				// Page numbers/Prev/Next are real <a href> now (see
-				// Renderer::render_pagination()'s docblock -- SEO
+				// ItemsRenderer::render_pagination()'s docblock -- SEO
 				// crawlability) -- .closest() still finds them the same
 				// way a <button> was found before, `aria-disabled` is the
 				// disabled-Prev/Next marker now instead of `.disabled`
@@ -363,11 +296,8 @@ store( 'flux-blocks/query-grid', {
 			} );
 		},
 		/**
-		 * Runs once (via `data-wp-init`, only present on Masonry instances
-		 * -- see Renderer::render_items_and_nav()) to size the FIRST batch
-		 * of server-rendered items. Later batches (pagination/search/filter/
-		 * load-more) are re-laid-out directly inside fetchAndApply() instead,
-		 * since this only fires once at hydration.
+		 * Sizes the FIRST batch of server-rendered Masonry items at
+		 * hydration; later batches are re-laid-out inside fetchAndApply().
 		 */
 		initMasonryLayout() {
 			const { ref } = getElement();
@@ -377,10 +307,8 @@ store( 'flux-blocks/query-grid', {
 } );
 
 /**
- * A column-count-per-breakpoint change (viewport resize crossing 600px/
- * 960px) changes how many rows each item's height maps to just as much as
- * a height change does -- re-run every Masonry instance on the page,
- * debounced so a drag-resize doesn't thrash layout on every pixel.
+ * Re-runs Masonry layout on resize (column count changes at breakpoints),
+ * debounced so a drag-resize doesn't thrash layout.
  */
 let masonryResizeTimeout;
 window.addEventListener( 'resize', () => {
@@ -393,56 +321,26 @@ window.addEventListener( 'resize', () => {
 } );
 
 /**
- * Strips any existing `/<slug>/N/` suffix from a pathname -- shared by
- * updateUrlForPage() (before appending a NEW page) and the `popstate`
- * reader (to isolate the number). Mirrors Renderer::build_page_url()'s PHP
- * side of the same logic; keep both in sync.
- *
- * @param {string} pathname `window.location.pathname`.
- * @param {string} slug     `context.paginationSlug` (see PaginationEndpoint.php).
- * @return {string} `pathname` with any trailing `/<slug>/N/` removed, always ending in `/`.
- */
-function stripPaginationSuffix( pathname, slug ) {
-	const stripped = pathname.replace(
-		new RegExp( `/${ slug }/\\d+/?$` ),
-		'/'
-	);
-	return stripped.endsWith( '/' ) ? stripped : `${ stripped }/`;
-}
-
-/**
- * Keeps the address bar in sync with a pagination click's AJAX-fetched page
- * -- `/<slug>/N/` is a path suffix (not a query string), matching
- * Renderer::render_pagination()'s `<a href>`s and what
- * Renderer::render()'s `get_query_var( PaginationEndpoint::slug() )` reads
- * back out on the next real page load. This is ONE SITE-WIDE segment
- * (`slug` is a site setting, not per-block), so multiple Query Grid
- * instances with numbered pagination on one page necessarily share it --
- * see PaginationEndpoint's docblock for why. `pushState` (not
- * `replaceState`) so the browser's own Back button steps back through
- * visited pages one at a time -- see the `popstate` listener below for how
- * Back/Forward gets the content to actually match.
+ * Keeps the address bar in sync with a pagination click's AJAX-fetched
+ * page, as a `/<slug>/N/` path suffix (matching
+ * ItemsRenderer::render_pagination()'s `<a href>`s). `pushState` (not
+ * `replaceState`) so Back steps through visited pages one at a time -- see
+ * the `popstate` listener below.
  *
  * @param {string} slug `context.paginationSlug`.
  * @param {number} page The page just navigated to.
  */
 function updateUrlForPage( slug, page ) {
 	const url = new URL( window.location.href );
-	let path = stripPaginationSuffix( url.pathname, slug );
-	if ( page > 1 ) {
-		path = `${ path }${ slug }/${ page }/`;
-	}
-	url.pathname = path;
+	url.pathname = buildPaginatedPath( url.pathname, slug, page );
 	window.history.pushState( { page }, '', url );
 }
 
 /**
- * Browser Back/Forward doesn't re-run any of the code above (the page
- * itself never reloads, `pushState` only changes the URL) -- this makes
- * that navigation actually DO something. Re-derives the target page from
- * the URL itself, not from `event.state`, since a `popstate` fired by
- * navigating back past the very first pagination click has no state object
- * from this code at all (the original page-load entry predates it).
+ * Makes Back/Forward actually do something -- `pushState` only changes
+ * the URL, it doesn't reload. Re-derives the page from the URL itself, not
+ * `event.state`, since navigating back past the first pagination click has
+ * no state object at all.
  */
 window.addEventListener( 'popstate', () => {
 	instancesByQueryId.forEach( ( { rootEl, context } ) => {
@@ -471,14 +369,10 @@ function countCarouselGroups( rootEl, context ) {
 }
 
 /**
- * Shows/hides carousel slides to match the current `carouselIndex` window --
- * plain DOM toggling, deliberately NOT a `data-wp-bind--hidden` directive.
- * See the file docblock's "Why carousel slide visibility is a plain DOM
- * toggle" section for why a directive bound to a derived `state` getter
- * cannot work here (WordPress re-evaluates it server-side and gets it
- * wrong). Items are toggled by their DOM position, which matches the
- * `slideIndex` each one was rendered with (see Renderer::render_items()'s
- * `foreach ( $items as $index => $item )`).
+ * Shows/hides carousel slides for the current `carouselIndex` window via
+ * plain DOM toggling, not `data-wp-bind--hidden` (see file docblock for
+ * why). Items are toggled by DOM position, matching the `slideIndex` each
+ * was rendered with.
  *
  * @param {HTMLElement} rootEl  The `.fb-query-grid` root element for this instance.
  * @param {Object}      context This instance's context (`carouselIndex` + `carouselItemsPerView`).
@@ -493,14 +387,10 @@ function applyCarouselVisibility( rootEl, context ) {
 }
 
 /**
- * After a pagination click (Prev/Next/a page number -- see
- * initPaginationDelegation()), the pagination controls themselves sit
- * below a full page of results, so without this the next page's items
- * load in ABOVE the current scroll position and look like nothing
- * happened. Scrolls the first item of the freshly-loaded page into view
- * instead, on every viewport size. Search/filter/load-more do NOT call
- * this -- only an explicit pagination click should jump the scroll
- * position, staying still is the expected behavior for those.
+ * Scrolls the first item of a freshly-loaded page into view -- pagination
+ * controls sit below the results, so without this a page change looks
+ * like nothing happened. Only called on explicit pagination clicks, not
+ * search/filter/load-more.
  *
  * @param {HTMLElement} rootEl The `.fb-query-grid` root element for this instance.
  */
@@ -510,11 +400,8 @@ function scrollFirstItemIntoView( rootEl ) {
 }
 
 /**
- * Sizes each Masonry item's grid row-span from its own real rendered
- * height, so items stay in DOM/query order (left-to-right, top row first)
- * while still getting variable heights -- see the file docblock's "Why
- * Masonry needs layoutMasonryItems()" section for the full explanation of
- * why plain CSS `column-count` can't do both at once.
+ * Sizes each Masonry item's grid row-span from its real rendered height,
+ * keeping items in DOM order with variable heights (see file docblock).
  *
  * @param {HTMLElement} rootEl The `.fb-query-grid` root element for this instance.
  */
@@ -524,11 +411,8 @@ function layoutMasonryItems( rootEl ) {
 		return;
 	}
 
-	// Overridden here (not in style.scss) so the editor's ServerSideRender
-	// preview -- which never runs this file at all -- still gets a sane
-	// CSS-only fallback (`grid-auto-rows: auto`, a plain responsive grid)
-	// instead of every item being squashed to a near-0px row on the
-	// frontend before this callback's first run.
+	// Overridden here, not in style.scss, so the editor's ServerSideRender
+	// preview (which never runs this file) keeps its CSS-only fallback.
 	itemsEl.style.gridAutoRows = '1px';
 
 	const styles = window.getComputedStyle( itemsEl );

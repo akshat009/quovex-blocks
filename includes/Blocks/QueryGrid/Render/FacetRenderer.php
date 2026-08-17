@@ -2,11 +2,6 @@
 /**
  * Renders Query Grid's search form and taxonomy filter-pill facets.
  *
- * Why its own class: search + facet rendering (and figuring out which
- * taxonomies/terms to show) is a self-contained concern that doesn't
- * touch querying posts, pagination, or CSS -- it previously lived inside
- * the same 700+ line Renderer as everything else.
- *
  * @package FluxBlocks
  */
 

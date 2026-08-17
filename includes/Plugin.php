@@ -1,11 +1,8 @@
 <?php
 /**
- * Plugin bootloader.
- *
- * Why: Boots every class and registers their WordPress hooks during init.
- * Impact of changing: this is the plugin's composition root — every class
- * gets wired together here; forgetting a `register()` call here means that
- * class's hooks simply never fire.
+ * Plugin bootloader -- the composition root. Wires every class together
+ * and registers their WordPress hooks during init; forgetting an
+ * `init_hooks()` call here means that class's hooks never fire.
  *
  * @package FluxBlocks
  */
@@ -31,10 +28,10 @@ final class Plugin {
 	 */
 	public static function boot(): void {
 		( new BlockCategory() )->init_hooks(); // Registers 'Flux Blocks' category in Gutenberg block inserter.
-		( new CacheInvalidator( Services::query_cache(), Services::logger() ) )->init_hooks(); // Auto-clears query cache when posts are saved or deleted.
+		( new CacheInvalidator( Services::query_cache() ) )->init_hooks(); // Auto-clears query cache when posts are saved or deleted.
 		( new PaginationEndpoint() )->init_hooks(); // Registers `/flux-page/N/` permalink rewrite endpoint for pagination.
 
-		( new QueryController( Services::query_grid_renderer(), Services::query_args_builder(), Services::logger() ) )->init_hooks(); // Registers `/flux-blocks/v1/query` REST API for live AJAX search & filtering.
-		( new PaginationSlugController( Services::logger() ) )->init_hooks(); // Registers `/flux-blocks/v1/pagination-slug` REST API for block inspector settings.
+		( new QueryController( Services::query_grid_renderer(), Services::query_args_builder() ) )->init_hooks(); // Registers `/flux-blocks/v1/query` REST API for live AJAX search & filtering.
+		( new PaginationSlugController() )->init_hooks(); // Registers `/flux-blocks/v1/pagination-slug` REST API for block inspector settings.
 	}
 }

@@ -1,19 +1,9 @@
 <?php
 /**
- * Orchestrates the Query Grid block: runs the query (via the injected
- * collaborators), resolves layout/colors/typography, and assembles the
- * final markup by delegating to StyleBuilder (CSS custom properties),
- * FacetRenderer (search + taxonomy filter pills), and ItemsRenderer (the
- * item grid + pagination/"Load more"/carousel nav).
- *
- * Why split this way: this class used to own ALL of that rendering logic
- * itself (700+ lines, one class doing querying, CSS-string building, and
- * several unrelated pieces of HTML templating) -- a textbook Single
- * Responsibility Principle violation. Splitting it doesn't change any
- * OUTPUT (see the live-render snapshot diff run before/after this
- * refactor), only which class each piece of logic lives in. Renderer
- * itself is now purely an orchestrator: resolve inputs, hand them to the
- * collaborator that owns that concern, assemble the result.
+ * Orchestrates the Query Grid block: runs the query, resolves
+ * layout/colors/typography, and assembles markup by delegating to
+ * StyleBuilder (CSS custom properties), FacetRenderer (search + filter
+ * pills), and ItemsRenderer (items + pagination/"Load more"/carousel nav).
  *
  * @package FluxBlocks
  */
@@ -57,12 +47,9 @@ class Renderer extends AbstractRenderer {
 	private $items;
 
 	/**
-	 * StyleBuilder/FacetRenderer/ItemsRenderer are composed internally
-	 * (not constructor-injected) -- they're pure view helpers with no
-	 * external dependencies of their own beyond $cache (which FacetRenderer
-	 * needs for its term-lookup caching), so injecting them here would
-	 * just re-introduce a long-parameter-list constructor to fix the
-	 * exact code smell this refactor is removing elsewhere.
+	 * StyleBuilder/FacetRenderer/ItemsRenderer are composed internally, not
+	 * constructor-injected -- they're pure view helpers with no external
+	 * dependencies beyond $cache.
 	 *
 	 * @param ArgsBuilderInterface $args_builder Turns attributes into WP_Query args.
 	 * @param CacheInterface       $cache        Read-through query cache.
@@ -241,10 +228,8 @@ class Renderer extends AbstractRenderer {
 	}
 
 	/**
-	 * Render item markup -- public because QueryController's REST endpoint
-	 * (paginated/filtered AJAX fetches) calls this directly to build its
-	 * JSON response's `html` field, reusing the exact same markup the
-	 * initial server render produces.
+	 * Render item markup -- public so QueryController's REST endpoint can
+	 * reuse it for AJAX pagination/search/filter responses.
 	 *
 	 * @param array[] $items                   Transformed post data.
 	 * @param string  $layout                  Layout slug.
@@ -257,7 +242,8 @@ class Renderer extends AbstractRenderer {
 
 	/**
 	 * Renders Prev / page-number / Next controls -- public for the same
-	 * reason as render_items() above (QueryController reuses it).
+	 * reason as render_items() above. See ItemsRenderer::render_pagination()
+	 * for the reasoning behind this markup (this just delegates to it).
 	 *
 	 * @param int    $current_page Page currently displayed.
 	 * @param int    $total_pages  Total pages.

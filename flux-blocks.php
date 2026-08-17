@@ -41,21 +41,23 @@ add_action( 'init', 'flux_blocks_block_init' );
 
 /*
  * Why: boots the plugin's composition root (category registration, cache
- * invalidation hooks, REST route) — see includes/Plugin.php.
+ * invalidation hooks, REST routes) — see includes/Plugin.php.
  */
 add_action( 'init', array( \FluxBlocks\Plugin::class, 'boot' ) );
 
 /*
  * Why: FluxBlocks\PaginationEndpoint::add_endpoint() (called every 'init'
- * via Plugin::boot()) only registers the `/flux-page/N/` query-var mapping
- * in memory for the CURRENT request -- WordPress still needs its cached
+ * via Plugin::boot()) only registers the query-var mapping for whatever
+ * slug PaginationEndpoint::slug() currently resolves to (`/flux-page/N/`
+ * by default, but site-configurable -- see that class's docblock) in
+ * memory for the CURRENT request -- WordPress still needs its cached
  * rewrite rules regenerated once for that URL pattern to actually resolve
  * at all, which only happens on a rules flush. Doing that flush on every
  * request would be a real performance problem (it is an expensive
  * operation), so it happens exactly once here, on activation, instead.
  * Impact of changing: if the endpoint is ever renamed (see
- * PaginationEndpoint::VAR) or this hook is removed, anyone who already had
- * the plugin active needs to deactivate + reactivate once (or manually
+ * PaginationEndpoint::OPTION) or this hook is removed, anyone who already
+ * had the plugin active needs to deactivate + reactivate once (or manually
  * flush permalinks under Settings > Permalinks) to pick up the change --
  * it will not happen automatically otherwise.
  */

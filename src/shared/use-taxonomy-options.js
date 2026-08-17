@@ -1,14 +1,8 @@
 /**
- * Editor-side hooks: list the taxonomies registered for a given post type,
- * and the terms within a given taxonomy — for the taxonomy-filter control.
- *
- * Why: taxonomyFilter must offer only taxonomies that actually apply to the
- * currently selected CPT — a hardcoded 'category' dropdown would silently
- * do nothing on a CPT that doesn't support categories.
- * Plain-JS equivalent: same idea as usePostTypeOptions — replaces a manual
- * `fetch('/wp-json/wp/v2/taxonomies?type=' + postType)` + state juggling
- * every time `postType` changes.
- * Impact of changing: both blocks' taxonomy filter control depends on this.
+ * Editor-side hooks: taxonomies registered for a given post type, and
+ * terms within a given taxonomy -- for the taxonomy-filter control used by
+ * both blocks. Only taxonomies that actually apply to the selected CPT are
+ * listed, not a hardcoded 'category' dropdown.
  */
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';

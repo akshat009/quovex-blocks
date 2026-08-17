@@ -12,6 +12,12 @@ build/
 # Packaged plugin zip (from `npm run plugin-zip`).
 *.zip
 
+# Raw/framed screenshot captures from scripts/capture-screenshots.py and
+# scripts/frame-screenshots.py -- disposable scratch output, regenerate any
+# time by re-running those scripts. The curated final picks live in assets/
+# as screenshot-N.png (committed, since that's what ships to WP.org).
+scripts/output/
+
 # Internal planning docs (PRD/architecture/technical-spec) -- not meant for
 # the public repo, kept locally only.
 docs/
