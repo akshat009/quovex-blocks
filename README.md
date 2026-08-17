@@ -46,6 +46,38 @@ A dismissible announcement bar or alert box.
 - Icon picker: emoji, dashicon, or a built-in SVG set.
 - Dismiss button with optional "remember dismissal" (localStorage-backed).
 
+## Screenshots
+
+### Query Grid
+
+| Grid, with numbered pagination | Carousel | Masonry |
+|---|---|---|
+| ![Query Grid -- Grid layout with pagination](assets/screenshot-1.png) | ![Query Grid -- Carousel style](assets/screenshot-2.png) | ![Query Grid -- Masonry style](assets/screenshot-3.png) |
+
+| List | Sidebar filters | Load more |
+|---|---|---|
+| ![Query Grid -- List style](assets/screenshot-4.png) | ![Query Grid -- Sidebar layout](assets/screenshot-5.png) | ![Query Grid -- Load more pagination](assets/screenshot-6.png) |
+
+### Content Showcase
+
+| Magazine | Split | Overlay |
+|---|---|---|
+| ![Content Showcase -- Magazine layout](assets/screenshot-7.png) | ![Content Showcase -- Split layout](assets/screenshot-8.png) | ![Content Showcase -- Overlay layout](assets/screenshot-9.png) |
+
+| Two-Thirds | Image hotspot popover |
+|---|---|
+| ![Content Showcase -- Two-Thirds layout](assets/screenshot-10.png) | ![Content Showcase -- hotspot popover](assets/screenshot-11.png) |
+
+### Notification Banner
+
+| Default | Warning + Glassmorphism | Success + Left Accent |
+|---|---|---|
+| ![Notification Banner -- default style](assets/screenshot-12.png) | ![Notification Banner -- Warning preset](assets/screenshot-13.png) | ![Notification Banner -- Success preset](assets/screenshot-14.png) |
+
+### Block editor
+
+![Query Grid's block editor panel](assets/screenshot-15.png)
+
 ## Installation
 
 1. Upload the plugin to `/wp-content/plugins/flux-blocks`, or install it through the WordPress Plugins screen.
