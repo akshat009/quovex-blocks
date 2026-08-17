@@ -1,5 +1,7 @@
 # Flux Blocks
 
+![Flux Blocks](assets/banner-1544x500.gif)
+
 Three native Gutenberg blocks for showcasing content: a filterable **Query Grid**, a magazine-style **Content Showcase**, and a dismissible **Notification Banner** -- built entirely on the block editor, no separate page-builder layer.
 
 ![WordPress plugin](https://img.shields.io/badge/WordPress-6.8%2B-21759b?logo=wordpress&logoColor=white)
