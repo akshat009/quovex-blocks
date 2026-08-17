@@ -1,0 +1,17 @@
+# Force LF line endings for all tracked text files, regardless of the
+# checking-out machine's core.autocrlf setting. WordPress Coding Standards
+# require Unix (LF) line endings in PHP/JS/CSS -- without this, a Windows
+# checkout with core.autocrlf=true silently converts everything to CRLF on
+# checkout, which then fails the project's ESLint/Stylelint/PHPCS checks
+# even though nothing about the actual code changed.
+* text=auto eol=lf
+
+# Binary assets -- never touch line endings, never diff as text.
+*.png binary
+*.gif binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+*.zip binary
+*.woff binary
+*.woff2 binary
