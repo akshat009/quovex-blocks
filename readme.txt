@@ -8,7 +8,7 @@ Stable tag:         0.1.0
 License:            GPL-2.0-or-later
 License URI:        https://www.gnu.org/licenses/gpl-2.0.html
 
-Three native Gutenberg blocks for showcasing content: a filterable Query Grid, a magazine-style Content Showcase, and a dismissible Notification Banner.
+Three native Gutenberg blocks: a filterable Query Grid, a magazine-style Content Showcase, and a dismissible Notification Banner.
 
 == Description ==
 
