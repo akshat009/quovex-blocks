@@ -29,7 +29,7 @@
 	<config name="minimum_supported_wp_version" value="6.8"/>
 	<config name="testVersion" value="7.4-"/>
 
-	<!-- <rule ref="PHPCompatibilityWP"/> -->
+	<rule ref="PHPCompatibilityWP"/>
 	<rule ref="WordPress">
 		<exclude name="Generic.Commenting.DocComment.MissingShort"/>
 		<!--
