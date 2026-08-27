@@ -23,8 +23,6 @@
 		"build/**",
 		"includes/**",
 		"languages/**",
-		"vendor/**",
-		"composer.json",
 		"flux-blocks.php",
 		"uninstall.php",
 		"readme.txt",
