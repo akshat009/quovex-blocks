@@ -1,18 +1,20 @@
 === Flux Blocks ===
 Contributors:      developerakshat
-Tags:               gutenberg, blocks, query, posts, showcase
+Tags:               post grid, query loop, content showcase, notification bar, post carousel
 Requires at least:  6.8
-Tested up to:       7.0
+Tested up to:       7.1
 Requires PHP:       7.4
 Stable tag:         0.1.0
 License:            GPL-2.0-or-later
 License URI:        https://www.gnu.org/licenses/gpl-2.0.html
 
-Three native Gutenberg blocks: a filterable Query Grid, a magazine-style Content Showcase, and a dismissible Notification Banner.
+Post grid, query loop, masonry & carousel blocks, a content showcase, and a dismissible notification / announcement bar for Gutenberg.
 
 == Description ==
 
-Flux Blocks adds three focused, modern Gutenberg blocks to the native block editor -- a filterable/paginated posts grid, a magazine-style Content Showcase with four layouts and interactive image hotspots, and a dismissible Notification Banner for announcements and alerts. Query Grid and Content Showcase both work with **any public post type**, not just Posts.
+Flux Blocks adds three focused, modern blocks to the native Gutenberg block editor -- a filterable, paginated **Query Grid** (a post grid with grid, list, masonry, and carousel layouts), a magazine-style **Content Showcase**, and a dismissible **Notification Banner** for announcements and alerts. Query Grid and Content Showcase both work with **any public post type** -- Posts, Pages, WooCommerce products, or any custom post type registered on your site -- not just Posts.
+
+**Great for:** a recent posts or featured posts grid, a custom post type or portfolio grid, a post carousel / slider, a related content section, a magazine-style homepage showcase, and an announcement bar, alert, or notice at the top of any page.
 
 = Why this plugin? =
 
@@ -25,9 +27,9 @@ Flux Blocks adds three focused, modern Gutenberg blocks to the native block edit
 
 == Blocks ==
 
-= Query Grid =
+= Query Grid -- post grid, list, masonry & carousel block =
 
-A filterable, paginated grid of posts.
+A filterable, paginated grid of posts -- use it as a recent posts grid, a featured or custom post type grid, or a post carousel / slider.
 
 * Four layouts as native Style Variations: Grid, List, Masonry, and Carousel.
 * Works with any public post type -- Posts, Pages, or any custom post type registered on your site.
@@ -38,9 +40,9 @@ A filterable, paginated grid of posts.
 * Two-tone heading with a colored accent word, full color controls for pills/pagination/meta text, and responsive column counts (mobile/tablet/desktop).
 * Font family and font weight controls (pulled from your active theme, no separate fonts to install) for the heading, card titles, excerpts, meta text, filter pills, and pagination.
 
-= Content Showcase =
+= Content Showcase -- magazine & featured posts block =
 
-A magazine-style showcase of up to three posts, automatic or hand-picked.
+A magazine-style showcase of up to three posts, automatic or hand-picked -- ideal for a homepage featured section or an editor's picks strip.
 
 * Four layouts as native Style Variations: Magazine (one large card + smaller ones beside it), Split (alternating text/image rows), Overlay (text floating on the image), and Two-Thirds/One-Third (a large featured post beside a stacked column, divided by a vertical rule).
 * Works with any public post type -- Posts, Pages, or any custom post type registered on your site.
@@ -52,9 +54,9 @@ A magazine-style showcase of up to three posts, automatic or hand-picked.
 * Color controls for the heading, card titles, dates, excerpts, and hotspot pins/tooltips.
 * Font family and font weight controls (pulled from your active theme, no separate fonts to install) for the heading, subheading, card titles, excerpts, dates, and the Explore button.
 
-= Notification Banner =
+= Notification Banner -- announcement bar & alert block =
 
-A dismissible announcement bar or alert box for promos, notices, and updates.
+A dismissible announcement bar or alert box for promos, notices, sales, and updates.
 
 * Four presets (Announcement, Info, Success, Warning) and five style variations (Gradient Background, Left Accent, Soft Card, Glassmorphism, Outline).
 * Icon picker: emoji, a built-in dashicon, or a small SVG icon set.
@@ -72,7 +74,11 @@ A dismissible announcement bar or alert box for promos, notices, and updates.
 
 = Does this plugin work with custom post types? =
 
-Yes. Both blocks let you choose any public post type registered on your site from the block's own Inspector settings -- not just Posts.
+Yes. Both blocks let you choose any public post type registered on your site from the block's own Inspector settings -- not just Posts. That includes building a custom post type grid, a WooCommerce products grid, or a portfolio grid.
+
+= Can I use Query Grid as a post carousel or slider? =
+
+Yes. Query Grid ships a Carousel Style Variation -- switch to it in the block's Styles panel and the same posts render as a swipeable, arrow-navigable carousel, no separate slider plugin needed.
 
 = Does Query Grid's pagination reload the page? =
 
@@ -89,6 +95,10 @@ Up to three -- it's designed as a compact, curated showcase rather than a full l
 = What are Content Showcase's image hotspots? =
 
 Small clickable pins you position anywhere on a post's image, each opening a popover with its own title, description, and an optional link -- useful for calling out a detail in the photo without cluttering the card itself.
+
+= Is the Notification Banner a full-width announcement bar or an inline alert? =
+
+Either. Place it at the top of a page (or in a header template part) for a site-wide announcement bar, or drop it inside content as an inline info / success / warning alert. Visitors can dismiss it, and the dismissal is remembered on their next visit.
 
 = Will this slow down my site? =
 
