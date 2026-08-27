@@ -1,4 +1,4 @@
-=== Flux Blocks -- Post Grid, Content Showcase & Notification Bar Blocks ===
+=== Flux Blocks ===
 Contributors:      developerakshat
 Tags:               post grid, query loop, content showcase, notification bar, post carousel
 Requires at least:  6.8

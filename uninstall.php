@@ -22,20 +22,30 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 
 delete_option( 'flux_blocks_pagination_slug' );
 
-global $wpdb;
+/**
+ * Deletes the per-post-type cache-key registry options and every transient
+ * they reference. Wrapped in a function so its locals stay function-scoped --
+ * uninstall.php otherwise runs in the global scope, where every variable
+ * reads as an unprefixed global.
+ */
+function flux_blocks_uninstall_cleanup(): void {
+	global $wpdb;
 
-// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- one-time uninstall cleanup, no option API equivalent for "find options by prefix".
-$registry_options = $wpdb->get_col(
-	$wpdb->prepare(
-		"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s",
-		$wpdb->esc_like( '_flux_blocks_cache_keys_' ) . '%'
-	)
-);
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- one-time uninstall cleanup, no option API equivalent for "find options by prefix".
+	$registry_options = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s",
+			$wpdb->esc_like( '_flux_blocks_cache_keys_' ) . '%'
+		)
+	);
 
-foreach ( $registry_options as $registry_option ) {
-	$keys = get_option( $registry_option, array() );
-	foreach ( (array) $keys as $key ) {
-		delete_transient( $key );
+	foreach ( $registry_options as $registry_option ) {
+		$keys = get_option( $registry_option, array() );
+		foreach ( (array) $keys as $key ) {
+			delete_transient( $key );
+		}
+		delete_option( $registry_option );
 	}
-	delete_option( $registry_option );
 }
+
+flux_blocks_uninstall_cleanup();

@@ -172,6 +172,7 @@ class Renderer extends AbstractRenderer {
 		$args      = $this->args_builder->build( $attributes, 1 );
 
 		if ( $is_manual_enabled && ! empty( $manual_ids ) ) {
+			// phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in -- bounded to at most 3 manually-picked IDs, so the NOT IN cost this sniff warns about does not apply here.
 			$args['post__not_in'] = array_values( $manual_ids );
 		}
 
