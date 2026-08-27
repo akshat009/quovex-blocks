@@ -19,12 +19,36 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /*
- * Why: brings in Composer's PSR-4 autoloader so `FluxBlocks\...` classes
- * under includes/ resolve without individual `require` statements.
- * Impact of changing: removing/moving this breaks every class in includes/ —
- * `composer install` must have been run at least once for vendor/ to exist.
+ * Autoload `FluxBlocks\...` classes from includes/ (PSR-4).
+ *
+ * Prefer Composer's autoloader when vendor/ is present (dev checkouts that
+ * ran `composer install`); otherwise fall back to a minimal hand-rolled
+ * PSR-4 loader so the shipped plugin needs no vendor/ directory at all.
+ * The plugin has zero runtime Composer dependencies — composer.json is dev
+ * tooling only — so the fallback is the path real installs take.
  */
-require_once __DIR__ . '/vendor/autoload.php';
+if ( is_readable( __DIR__ . '/vendor/autoload.php' ) ) {
+	require_once __DIR__ . '/vendor/autoload.php';
+} else {
+	spl_autoload_register(
+		static function ( $class_name ) {
+			$prefix   = 'FluxBlocks\\';
+			$base_dir = __DIR__ . '/includes/';
+			$len      = strlen( $prefix );
+
+			if ( 0 !== strncmp( $prefix, $class_name, $len ) ) {
+				return;
+			}
+
+			$relative_class = substr( $class_name, $len );
+			$file           = $base_dir . str_replace( '\\', '/', $relative_class ) . '.php';
+
+			if ( is_readable( $file ) ) {
+				require_once $file;
+			}
+		}
+	);
+}
 
 /**
  * Registers the block(s) metadata from the `blocks-manifest.php` and registers the block type(s)
