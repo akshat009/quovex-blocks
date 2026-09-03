@@ -1,0 +1,49 @@
+name: Deploy to WordPress.org
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  tag:
+    name: New tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Verify tag matches readme.txt Stable tag
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          STABLE_TAG=$(grep -m1 "^Stable tag:" readme.txt | sed -E 's/^Stable tag:[[:space:]]*//')
+          echo "Git tag: $TAG_VERSION | readme.txt Stable tag: $STABLE_TAG"
+          if [ "$TAG_VERSION" != "$STABLE_TAG" ]; then
+            echo "::error::Git tag ($GITHUB_REF_NAME) does not match readme.txt's Stable tag ($STABLE_TAG). Bump Stable tag and commit before tagging a release. Aborting."
+            exit 1
+          fi
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies and build
+        run: |
+          npm ci
+          npm run build
+
+      - name: WordPress Plugin Deploy
+        id: deploy
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        with:
+          generate-zip: true
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+
+      - name: Attach zip to GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.deploy.outputs.zip-path }}
