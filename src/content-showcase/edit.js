@@ -60,19 +60,19 @@ export default function Edit( { attributes, setAttributes } ) {
 		? rawThemeFontFamilies
 		: [];
 	const fontFamilyOptions = [
-		{ label: __( 'Theme Default', 'flux-blocks' ), value: '' },
+		{ label: __( 'Theme Default', 'quovex-blocks' ), value: '' },
 		...themeFontFamilies.map( ( font ) => ( {
 			label: font.name,
 			value: font.fontFamily,
 		} ) ),
 	];
 	const fontWeightOptions = [
-		{ label: __( 'Theme Default', 'flux-blocks' ), value: '' },
-		{ label: __( 'Normal (400)', 'flux-blocks' ), value: '400' },
-		{ label: __( 'Medium (500)', 'flux-blocks' ), value: '500' },
-		{ label: __( 'Semi-Bold (600)', 'flux-blocks' ), value: '600' },
-		{ label: __( 'Bold (700)', 'flux-blocks' ), value: '700' },
-		{ label: __( 'Extra-Bold (800)', 'flux-blocks' ), value: '800' },
+		{ label: __( 'Theme Default', 'quovex-blocks' ), value: '' },
+		{ label: __( 'Normal (400)', 'quovex-blocks' ), value: '400' },
+		{ label: __( 'Medium (500)', 'quovex-blocks' ), value: '500' },
+		{ label: __( 'Semi-Bold (600)', 'quovex-blocks' ), value: '600' },
+		{ label: __( 'Bold (700)', 'quovex-blocks' ), value: '700' },
+		{ label: __( 'Extra-Bold (800)', 'quovex-blocks' ), value: '800' },
 	];
 
 	// Shared with query-grid/edit.js -- filters on `publicly_queryable`
@@ -112,10 +112,10 @@ export default function Edit( { attributes, setAttributes } ) {
 			postIndex: 0,
 			x: 50,
 			y: 50,
-			title: __( 'Hotspot Title', 'flux-blocks' ),
+			title: __( 'Hotspot Title', 'quovex-blocks' ),
 			content: __(
 				'Hotspot details or description text…',
-				'flux-blocks'
+				'quovex-blocks'
 			),
 			linkUrl: '',
 		};
@@ -194,7 +194,7 @@ export default function Edit( { attributes, setAttributes } ) {
 			>
 				{ /* ServerSideRender calls the real render.php path (see includes/Blocks/ContentShowcase/Render/Renderer.php) so the editor always matches the frontend. */ }
 				<ServerSideRender
-					block="flux-blocks/content-showcase"
+					block="quovex-blocks/content-showcase"
 					attributes={ attributes }
 				/>
 			</div>

@@ -74,19 +74,19 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		? rawThemeFontFamilies
 		: [];
 	const fontFamilyOptions = [
-		{ label: __( 'Theme Default', 'flux-blocks' ), value: '' },
+		{ label: __( 'Theme Default', 'quovex-blocks' ), value: '' },
 		...themeFontFamilies.map( ( font ) => ( {
 			label: font.name,
 			value: font.fontFamily,
 		} ) ),
 	];
 	const fontWeightOptions = [
-		{ label: __( 'Theme Default', 'flux-blocks' ), value: '' },
-		{ label: __( 'Normal (400)', 'flux-blocks' ), value: '400' },
-		{ label: __( 'Medium (500)', 'flux-blocks' ), value: '500' },
-		{ label: __( 'Semi-Bold (600)', 'flux-blocks' ), value: '600' },
-		{ label: __( 'Bold (700)', 'flux-blocks' ), value: '700' },
-		{ label: __( 'Extra-Bold (800)', 'flux-blocks' ), value: '800' },
+		{ label: __( 'Theme Default', 'quovex-blocks' ), value: '' },
+		{ label: __( 'Normal (400)', 'quovex-blocks' ), value: '400' },
+		{ label: __( 'Medium (500)', 'quovex-blocks' ), value: '500' },
+		{ label: __( 'Semi-Bold (600)', 'quovex-blocks' ), value: '600' },
+		{ label: __( 'Bold (700)', 'quovex-blocks' ), value: '700' },
+		{ label: __( 'Extra-Bold (800)', 'quovex-blocks' ), value: '800' },
 	];
 
 	// Style Variation isn't a tracked attribute -- WordPress stores it as
@@ -114,9 +114,9 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 	const paginationSlugSaveTimeout = useRef();
 
 	useEffect( () => {
-		apiFetch( { path: '/flux-blocks/v1/pagination-slug' } )
+		apiFetch( { path: '/quovex-blocks/v1/pagination-slug' } )
 			.then( ( res ) => setPaginationSlug( res.slug ) )
-			.catch( () => setPaginationSlug( 'flux-page' ) );
+			.catch( () => setPaginationSlug( 'quovex-page' ) );
 	}, [] );
 
 	const updatePaginationSlug = ( value ) => {
@@ -126,7 +126,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		clearTimeout( paginationSlugSaveTimeout.current );
 		paginationSlugSaveTimeout.current = setTimeout( () => {
 			apiFetch( {
-				path: '/flux-blocks/v1/pagination-slug',
+				path: '/quovex-blocks/v1/pagination-slug',
 				method: 'POST',
 				data: { slug: value },
 			} );
@@ -223,7 +223,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			>
 				{ /* ServerSideRender calls the real render.php path so the editor always matches the frontend; interactive behavior (pagination/search/filter/carousel) doesn't run in this preview. */ }
 				<ServerSideRender
-					block="flux-blocks/query-grid"
+					block="quovex-blocks/query-grid"
 					attributes={ attributes }
 				/>
 			</div>

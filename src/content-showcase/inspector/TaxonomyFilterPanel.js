@@ -17,7 +17,7 @@ export default function TaxonomyFilterPanel( {
 	return (
 		<InspectorControls>
 			<PanelBody
-				title={ __( 'Category & Taxonomy Filter', 'flux-blocks' ) }
+				title={ __( 'Category & Taxonomy Filter', 'quovex-blocks' ) }
 				initialOpen={ false }
 			>
 				{ enableManualSelection ? (
@@ -39,7 +39,7 @@ export default function TaxonomyFilterPanel( {
 						>
 							{ __(
 								'Category filter is automatically disabled because Manual Post Selection is active.',
-								'flux-blocks'
+								'quovex-blocks'
 							) }
 						</p>
 					</div>
@@ -47,13 +47,13 @@ export default function TaxonomyFilterPanel( {
 					<>
 						<SelectControl
 							__nextHasNoMarginBottom
-							label={ __( 'Taxonomy Filter', 'flux-blocks' ) }
+							label={ __( 'Taxonomy Filter', 'quovex-blocks' ) }
 							value={ activeTax }
 							options={ [
 								{
 									label: __(
 										'-- All Taxonomies (No Filter) --',
-										'flux-blocks'
+										'quovex-blocks'
 									),
 									value: '',
 								},
@@ -78,14 +78,14 @@ export default function TaxonomyFilterPanel( {
 								__nextHasNoMarginBottom
 								label={ __(
 									'Filter by Category / Term',
-									'flux-blocks'
+									'quovex-blocks'
 								) }
 								value={ taxonomyFilter?.terms?.[ 0 ] ?? '' }
 								options={ [
 									{
 										label: __(
 											'-- All Categories / Terms --',
-											'flux-blocks'
+											'quovex-blocks'
 										),
 										value: '',
 									},

@@ -1,16 +1,16 @@
 <?php
 /**
- * @package FluxBlocks\Tests
+ * @package QuovexBlocks\Tests
  */
 
-namespace FluxBlocks\Tests\Unit;
+namespace QuovexBlocks\Tests\Unit;
 
 use Brain\Monkey\Functions;
-use FluxBlocks\Blocks\ContentShowcase\Render\StyleBuilder;
-use FluxBlocks\Tests\TestCase;
+use QuovexBlocks\Blocks\ContentShowcase\Render\StyleBuilder;
+use QuovexBlocks\Tests\TestCase;
 
 /**
- * @covers \FluxBlocks\Blocks\ContentShowcase\Render\StyleBuilder
+ * @covers \QuovexBlocks\Blocks\ContentShowcase\Render\StyleBuilder
  */
 class ContentShowcaseStyleBuilderTest extends TestCase {
 
@@ -31,7 +31,7 @@ class ContentShowcaseStyleBuilderTest extends TestCase {
 	public function test_a_single_set_attribute_produces_its_css_custom_property_with_no_trailing_semicolon(): void {
 		$style = $this->builder->build_inline_style( array( 'headingAccentColor' => '#654321' ) );
 
-		$this->assertSame( '--fb-accent:#654321', $style );
+		$this->assertSame( '--qv-accent:#654321', $style );
 	}
 
 	public function test_multiple_set_attributes_are_semicolon_joined_in_property_map_order(): void {
@@ -45,7 +45,7 @@ class ContentShowcaseStyleBuilderTest extends TestCase {
 		// Declaration ORDER matters here -- it must follow the property
 		// map's order (title before date), not the order attributes
 		// happened to be passed in the array.
-		$this->assertSame( '--fb-card-title-color:#111222;--fb-card-date-color:#333444', $style );
+		$this->assertSame( '--qv-card-title-color:#111222;--qv-card-date-color:#333444', $style );
 	}
 
 	public function test_an_empty_attribute_value_is_skipped(): void {
@@ -56,7 +56,7 @@ class ContentShowcaseStyleBuilderTest extends TestCase {
 			)
 		);
 
-		$this->assertSame( '--fb-card-date-color:#333444', $style );
+		$this->assertSame( '--qv-card-date-color:#333444', $style );
 	}
 
 	public function test_typography_attributes_produce_their_css_custom_properties(): void {
@@ -67,6 +67,6 @@ class ContentShowcaseStyleBuilderTest extends TestCase {
 			)
 		);
 
-		$this->assertSame( '--fb-card-title-font-family:Georgia;--fb-card-title-font-weight:600', $style );
+		$this->assertSame( '--qv-card-title-font-family:Georgia;--qv-card-title-font-weight:600', $style );
 	}
 }

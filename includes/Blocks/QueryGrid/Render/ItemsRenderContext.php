@@ -3,10 +3,10 @@
  * Parameter object for ItemsRenderer::render_items_and_nav() -- groups
  * everything needed to render one page's items + nav.
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
-namespace FluxBlocks\Blocks\QueryGrid\Render;
+namespace QuovexBlocks\Blocks\QueryGrid\Render;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

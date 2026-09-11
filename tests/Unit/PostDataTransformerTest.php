@@ -1,17 +1,17 @@
 <?php
 /**
- * @package FluxBlocks\Tests
+ * @package QuovexBlocks\Tests
  */
 
-namespace FluxBlocks\Tests\Unit;
+namespace QuovexBlocks\Tests\Unit;
 
 use Brain\Monkey\Functions;
-use FluxBlocks\QueryEngine\PostDataTransformer;
-use FluxBlocks\Tests\TestCase;
+use QuovexBlocks\QueryEngine\PostDataTransformer;
+use QuovexBlocks\Tests\TestCase;
 use WP_Post;
 
 /**
- * @covers \FluxBlocks\QueryEngine\PostDataTransformer
+ * @covers \QuovexBlocks\QueryEngine\PostDataTransformer
  */
 class PostDataTransformerTest extends TestCase {
 

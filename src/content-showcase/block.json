@@ -1,10 +1,10 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "flux-blocks/content-showcase",
+	"name": "quovex-blocks/content-showcase",
 	"version": "0.1.0",
 	"title": "Content Showcase",
-	"category": "flux-blocks",
+	"category": "quovex-blocks",
 	"icon": "format-gallery",
 	"description": "A magazine-style posts showcase with four distinct layouts -- Magazine (1 large + 3 small cards), Split (alternating text/image rows), Overlay (text floating on the image), and Two-Thirds/One-Third (1 large + smaller posts stacked beside it).",
 	"keywords": [ "posts", "showcase", "magazine", "featured", "hotspot" ],
@@ -238,7 +238,7 @@
 		{ "name": "overlay", "label": "Overlay" },
 		{ "name": "two-thirds", "label": "Two-Thirds/One-Third" }
 	],
-	"textdomain": "flux-blocks",
+	"textdomain": "quovex-blocks",
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
 	"style": "file:./style-index.css",

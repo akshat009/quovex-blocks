@@ -17,7 +17,7 @@
 	colors="true"
 >
 	<testsuites>
-		<testsuite name="Flux Blocks Unit Tests">
+		<testsuite name="Quovex Blocks Unit Tests">
 			<directory>tests/Unit</directory>
 		</testsuite>
 	</testsuites>

@@ -5,19 +5,19 @@
  * StyleBuilder, HeadingRenderer, CardRenderer (which delegates hotspot
  * pins to HotspotRenderer), and ExploreButtonRenderer.
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
-namespace FluxBlocks\Blocks\ContentShowcase\Render;
+namespace QuovexBlocks\Blocks\ContentShowcase\Render;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use FluxBlocks\Blocks\View\AbstractRenderer;
-use FluxBlocks\QueryEngine\ArgsBuilderInterface;
-use FluxBlocks\Cache\CacheInterface;
-use FluxBlocks\QueryEngine\TransformerInterface;
+use QuovexBlocks\Blocks\View\AbstractRenderer;
+use QuovexBlocks\QueryEngine\ArgsBuilderInterface;
+use QuovexBlocks\Cache\CacheInterface;
+use QuovexBlocks\QueryEngine\TransformerInterface;
 
 /**
  * Builds the Content Showcase query and renders one of its layouts.
@@ -81,7 +81,7 @@ class Renderer extends AbstractRenderer {
 
 		$wrapper_attrs = get_block_wrapper_attributes(
 			array(
-				'class' => 'fb-content-showcase fb-content-showcase--' . sanitize_html_class( $layout ),
+				'class' => 'qv-content-showcase qv-content-showcase--' . sanitize_html_class( $layout ),
 				'style' => '' !== $style ? $style : null,
 			)
 		);
@@ -112,14 +112,14 @@ class Renderer extends AbstractRenderer {
 					<?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_block_wrapper_attributes() already escapes. ?>
 				>
 					<?php if ( $heading || $subheading ) : ?>
-						<header class="fb-content-showcase__header">
+						<header class="qv-content-showcase__header">
 							<?php if ( $heading ) : ?>
-								<h2 class="fb-content-showcase__heading">
+								<h2 class="qv-content-showcase__heading">
 									<?php echo $heading_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- HeadingRenderer::render_heading() escapes both parts. ?>
 								</h2>
 							<?php endif; ?>
 							<?php if ( $subheading ) : ?>
-								<p class="fb-content-showcase__subheading"<?php echo $subheading_style; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- build_style_attr() already escapes. ?>>
+								<p class="qv-content-showcase__subheading"<?php echo $subheading_style; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- build_style_attr() already escapes. ?>>
 									<?php echo esc_html( $subheading ); ?>
 								</p>
 							<?php endif; ?>
@@ -127,7 +127,7 @@ class Renderer extends AbstractRenderer {
 					<?php endif; ?>
 
 					<?php if ( empty( $items ) ) : ?>
-						<p class="fb-content-showcase__empty"><?php esc_html_e( 'No posts found.', 'flux-blocks' ); ?></p>
+						<p class="qv-content-showcase__empty"><?php esc_html_e( 'No posts found.', 'quovex-blocks' ); ?></p>
 					<?php else : ?>
 						<?php if ( 'split' === $layout ) : ?>
 							<?php echo $this->cards->render_split( $items, $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CardRenderer::render_split() escapes per field. ?>

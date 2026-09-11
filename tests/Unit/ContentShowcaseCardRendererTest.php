@@ -1,17 +1,17 @@
 <?php
 /**
- * @package FluxBlocks\Tests
+ * @package QuovexBlocks\Tests
  */
 
-namespace FluxBlocks\Tests\Unit;
+namespace QuovexBlocks\Tests\Unit;
 
 use Brain\Monkey\Functions;
-use FluxBlocks\Blocks\ContentShowcase\Render\CardRenderer;
-use FluxBlocks\Blocks\ContentShowcase\Render\HotspotRenderer;
-use FluxBlocks\Tests\TestCase;
+use QuovexBlocks\Blocks\ContentShowcase\Render\CardRenderer;
+use QuovexBlocks\Blocks\ContentShowcase\Render\HotspotRenderer;
+use QuovexBlocks\Tests\TestCase;
 
 /**
- * @covers \FluxBlocks\Blocks\ContentShowcase\Render\CardRenderer
+ * @covers \QuovexBlocks\Blocks\ContentShowcase\Render\CardRenderer
  */
 class ContentShowcaseCardRendererTest extends TestCase {
 

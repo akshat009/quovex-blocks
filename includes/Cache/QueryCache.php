@@ -6,10 +6,10 @@
  * Redis/Memcached over wp_options transparently when available. See
  * CacheInvalidator for how entries get cleared.
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
-namespace FluxBlocks\Cache;
+namespace QuovexBlocks\Cache;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class QueryCache implements CacheInterface {
 
 	const TTL               = HOUR_IN_SECONDS;
-	const REGISTRY_PREFIX   = '_flux_blocks_cache_keys_';
+	const REGISTRY_PREFIX   = '_quovex_blocks_cache_keys_';
 	const MAX_REGISTRY_SIZE = 200;
 
 	/**
@@ -33,7 +33,7 @@ class QueryCache implements CacheInterface {
 	 * @return mixed
 	 */
 	public function remember( string $post_type, string $signature, callable $callback ) {
-		$key    = 'fb_q_' . md5( $signature );
+		$key    = 'qv_q_' . md5( $signature );
 		$cached = get_transient( $key );
 
 		// Wrapped in array('value' => ...) -- get_transient() returns bare

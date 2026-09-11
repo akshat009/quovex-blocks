@@ -2,10 +2,10 @@
 /**
  * Sanitizes and validates inline CSS values (colors, typography, numbers) to block declaration injection via unescaped semicolons.
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
-namespace FluxBlocks\Utils;
+namespace QuovexBlocks\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

@@ -2,16 +2,16 @@
 /**
  * Renders Content Showcase's interactive image hotspot pins.
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
-namespace FluxBlocks\Blocks\ContentShowcase\Render;
+namespace QuovexBlocks\Blocks\ContentShowcase\Render;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use FluxBlocks\Utils\StyleSanitizer;
+use QuovexBlocks\Utils\StyleSanitizer;
 
 /**
  * Renders clickable hotspot pins + their popovers for one post's image.
@@ -54,7 +54,7 @@ class HotspotRenderer {
 			$link_url = ! empty( $hs['linkUrl'] ) ? $hs['linkUrl'] : '';
 
 			$style_attr = sprintf(
-				'left: %s%%; top: %s%%; --fb-hotspot-pin-color: %s; --fb-hotspot-tooltip-bg: %s; --fb-hotspot-tooltip-color: %s; --fb-hotspot-pin-size: %dpx;',
+				'left: %s%%; top: %s%%; --qv-hotspot-pin-color: %s; --qv-hotspot-tooltip-bg: %s; --qv-hotspot-tooltip-color: %s; --qv-hotspot-pin-size: %dpx;',
 				esc_attr( $x ),
 				esc_attr( $y ),
 				esc_attr( $pin_color ),
@@ -65,35 +65,35 @@ class HotspotRenderer {
 
 			?>
 			<div
-				class="fb-hotspot"
+				class="qv-hotspot"
 				style="<?php echo $style_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"
-				data-wp-interactive="flux-blocks/content-showcase"
+				data-wp-interactive="quovex-blocks/content-showcase"
 				<?php echo wp_interactivity_data_wp_context( array( 'isOpen' => false ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			>
 				<button
 					type="button"
-					class="fb-hotspot__pin"
+					class="qv-hotspot__pin"
 					data-wp-on--click="actions.toggleHotspot"
 					data-wp-bind--aria-expanded="context.isOpen"
-					aria-label="<?php echo esc_attr( $title ? $title : __( 'Hotspot details', 'flux-blocks' ) ); ?>"
+					aria-label="<?php echo esc_attr( $title ? $title : __( 'Hotspot details', 'quovex-blocks' ) ); ?>"
 				>
-					<span class="fb-hotspot__pin-pulse"></span>
-					<span class="fb-hotspot__pin-icon">+</span>
+					<span class="qv-hotspot__pin-pulse"></span>
+					<span class="qv-hotspot__pin-icon">+</span>
 				</button>
 
 				<div
-					class="fb-hotspot__popover"
+					class="qv-hotspot__popover"
 					data-wp-bind--hidden="!context.isOpen"
 				>
 					<?php if ( $title ) : ?>
-						<h4 class="fb-hotspot__title"><?php echo esc_html( $title ); ?></h4>
+						<h4 class="qv-hotspot__title"><?php echo esc_html( $title ); ?></h4>
 					<?php endif; ?>
 					<?php if ( $content ) : ?>
-						<p class="fb-hotspot__content"><?php echo esc_html( $content ); ?></p>
+						<p class="qv-hotspot__content"><?php echo esc_html( $content ); ?></p>
 					<?php endif; ?>
 					<?php if ( $link_url ) : ?>
-						<a class="fb-hotspot__link" href="<?php echo esc_url( $link_url ); ?>">
-							<?php esc_html_e( 'Learn More →', 'flux-blocks' ); ?>
+						<a class="qv-hotspot__link" href="<?php echo esc_url( $link_url ); ?>">
+							<?php esc_html_e( 'Learn More →', 'quovex-blocks' ); ?>
 						</a>
 					<?php endif; ?>
 				</div>

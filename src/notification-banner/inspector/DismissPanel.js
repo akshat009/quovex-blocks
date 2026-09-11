@@ -11,15 +11,15 @@ export default function DismissPanel( { attributes, setAttributes } ) {
 	return (
 		<InspectorControls>
 			<PanelBody
-				title={ __( 'Dismiss & Memory Settings', 'flux-blocks' ) }
+				title={ __( 'Dismiss & Memory Settings', 'quovex-blocks' ) }
 				initialOpen={ false }
 			>
 				<ToggleControl
 					__nextHasNoMarginBottom
-					label={ __( 'Allow Dismiss (✕ Button)', 'flux-blocks' ) }
+					label={ __( 'Allow Dismiss (✕ Button)', 'quovex-blocks' ) }
 					help={ __(
 						'Displays a close button for users to dismiss the notice.',
-						'flux-blocks'
+						'quovex-blocks'
 					) }
 					checked={ allowDismiss }
 					onChange={ ( val ) =>
@@ -32,11 +32,11 @@ export default function DismissPanel( { attributes, setAttributes } ) {
 						__nextHasNoMarginBottom
 						label={ __(
 							'Remember Dismissal (localStorage)',
-							'flux-blocks'
+							'quovex-blocks'
 						) }
 						help={ __(
 							'Prevents the notice from reappearing once dismissed by the visitor.',
-							'flux-blocks'
+							'quovex-blocks'
 						) }
 						checked={ rememberDismiss }
 						onChange={ ( val ) =>

@@ -1,12 +1,12 @@
 <?php
 /**
- * @package FluxBlocks\Tests
+ * @package QuovexBlocks\Tests
  */
 
-namespace FluxBlocks\Tests\Unit;
+namespace QuovexBlocks\Tests\Unit;
 
-use FluxBlocks\Blocks\View\AbstractRenderer;
-use FluxBlocks\Tests\TestCase;
+use QuovexBlocks\Blocks\View\AbstractRenderer;
+use QuovexBlocks\Tests\TestCase;
 
 /**
  * Tiny concrete fixture -- layout_from_class_name() is `protected`, and
@@ -24,7 +24,7 @@ class LayoutFromClassNameFixture extends AbstractRenderer {
 }
 
 /**
- * @covers \FluxBlocks\Blocks\View\AbstractRenderer
+ * @covers \QuovexBlocks\Blocks\View\AbstractRenderer
  */
 class LayoutFromClassNameTest extends TestCase {
 
@@ -48,7 +48,7 @@ class LayoutFromClassNameTest extends TestCase {
 	}
 
 	public function test_a_style_class_among_other_classes_is_still_found(): void {
-		$this->assertSame( 'list', $this->renderer->resolve( 'wp-block-flux-blocks-query-grid is-style-list', $this->known, 'grid' ) );
+		$this->assertSame( 'list', $this->renderer->resolve( 'wp-block-quovex-blocks-query-grid is-style-list', $this->known, 'grid' ) );
 	}
 
 	/**

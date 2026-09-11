@@ -3,16 +3,16 @@
  * Builds Query Grid's wrapper-level CSS custom properties from resolved
  * columns/colors/typography maps.
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
-namespace FluxBlocks\Blocks\QueryGrid\Render;
+namespace QuovexBlocks\Blocks\QueryGrid\Render;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use FluxBlocks\Utils\StyleSanitizer;
+use QuovexBlocks\Utils\StyleSanitizer;
 
 /**
  * Resolves Query Grid's color/typography attributes into CSS custom properties.
@@ -26,20 +26,20 @@ class StyleBuilder {
 	 * @var array<string,string>
 	 */
 	private const COLOR_PROPERTY_MAP = array(
-		'titleColor'          => '--fb-title-color',
-		'accentColor'         => '--fb-accent-color',
-		'subheadingColor'     => '--fb-subheading-color',
-		'cardTitleColor'      => '--fb-card-title-color',
-		'cardTitleHoverColor' => '--fb-card-title-hover-color',
-		'cardExcerptColor'    => '--fb-card-excerpt-color',
-		'readMoreColor'       => '--fb-read-more-color',
-		'readMoreHoverColor'  => '--fb-read-more-hover-color',
-		'activeAccent'        => '--fb-active-accent',
-		'disabledNav'         => '--fb-disabled-nav',
-		'inactivePillBg'      => '--fb-inactive-pill-bg',
-		'inactivePillText'    => '--fb-inactive-pill-text',
-		'metaText'            => '--fb-meta-text',
-		'authorText'          => '--fb-author-text',
+		'titleColor'          => '--qv-title-color',
+		'accentColor'         => '--qv-accent-color',
+		'subheadingColor'     => '--qv-subheading-color',
+		'cardTitleColor'      => '--qv-card-title-color',
+		'cardTitleHoverColor' => '--qv-card-title-hover-color',
+		'cardExcerptColor'    => '--qv-card-excerpt-color',
+		'readMoreColor'       => '--qv-read-more-color',
+		'readMoreHoverColor'  => '--qv-read-more-hover-color',
+		'activeAccent'        => '--qv-active-accent',
+		'disabledNav'         => '--qv-disabled-nav',
+		'inactivePillBg'      => '--qv-inactive-pill-bg',
+		'inactivePillText'    => '--qv-inactive-pill-text',
+		'metaText'            => '--qv-meta-text',
+		'authorText'          => '--qv-author-text',
 	);
 
 	/**
@@ -50,16 +50,16 @@ class StyleBuilder {
 	 * @var array<string,string>
 	 */
 	private const TYPOGRAPHY_PROPERTY_MAP = array(
-		'headingTitleFontFamily'     => '--fb-title-font-family',
-		'headingTitleFontWeight'     => '--fb-title-font-weight',
-		'cardTitleFontFamily'        => '--fb-card-title-font-family',
-		'cardTitleFontWeight'        => '--fb-card-title-font-weight',
-		'cardExcerptFontFamily'      => '--fb-card-excerpt-font-family',
-		'cardExcerptFontWeight'      => '--fb-card-excerpt-font-weight',
-		'metaFontFamily'             => '--fb-meta-font-family',
-		'metaFontWeight'             => '--fb-meta-font-weight',
-		'filterPaginationFontFamily' => '--fb-filter-pagination-font-family',
-		'filterPaginationFontWeight' => '--fb-filter-pagination-font-weight',
+		'headingTitleFontFamily'     => '--qv-title-font-family',
+		'headingTitleFontWeight'     => '--qv-title-font-weight',
+		'cardTitleFontFamily'        => '--qv-card-title-font-family',
+		'cardTitleFontWeight'        => '--qv-card-title-font-weight',
+		'cardExcerptFontFamily'      => '--qv-card-excerpt-font-family',
+		'cardExcerptFontWeight'      => '--qv-card-excerpt-font-weight',
+		'metaFontFamily'             => '--qv-meta-font-family',
+		'metaFontWeight'             => '--qv-meta-font-weight',
+		'filterPaginationFontFamily' => '--qv-filter-pagination-font-family',
+		'filterPaginationFontWeight' => '--qv-filter-pagination-font-weight',
 	);
 
 	/**
@@ -71,7 +71,7 @@ class StyleBuilder {
 	 */
 	public function build_inline_style( array $columns, array $colors, array $typography, int $carousel_items_per_view = 3 ): string {
 		$style = sprintf(
-			'--fb-cols-mobile:%d;--fb-cols-tablet:%d;--fb-cols-desktop:%d;--fb-carousel-items:%d;',
+			'--qv-cols-mobile:%d;--qv-cols-tablet:%d;--qv-cols-desktop:%d;--qv-carousel-items:%d;',
 			absint( $columns['mobile'] ),
 			absint( $columns['tablet'] ),
 			absint( $columns['desktop'] ),

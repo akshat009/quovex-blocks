@@ -5,20 +5,20 @@
  * StyleBuilder (CSS custom properties), FacetRenderer (search + filter
  * pills), and ItemsRenderer (items + pagination/"Load more"/carousel nav).
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
-namespace FluxBlocks\Blocks\QueryGrid\Render;
+namespace QuovexBlocks\Blocks\QueryGrid\Render;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use FluxBlocks\Blocks\View\AbstractRenderer;
-use FluxBlocks\QueryEngine\ArgsBuilderInterface;
-use FluxBlocks\Cache\CacheInterface;
-use FluxBlocks\QueryEngine\TransformerInterface;
-use FluxBlocks\Blocks\QueryGrid\Routing\PaginationEndpoint;
+use QuovexBlocks\Blocks\View\AbstractRenderer;
+use QuovexBlocks\QueryEngine\ArgsBuilderInterface;
+use QuovexBlocks\Cache\CacheInterface;
+use QuovexBlocks\QueryEngine\TransformerInterface;
+use QuovexBlocks\Blocks\QueryGrid\Routing\PaginationEndpoint;
 
 /**
  * Builds the Query Grid query, transforms results, and renders a layout.
@@ -120,8 +120,8 @@ class Renderer extends AbstractRenderer {
 		$wrapper_attrs = get_block_wrapper_attributes(
 			array(
 				'class' => trim(
-					'fb-query-grid fb-query-grid--' . sanitize_html_class( $layout )
-					. ( $is_sidebar ? ' fb-query-grid--filter-sidebar fb-query-grid--sidebar-' . sanitize_html_class( $sidebar_side ) : '' )
+					'qv-query-grid qv-query-grid--' . sanitize_html_class( $layout )
+					. ( $is_sidebar ? ' qv-query-grid--filter-sidebar qv-query-grid--sidebar-' . sanitize_html_class( $sidebar_side ) : '' )
 				),
 				'style' => $this->style_builder->build_inline_style( $columns, $colors, $typography, $carousel_items_per_view ),
 			)
@@ -142,7 +142,7 @@ class Renderer extends AbstractRenderer {
 			'searchQuery'          => '',
 			'activeFacetTaxonomy'  => '',
 			'activeTermIds'        => array(),
-			'restUrl'              => rest_url( 'flux-blocks/v1/query' ),
+			'restUrl'              => rest_url( 'quovex-blocks/v1/query' ),
 		);
 
 		$items_and_nav = $this->items->render_items_and_nav(
@@ -168,18 +168,18 @@ class Renderer extends AbstractRenderer {
 				?>
 			<div
 				<?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_block_wrapper_attributes() already escapes. ?>
-				data-wp-interactive="flux-blocks/query-grid"
+				data-wp-interactive="quovex-blocks/query-grid"
 				<?php echo wp_interactivity_data_wp_context( $context ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core helper already escapes/encodes. ?>
 			>
 				<?php if ( $heading ) : ?>
-					<h2 class="fb-query-grid__heading"><?php echo $this->render_heading( $heading, $heading_accent ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_heading() escapes both parts. ?></h2>
+					<h2 class="qv-query-grid__heading"><?php echo $this->render_heading( $heading, $heading_accent ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_heading() escapes both parts. ?></h2>
 				<?php endif; ?>
 
 				<?php if ( $is_sidebar ) : ?>
-					<div class="fb-query-grid__layout">
-						<aside class="fb-query-grid__sidebar">
+					<div class="qv-query-grid__layout">
+						<aside class="qv-query-grid__sidebar">
 							<?php if ( $show_search ) : ?>
-								<div class="fb-query-grid__toolbar fb-query-grid__toolbar--align-<?php echo esc_attr( $search_align ); ?>">
+								<div class="qv-query-grid__toolbar qv-query-grid__toolbar--align-<?php echo esc_attr( $search_align ); ?>">
 									<?php echo $this->facets->render_search_form(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_search_form() escapes per field. ?>
 								</div>
 							<?php endif; ?>
@@ -187,13 +187,13 @@ class Renderer extends AbstractRenderer {
 								<?php echo $this->facets->render_facet_group( $taxonomy, $post_type, $show_filter_headings, $facet_headings[ $taxonomy ] ?? '' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_facet_group() escapes per field. ?>
 							<?php endforeach; ?>
 						</aside>
-						<div class="fb-query-grid__main">
+						<div class="qv-query-grid__main">
 							<?php echo $items_and_nav; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- ItemsRenderer::render_items_and_nav() escapes per field internally. ?>
 						</div>
 					</div>
 				<?php else : ?>
 					<?php if ( ! $is_carousel && ( $show_search || ! empty( $facet_taxonomies ) ) ) : ?>
-						<div class="fb-query-grid__toolbar fb-query-grid__toolbar--align-<?php echo esc_attr( $search_align ); ?>">
+						<div class="qv-query-grid__toolbar qv-query-grid__toolbar--align-<?php echo esc_attr( $search_align ); ?>">
 							<?php if ( $show_search ) : ?>
 								<?php echo $this->facets->render_search_form(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_search_form() escapes per field. ?>
 							<?php endif; ?>
@@ -224,7 +224,7 @@ class Renderer extends AbstractRenderer {
 		list( $before, $after ) = explode( $accent, $heading, 2 );
 
 		return esc_html( $before )
-			. '<span class="fb-query-grid__heading-accent">' . esc_html( $accent ) . '</span>'
+			. '<span class="qv-query-grid__heading-accent">' . esc_html( $accent ) . '</span>'
 			. esc_html( $after );
 	}
 
@@ -265,19 +265,27 @@ class Renderer extends AbstractRenderer {
 	public function query( array $attributes, int $page ): array {
 		$args               = $this->args_builder->build( $attributes, $page );
 		$resolved_post_type = is_string( $args['post_type'] ?? null ) ? $args['post_type'] : 'post';
-		$signature          = $resolved_post_type . '|grid|' . wp_json_encode( $args );
 
-		return $this->cache->remember(
-			$resolved_post_type,
-			$signature,
-			function () use ( $args ) {
-				$query = new \WP_Query( $args );
-				return array(
-					'items'       => $this->transformer->transform_many( $query->posts ),
-					'has_more'    => (int) $query->max_num_pages > (int) ( $args['paged'] ?? 1 ),
-					'total_pages' => max( 1, (int) $query->max_num_pages ),
-				);
-			}
-		);
+		$run_query = function () use ( $args ) {
+			$query = new \WP_Query( $args );
+			return array(
+				'items'       => $this->transformer->transform_many( $query->posts ),
+				'has_more'    => (int) $query->max_num_pages > (int) ( $args['paged'] ?? 1 ),
+				'total_pages' => max( 1, (int) $query->max_num_pages ),
+			);
+		};
+
+		// Free-text search ('s') has effectively unbounded cardinality -- every
+		// distinct search term a visitor types would mint its own transient
+		// that just sits there until TTL. Every other filter (post type,
+		// taxonomy, order, page) has a small, bounded set of values and is
+		// worth caching; a live search isn't, so run it straight through.
+		if ( ! empty( $args['s'] ) ) {
+			return $run_query();
+		}
+
+		$signature = $resolved_post_type . '|grid|' . wp_json_encode( $args );
+
+		return $this->cache->remember( $resolved_post_type, $signature, $run_query );
 	}
 }

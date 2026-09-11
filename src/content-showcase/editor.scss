@@ -4,7 +4,7 @@
  * Replace them with your own styles or remove the file completely.
  */
 
-.wp-block-flux-blocks-content-showcase {
+.wp-block-quovex-blocks-content-showcase {
 
 	a {
 		pointer-events: none;
@@ -23,8 +23,8 @@
 		overflow: hidden !important;
 	}
 
-	.fb-content-showcase,
-	.fb-query-grid {
+	.qv-content-showcase,
+	.qv-query-grid {
 		transform: scale(0.25);
 		transform-origin: top left;
 		width: 400%;

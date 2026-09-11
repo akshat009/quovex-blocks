@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ruleset name="Flux Blocks">
+<ruleset name="Quovex Blocks">
 	<!--
 		Why this file exists: without a ruleset here, PHPCS falls back to the
 		default PEAR standard (irrelevant tags like @category/@package on every
@@ -8,7 +8,7 @@
 		Impact of changing: touches every PHP file's fix-on-save behavior and
 		the pre-push lint gate — not just this file.
 	-->
-	<description>WordPress Coding Standards ruleset for Flux Blocks.</description>
+	<description>WordPress Coding Standards ruleset for Quovex Blocks.</description>
 
 	<file>.</file>
 	<exclude-pattern>/build/*</exclude-pattern>
@@ -33,7 +33,7 @@
 	<rule ref="WordPress">
 		<exclude name="Generic.Commenting.DocComment.MissingShort"/>
 		<!--
-			includes/ uses Composer PSR-4 autoloading (FluxBlocks\Foo\Bar ->
+			includes/ uses Composer PSR-4 autoloading (QuovexBlocks\Foo\Bar ->
 			includes/Foo/Bar.php), which requires the filename to match the
 			class name case for case; that is incompatible with WP's legacy
 			class-foo.php/all-lowercase file-naming sniffs, which assume
@@ -46,7 +46,7 @@
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<property name="text_domain" type="array">
-				<element value="flux-blocks"/>
+				<element value="quovex-blocks"/>
 			</property>
 		</properties>
 	</rule>

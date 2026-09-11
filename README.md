@@ -1,6 +1,6 @@
-# Flux Blocks
+# Quovex Blocks
 
-![Flux Blocks](assets/banner-1544x500.gif)
+![Quovex Blocks](assets/banner-1544x500.gif)
 
 Three native Gutenberg blocks for showcasing content: a filterable **Query Grid**, a magazine-style **Content Showcase**, and a dismissible **Notification Banner** -- built entirely on the block editor, no separate page-builder layer.
 
@@ -88,9 +88,9 @@ A dismissible announcement bar or alert box.
 
 ## Installation
 
-1. Upload the plugin to `/wp-content/plugins/flux-blocks`, or install it through the WordPress Plugins screen.
+1. Upload the plugin to `/wp-content/plugins/quovex-blocks`, or install it through the WordPress Plugins screen.
 2. Activate it through the Plugins screen.
-3. Add a "Query Grid", "Content Showcase", or "Notification Banner" block from the "Flux Blocks" category in the inserter.
+3. Add a "Query Grid", "Content Showcase", or "Notification Banner" block from the "Quovex Blocks" category in the inserter.
 
 ## Development
 
@@ -112,7 +112,7 @@ npm run test:unit:js            # Jest
 
 ### Architecture
 
-- `includes/` -- PHP (PSR-4 autoloaded under the `FluxBlocks\` namespace). `Plugin::boot()` ([includes/Plugin.php](includes/Plugin.php)) is the composition root; `Services` ([includes/Services.php](includes/Services.php)) is the service container.
+- `includes/` -- PHP (PSR-4 autoloaded under the `QuovexBlocks\` namespace). `Plugin::boot()` ([includes/Plugin.php](includes/Plugin.php)) is the composition root; `Services` ([includes/Services.php](includes/Services.php)) is the service container.
 - `src/` -- block source (editor UI, frontend view scripts, styles). Built into `build/` via `@wordpress/scripts`.
 - `tests/` -- PHPUnit (`tests/Unit/`) and Jest (`src/**/test/`) suites.
 - Each block's render path: `src/<block>/render.php` -> `Services::<block>_renderer()` -> `includes/Blocks/<Block>/Render/Renderer.php`.

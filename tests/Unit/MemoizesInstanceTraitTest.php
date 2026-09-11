@@ -1,12 +1,12 @@
 <?php
 /**
- * @package FluxBlocks\Tests
+ * @package QuovexBlocks\Tests
  */
 
-namespace FluxBlocks\Tests\Unit;
+namespace QuovexBlocks\Tests\Unit;
 
-use FluxBlocks\MemoizesInstanceTrait;
-use FluxBlocks\Tests\TestCase;
+use QuovexBlocks\MemoizesInstanceTrait;
+use QuovexBlocks\Tests\TestCase;
 
 /**
  * Tiny fixture class -- `once()` is `protected`, so a real (if trivial)
@@ -42,7 +42,7 @@ class MemoizesInstanceTraitResetFixture {
 }
 
 /**
- * @covers \FluxBlocks\MemoizesInstanceTrait
+ * @covers \QuovexBlocks\MemoizesInstanceTrait
  */
 class MemoizesInstanceTraitTest extends TestCase {
 

@@ -1,4 +1,4 @@
-=== Flux Blocks ===
+=== Quovex Blocks ===
 Contributors:      developerakshat
 Tags:               post grid, query loop, content showcase, notification bar, post carousel
 Requires at least:  6.8
@@ -12,7 +12,7 @@ Post grid, query loop, masonry & carousel blocks, a content showcase, and a dism
 
 == Description ==
 
-Flux Blocks adds three focused, modern blocks to the native Gutenberg block editor -- a filterable, paginated **Query Grid** (a post grid with grid, list, masonry, and carousel layouts), a magazine-style **Content Showcase**, and a dismissible **Notification Banner** for announcements and alerts. Query Grid and Content Showcase both work with **any public post type** -- Posts, Pages, WooCommerce products, or any custom post type registered on your site -- not just Posts.
+Quovex Blocks adds three focused, modern blocks to the native Gutenberg block editor -- a filterable, paginated **Query Grid** (a post grid with grid, list, masonry, and carousel layouts), a magazine-style **Content Showcase**, and a dismissible **Notification Banner** for announcements and alerts. Query Grid and Content Showcase both work with **any public post type** -- Posts, Pages, WooCommerce products, or any custom post type registered on your site -- not just Posts.
 
 **Great for:** a recent posts or featured posts grid, a custom post type or portfolio grid, a post carousel / slider, a related content section, a magazine-style homepage showcase, and an announcement bar, alert, or notice at the top of any page.
 
@@ -21,7 +21,7 @@ Flux Blocks adds three focused, modern blocks to the native Gutenberg block edit
 * **No separate builder layer:** everything is a native block, edited with the block editor you already use -- no new page-building interface to learn, no plugin-specific UI to fight.
 * **Works with any post type:** pick Posts, Pages, or any custom post type registered on your site, right from the block's own settings -- not hardcoded to Posts.
 * **Real interactivity, no jQuery:** search, filtering, pagination, carousels, and image hotspots are all built on WordPress's own Interactivity API -- lightweight, no extra JS framework loaded on your frontend.
-* **SEO-friendly pagination:** Query Grid's numbered pagination uses real, crawlable links with a configurable URL segment (e.g. `/your-site/flux-page/2/`) -- not JavaScript-only buttons search engines can't follow.
+* **SEO-friendly pagination:** Query Grid's numbered pagination uses real, crawlable links with a configurable URL segment (e.g. `/your-site/quovex-page/2/`) -- not JavaScript-only buttons search engines can't follow.
 * **Cache-aware by design:** every query is cached and automatically invalidated the moment a post, category, or tag changes -- fast without ever showing stale content.
 * **Clean uninstall:** deactivating leaves your data untouched; deleting the plugin removes every option and cached value it created. Nothing lingers in your database.
 
@@ -66,9 +66,9 @@ A dismissible announcement bar or alert box for promos, notices, sales, and upda
 
 == Installation ==
 
-1. Upload the plugin files to the `/wp-content/plugins/flux-blocks` directory, or install the plugin through the WordPress Plugins screen directly.
+1. Upload the plugin files to the `/wp-content/plugins/quovex-blocks` directory, or install the plugin through the WordPress Plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress.
-3. Add a "Query Grid", "Content Showcase", or "Notification Banner" block from the "Flux Blocks" category in the block inserter.
+3. Add a "Query Grid", "Content Showcase", or "Notification Banner" block from the "Quovex Blocks" category in the block inserter.
 
 == Frequently Asked Questions ==
 
@@ -106,11 +106,15 @@ No. Query results are cached automatically (and cleared the moment relevant cont
 
 = What happens to my data if I delete the plugin? =
 
-Everything Flux Blocks created -- cached query results and the pagination URL setting -- is removed on deletion. Deactivating the plugin, on the other hand, leaves everything untouched in case you reactivate later.
+Everything Quovex Blocks created -- cached query results and the pagination URL setting -- is removed on deletion. Deactivating the plugin, on the other hand, leaves everything untouched in case you reactivate later.
 
 = Is there a Pro version? =
 
 Not currently -- every feature described above is included.
+
+== Source Code ==
+
+The `build/` directory ships compiled, minified JavaScript and CSS. Its uncompiled source, along with the build tooling to regenerate it (`npm install && npm run build`), is publicly available at https://github.com/akshat009/quovex-blocks.
 
 == Screenshots ==
 

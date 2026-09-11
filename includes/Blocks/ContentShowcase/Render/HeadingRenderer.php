@@ -4,10 +4,10 @@
  * highlight span) and the small `style="..."` attribute helper it shares
  * with the subheading paragraph in Renderer::render().
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
-namespace FluxBlocks\Blocks\ContentShowcase\Render;
+namespace QuovexBlocks\Blocks\ContentShowcase\Render;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -44,7 +44,7 @@ class HeadingRenderer {
 		list( $before, $after ) = explode( $accent, $heading, 2 );
 
 		return sprintf(
-			'<span%s>%s</span><span class="fb-content-showcase__heading-accent"%s>%s</span><span%s>%s</span>',
+			'<span%s>%s</span><span class="qv-content-showcase__heading-accent"%s>%s</span><span%s>%s</span>',
 			$title_style,
 			esc_html( $before ),
 			$accent_style,

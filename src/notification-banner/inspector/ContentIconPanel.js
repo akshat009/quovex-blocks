@@ -37,19 +37,19 @@ export default function ContentIconPanel( {
 	return (
 		<InspectorControls>
 			<PanelBody
-				title={ __( 'Content & Icon Settings', 'flux-blocks' ) }
+				title={ __( 'Content & Icon Settings', 'quovex-blocks' ) }
 				initialOpen={ false }
 			>
 				<TextControl
 					__nextHasNoMarginBottom
-					label={ __( 'Announcement Title', 'flux-blocks' ) }
+					label={ __( 'Announcement Title', 'quovex-blocks' ) }
 					value={ title }
 					onChange={ ( val ) => setAttributes( { title: val } ) }
 				/>
 
 				<TextareaControl
 					__nextHasNoMarginBottom
-					label={ __( 'Announcement Message', 'flux-blocks' ) }
+					label={ __( 'Announcement Message', 'quovex-blocks' ) }
 					value={ message }
 					onChange={ ( val ) => setAttributes( { message: val } ) }
 					rows={ 3 }
@@ -59,7 +59,7 @@ export default function ContentIconPanel( {
 
 				<ToggleControl
 					__nextHasNoMarginBottom
-					label={ __( 'Show Icon / Emoji', 'flux-blocks' ) }
+					label={ __( 'Show Icon / Emoji', 'quovex-blocks' ) }
 					checked={ showIcon }
 					onChange={ ( val ) => setAttributes( { showIcon: val } ) }
 				/>
@@ -68,7 +68,10 @@ export default function ContentIconPanel( {
 					<div style={ { marginBottom: '1em' } }>
 						<SelectControl
 							__nextHasNoMarginBottom
-							label={ __( 'Icon Library Choice', 'flux-blocks' ) }
+							label={ __(
+								'Icon Library Choice',
+								'quovex-blocks'
+							) }
 							value={ iconType }
 							options={ libraries }
 							onChange={ ( val ) => {
@@ -89,7 +92,10 @@ export default function ContentIconPanel( {
 							<>
 								<TextControl
 									__nextHasNoMarginBottom
-									label={ __( 'Emoji Input', 'flux-blocks' ) }
+									label={ __(
+										'Emoji Input',
+										'quovex-blocks'
+									) }
 									value={ icon }
 									onChange={ ( val ) =>
 										setAttributes( { icon: val } )
@@ -146,7 +152,7 @@ export default function ContentIconPanel( {
 								>
 									{ __(
 										'Select WordPress Dashicon:',
-										'flux-blocks'
+										'quovex-blocks'
 									) }
 								</p>
 								<div
@@ -209,7 +215,7 @@ export default function ContentIconPanel( {
 								>
 									{ __(
 										'Select SVG Vector Icon:',
-										'flux-blocks'
+										'quovex-blocks'
 									) }
 								</p>
 								<div
@@ -268,7 +274,7 @@ export default function ContentIconPanel( {
 
 				<ToggleControl
 					__nextHasNoMarginBottom
-					label={ __( 'Show CTA Button', 'flux-blocks' ) }
+					label={ __( 'Show CTA Button', 'quovex-blocks' ) }
 					checked={ showButton }
 					onChange={ ( val ) => setAttributes( { showButton: val } ) }
 				/>
@@ -277,7 +283,7 @@ export default function ContentIconPanel( {
 					<>
 						<TextControl
 							__nextHasNoMarginBottom
-							label={ __( 'Button Text', 'flux-blocks' ) }
+							label={ __( 'Button Text', 'quovex-blocks' ) }
 							value={ buttonText }
 							onChange={ ( val ) =>
 								setAttributes( { buttonText: val } )
@@ -285,7 +291,7 @@ export default function ContentIconPanel( {
 						/>
 						<TextControl
 							__nextHasNoMarginBottom
-							label={ __( 'Button Target URL', 'flux-blocks' ) }
+							label={ __( 'Button Target URL', 'quovex-blocks' ) }
 							value={ buttonUrl }
 							onChange={ ( val ) =>
 								setAttributes( { buttonUrl: val } )
@@ -293,7 +299,7 @@ export default function ContentIconPanel( {
 						/>
 						<ToggleControl
 							__nextHasNoMarginBottom
-							label={ __( 'Open in new tab', 'flux-blocks' ) }
+							label={ __( 'Open in new tab', 'quovex-blocks' ) }
 							checked={ buttonTarget }
 							onChange={ ( val ) =>
 								setAttributes( { buttonTarget: val } )

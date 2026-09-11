@@ -1,23 +1,23 @@
 <?php
 /**
- * Registers the "Flux Blocks" custom block category, grouping both blocks
+ * Registers the "Quovex Blocks" custom block category, grouping both blocks
  * together in the inserter instead of falling back to "Text".
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
-namespace FluxBlocks;
+namespace QuovexBlocks;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
 /**
- * Registers the "Flux Blocks" inserter category.
+ * Registers the "Quovex Blocks" inserter category.
  */
 class BlockCategory {
 
-	const SLUG = 'flux-blocks';
+	const SLUG = 'quovex-blocks';
 
 	/**
 	 * Register the WordPress hook.
@@ -35,7 +35,7 @@ class BlockCategory {
 			array(
 				array(
 					'slug'  => self::SLUG,
-					'title' => __( 'Flux Blocks', 'flux-blocks' ),
+					'title' => __( 'Quovex Blocks', 'quovex-blocks' ),
 					'icon'  => 'layout',
 				),
 			),

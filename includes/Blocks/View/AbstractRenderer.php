@@ -5,10 +5,10 @@
  * write its own ob_start()/ob_get_clean() pair; render() stays abstract
  * since each block's markup is genuinely different.
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
-namespace FluxBlocks\Blocks\View;
+namespace QuovexBlocks\Blocks\View;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

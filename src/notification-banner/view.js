@@ -4,7 +4,7 @@
  */
 function initNotificationBanners() {
 	const banners = document.querySelectorAll(
-		'.fb-notification-banner[data-banner-id]'
+		'.qv-notification-banner[data-banner-id]'
 	);
 
 	banners.forEach( ( banner ) => {
@@ -16,7 +16,7 @@ function initNotificationBanners() {
 		if (
 			remember &&
 			bannerId &&
-			localStorage.getItem( 'fb_dismissed_' + bannerId )
+			localStorage.getItem( 'qv_dismissed_' + bannerId )
 		) {
 			banner.style.display = 'none';
 			banner.classList.add( 'is-dismissed' );
@@ -24,7 +24,7 @@ function initNotificationBanners() {
 		}
 
 		const dismissBtn = banner.querySelector(
-			'.fb-notification-banner__dismiss'
+			'.qv-notification-banner__dismiss'
 		);
 		if ( dismissBtn ) {
 			dismissBtn.addEventListener( 'click', ( e ) => {
@@ -32,7 +32,7 @@ function initNotificationBanners() {
 				banner.classList.add( 'is-dismissed' );
 
 				if ( remember && bannerId ) {
-					localStorage.setItem( 'fb_dismissed_' + bannerId, '1' );
+					localStorage.setItem( 'qv_dismissed_' + bannerId, '1' );
 				}
 
 				setTimeout( () => {

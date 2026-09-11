@@ -2,16 +2,16 @@
 /**
  * Renders Query Grid's search form and taxonomy filter-pill facets.
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
-namespace FluxBlocks\Blocks\QueryGrid\Render;
+namespace QuovexBlocks\Blocks\QueryGrid\Render;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use FluxBlocks\Cache\CacheInterface;
+use QuovexBlocks\Cache\CacheInterface;
 
 /**
  * Renders the search form and taxonomy facet groups.
@@ -34,17 +34,17 @@ class FacetRenderer {
 	public function render_search_form(): string {
 		ob_start();
 		?>
-		<form action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get" class="fb-query-grid__search" data-wp-on--submit="actions.onSearchSubmit">
+		<form action="<?php echo esc_url( home_url( '/' ) ); ?>" method="get" class="qv-query-grid__search" data-wp-on--submit="actions.onSearchSubmit">
 			<input
 				type="search"
 				name="s"
-				class="fb-query-grid__search-input"
-				placeholder="<?php esc_attr_e( 'Search Here', 'flux-blocks' ); ?>"
-				aria-label="<?php esc_attr_e( 'Search', 'flux-blocks' ); ?>"
+				class="qv-query-grid__search-input"
+				placeholder="<?php esc_attr_e( 'Search Here', 'quovex-blocks' ); ?>"
+				aria-label="<?php esc_attr_e( 'Search', 'quovex-blocks' ); ?>"
 				data-wp-bind--value="context.searchQuery"
 				data-wp-on--input="actions.onSearchInput"
 			/>
-			<button type="submit" class="fb-query-grid__search-btn" aria-label="<?php esc_attr_e( 'Search', 'flux-blocks' ); ?>"><span aria-hidden="true">&#128269;</span></button>
+			<button type="submit" class="qv-query-grid__search-btn" aria-label="<?php esc_attr_e( 'Search', 'quovex-blocks' ); ?>"><span aria-hidden="true">&#128269;</span></button>
 		</form>
 		<?php
 		return ob_get_clean();
@@ -70,11 +70,11 @@ class FacetRenderer {
 
 		ob_start();
 		?>
-		<div class="fb-query-grid__filter-group">
+		<div class="qv-query-grid__filter-group">
 			<?php if ( $show_heading ) : ?>
-				<h4 class="fb-query-grid__filter-heading"><?php echo esc_html( $heading_to_show ); ?></h4>
+				<h4 class="qv-query-grid__filter-heading"><?php echo esc_html( $heading_to_show ); ?></h4>
 			<?php endif; ?>
-			<div class="fb-query-grid__filters" role="group" aria-label="<?php echo esc_attr( $heading_to_show ); ?>">
+			<div class="qv-query-grid__filters" role="group" aria-label="<?php echo esc_attr( $heading_to_show ); ?>">
 				<?php foreach ( $terms as $term ) : ?>
 					<?php
 					$pill_context = array(
@@ -84,7 +84,7 @@ class FacetRenderer {
 					?>
 					<button
 						type="button"
-						class="fb-query-grid__filter-btn"
+						class="qv-query-grid__filter-btn"
 						data-wp-class--is-active="state.isActiveTerm"
 						data-wp-bind--aria-pressed="state.isActiveTerm"
 						data-wp-on--click="actions.onFilterClick"

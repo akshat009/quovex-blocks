@@ -1,19 +1,19 @@
 <?php
 /**
- * @package FluxBlocks\Tests
+ * @package QuovexBlocks\Tests
  */
 
-namespace FluxBlocks\Tests\Unit;
+namespace QuovexBlocks\Tests\Unit;
 
 use Brain\Monkey\Functions;
-use FluxBlocks\Cache\CacheInvalidator;
-use FluxBlocks\Cache\QueryCache;
-use FluxBlocks\Tests\TestCase;
+use QuovexBlocks\Cache\CacheInvalidator;
+use QuovexBlocks\Cache\QueryCache;
+use QuovexBlocks\Tests\TestCase;
 use Mockery;
 use WP_Post;
 
 /**
- * @covers \FluxBlocks\Cache\CacheInvalidator
+ * @covers \QuovexBlocks\Cache\CacheInvalidator
  */
 class CacheInvalidatorTest extends TestCase {
 

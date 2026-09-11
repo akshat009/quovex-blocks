@@ -3,10 +3,10 @@
  * Parameter object for HeadingRenderer::render_heading() -- groups the
  * title's color/font values.
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
-namespace FluxBlocks\Blocks\ContentShowcase\Render;
+namespace QuovexBlocks\Blocks\ContentShowcase\Render;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

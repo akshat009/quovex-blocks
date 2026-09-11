@@ -4,10 +4,10 @@
  * the REST fragment response. Keeps formatting decisions (excerpt length,
  * image size, date format) in one place.
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
-namespace FluxBlocks\QueryEngine;
+namespace QuovexBlocks\QueryEngine;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

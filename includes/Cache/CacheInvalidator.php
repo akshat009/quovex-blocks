@@ -4,10 +4,10 @@
  * a term is added/renamed/deleted (FacetRenderer caches term lists through
  * the same QueryCache, so term changes need invalidating too).
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
-namespace FluxBlocks\Cache;
+namespace QuovexBlocks\Cache;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

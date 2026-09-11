@@ -1,16 +1,16 @@
 <?php
 /**
- * @package FluxBlocks\Tests
+ * @package QuovexBlocks\Tests
  */
 
-namespace FluxBlocks\Tests\Unit;
+namespace QuovexBlocks\Tests\Unit;
 
 use Brain\Monkey\Functions;
-use FluxBlocks\Cache\QueryCache;
-use FluxBlocks\Tests\TestCase;
+use QuovexBlocks\Cache\QueryCache;
+use QuovexBlocks\Tests\TestCase;
 
 /**
- * @covers \FluxBlocks\Cache\QueryCache
+ * @covers \QuovexBlocks\Cache\QueryCache
  */
 class QueryCacheTest extends TestCase {
 
@@ -153,7 +153,7 @@ class QueryCacheTest extends TestCase {
 		$this->cache->remember( 'post', 'sig-g', fn() => 'v1' );
 		$this->cache->remember( 'post', 'sig-g', fn() => 'v1' ); // cache hit, but even so...
 
-		$registry = $this->options['_flux_blocks_cache_keys_post'];
+		$registry = $this->options['_quovex_blocks_cache_keys_post'];
 		$this->assertCount( 1, $registry );
 	}
 
@@ -171,13 +171,13 @@ class QueryCacheTest extends TestCase {
 			$this->cache->remember( 'post', "sig-cap-$i", fn() => "v$i" );
 		}
 
-		$registry = $this->options['_flux_blocks_cache_keys_post'];
+		$registry = $this->options['_quovex_blocks_cache_keys_post'];
 		$this->assertCount( $cap, $registry, 'Registry must never exceed MAX_REGISTRY_SIZE.' );
 
-		$first_key = 'fb_q_' . md5( 'sig-cap-0' );
+		$first_key = 'qv_q_' . md5( 'sig-cap-0' );
 		$this->assertNotContains( $first_key, $registry, 'The OLDEST entry must be the one dropped once over the cap.' );
 
-		$last_key = 'fb_q_' . md5( "sig-cap-$cap" );
+		$last_key = 'qv_q_' . md5( "sig-cap-$cap" );
 		$this->assertContains( $last_key, $registry, 'The newest entry must still be present.' );
 	}
 }

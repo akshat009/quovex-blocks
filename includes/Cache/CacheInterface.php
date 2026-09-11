@@ -4,10 +4,10 @@
  * Lets both Renderers depend on this abstraction instead of the concrete
  * QueryCache class.
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
-namespace FluxBlocks\Cache;
+namespace QuovexBlocks\Cache;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

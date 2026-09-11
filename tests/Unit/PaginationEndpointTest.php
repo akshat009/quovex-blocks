@@ -1,16 +1,16 @@
 <?php
 /**
- * @package FluxBlocks\Tests
+ * @package QuovexBlocks\Tests
  */
 
-namespace FluxBlocks\Tests\Unit;
+namespace QuovexBlocks\Tests\Unit;
 
 use Brain\Monkey\Functions;
-use FluxBlocks\Blocks\QueryGrid\Routing\PaginationEndpoint;
-use FluxBlocks\Tests\TestCase;
+use QuovexBlocks\Blocks\QueryGrid\Routing\PaginationEndpoint;
+use QuovexBlocks\Tests\TestCase;
 
 /**
- * @covers \FluxBlocks\Blocks\QueryGrid\Routing\PaginationEndpoint
+ * @covers \QuovexBlocks\Blocks\QueryGrid\Routing\PaginationEndpoint
  */
 class PaginationEndpointTest extends TestCase {
 
@@ -23,12 +23,12 @@ class PaginationEndpointTest extends TestCase {
 		);
 	}
 
-	public function test_defaults_to_flux_page_when_nothing_is_stored(): void {
+	public function test_defaults_to_quovex_page_when_nothing_is_stored(): void {
 		Functions\when( 'get_option' )->alias(
 			fn( $name, $default = false ) => $default
 		);
 
-		$this->assertSame( 'flux-page', PaginationEndpoint::slug() );
+		$this->assertSame( 'quovex-page', PaginationEndpoint::slug() );
 	}
 
 	public function test_returns_the_sites_configured_slug_when_one_is_stored(): void {
@@ -37,19 +37,19 @@ class PaginationEndpointTest extends TestCase {
 		$this->assertSame( 'my-custom-slug', PaginationEndpoint::slug() );
 	}
 
-	public function test_falls_back_to_flux_page_if_the_stored_value_sanitizes_to_nothing(): void {
+	public function test_falls_back_to_quovex_page_if_the_stored_value_sanitizes_to_nothing(): void {
 		// e.g. a stored value that was pure punctuation/emoji -- sanitize_title()
 		// can legitimately reduce that to an empty string.
 		Functions\when( 'get_option' )->justReturn( '!!!' );
 
-		$this->assertSame( 'flux-page', PaginationEndpoint::slug() );
+		$this->assertSame( 'quovex-page', PaginationEndpoint::slug() );
 	}
 
 	public function test_reads_from_the_correct_option_name(): void {
 		Functions\expect( 'get_option' )
 			->once()
-			->with( PaginationEndpoint::OPTION, 'flux-page' )
-			->andReturn( 'flux-page' );
+			->with( PaginationEndpoint::OPTION, 'quovex-page' )
+			->andReturn( 'quovex-page' );
 
 		PaginationEndpoint::slug();
 	}

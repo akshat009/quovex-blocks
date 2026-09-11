@@ -8,19 +8,19 @@
  *
  * Why this is needed: CacheInvalidator/QueryCache/PaginationEndpoint leave
  * data in wp_options that plugin deactivation never touches --
- * `flux_blocks_pagination_slug` (PaginationEndpoint::OPTION), and per post
- * type ever queried, a `_flux_blocks_cache_keys_{post_type}` registry
- * option (QueryCache::REGISTRY_PREFIX) plus every `fb_q_*` transient it
+ * `quovex_blocks_pagination_slug` (PaginationEndpoint::OPTION), and per post
+ * type ever queried, a `_quovex_blocks_cache_keys_{post_type}` registry
+ * option (QueryCache::REGISTRY_PREFIX) plus every `qv_q_*` transient it
  * points at. Left alone, all of it survives the plugin being deleted.
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-delete_option( 'flux_blocks_pagination_slug' );
+delete_option( 'quovex_blocks_pagination_slug' );
 
 /**
  * Deletes the per-post-type cache-key registry options and every transient
@@ -28,14 +28,14 @@ delete_option( 'flux_blocks_pagination_slug' );
  * uninstall.php otherwise runs in the global scope, where every variable
  * reads as an unprefixed global.
  */
-function flux_blocks_uninstall_cleanup(): void {
+function quovex_blocks_uninstall_cleanup(): void {
 	global $wpdb;
 
 	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- one-time uninstall cleanup, no option API equivalent for "find options by prefix".
 	$registry_options = $wpdb->get_col(
 		$wpdb->prepare(
 			"SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s",
-			$wpdb->esc_like( '_flux_blocks_cache_keys_' ) . '%'
+			$wpdb->esc_like( '_quovex_blocks_cache_keys_' ) . '%'
 		)
 	);
 
@@ -48,4 +48,4 @@ function flux_blocks_uninstall_cleanup(): void {
 	}
 }
 
-flux_blocks_uninstall_cleanup();
+quovex_blocks_uninstall_cleanup();

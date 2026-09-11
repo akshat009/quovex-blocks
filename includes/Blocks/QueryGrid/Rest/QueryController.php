@@ -6,17 +6,17 @@
  * shape (`html`/`pagination`/`hasMore`/`totalPages`) is consumed by
  * src/query-grid/view.js -- keep them in sync.
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
-namespace FluxBlocks\Blocks\QueryGrid\Rest;
+namespace QuovexBlocks\Blocks\QueryGrid\Rest;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use FluxBlocks\Blocks\QueryGrid\Render\Renderer;
-use FluxBlocks\QueryEngine\QueryArgsBuilder;
+use QuovexBlocks\Blocks\QueryGrid\Render\Renderer;
+use QuovexBlocks\QueryEngine\QueryArgsBuilder;
 
 /**
  * REST route Query Grid's frontend calls for paginated/filtered fetches.
@@ -46,7 +46,7 @@ class QueryController implements UsesQueryGridNamespace {
 	}
 
 	/**
-	 * Registers `GET /flux-blocks/v1/query`.
+	 * Registers `GET /quovex-blocks/v1/query`.
 	 */
 	public function register_routes(): void {
 		register_rest_route(

@@ -24,51 +24,51 @@ export default function SectionHeaderStylesPanel( {
 	return (
 		<>
 			<PanelColorSettings
-				title={ __( 'Section Header Colors', 'flux-blocks' ) }
+				title={ __( 'Section Header Colors', 'quovex-blocks' ) }
 				initialOpen={ false }
 				colorSettings={ [
 					{
 						value: colorsValue.titleColor,
 						onChange: setColor( 'titleColor' ),
-						label: __( 'Section Title Color', 'flux-blocks' ),
+						label: __( 'Section Title Color', 'quovex-blocks' ),
 					},
 					{
 						value: colorsValue.accentColor,
 						onChange: setColor( 'accentColor' ),
 						label: __(
 							'Title Accent Highlight Color',
-							'flux-blocks'
+							'quovex-blocks'
 						),
 					},
 					{
 						value: colorsValue.subheadingColor,
 						onChange: setColor( 'subheadingColor' ),
-						label: __( 'Subheading Text Color', 'flux-blocks' ),
+						label: __( 'Subheading Text Color', 'quovex-blocks' ),
 					},
 				] }
 			/>
 
 			<PanelBody
-				title={ __( 'Section Header Typography', 'flux-blocks' ) }
+				title={ __( 'Section Header Typography', 'quovex-blocks' ) }
 				initialOpen={ false }
 			>
 				<p>
 					{ __(
 						'Font choices come from the active theme -- picking one here never needs a separate font to be installed or loaded.',
-						'flux-blocks'
+						'quovex-blocks'
 					) }
 				</p>
 
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Section Title Font', 'flux-blocks' ) }
+					label={ __( 'Section Title Font', 'quovex-blocks' ) }
 					value={ typographyValue.headingTitleFontFamily }
 					options={ fontFamilyOptions }
 					onChange={ setTypography( 'headingTitleFontFamily' ) }
 				/>
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Section Title Weight', 'flux-blocks' ) }
+					label={ __( 'Section Title Weight', 'quovex-blocks' ) }
 					value={ typographyValue.headingTitleFontWeight }
 					options={ fontWeightOptions }
 					onChange={ setTypography( 'headingTitleFontWeight' ) }

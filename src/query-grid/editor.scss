@@ -4,7 +4,7 @@
  * classes; only the Inspector's layout-picker buttons need styling here.
  */
 
-.wp-block-flux-blocks-query-grid {
+.wp-block-quovex-blocks-query-grid {
 
 	a {
 		pointer-events: none;
@@ -12,7 +12,7 @@
 	}
 }
 
-.fb-layout-picker {
+.qv-layout-picker {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 0.5em;
@@ -30,8 +30,8 @@
 		overflow: hidden !important;
 	}
 
-	.fb-content-showcase,
-	.fb-query-grid {
+	.qv-content-showcase,
+	.qv-query-grid {
 		transform: scale(0.25);
 		transform-origin: top left;
 		width: 400%;

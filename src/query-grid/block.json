@@ -1,10 +1,10 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "flux-blocks/query-grid",
+	"name": "quovex-blocks/query-grid",
 	"version": "0.1.0",
 	"title": "Query Grid",
-	"category": "flux-blocks",
+	"category": "quovex-blocks",
 	"icon": "grid-view",
 	"description": "A filterable, paginated grid of posts with search and category chips.",
 	"keywords": [ "posts", "grid", "query", "loop", "filter", "pagination" ],
@@ -140,7 +140,7 @@
 		{ "name": "masonry", "label": "Masonry" },
 		{ "name": "carousel", "label": "Carousel" }
 	],
-	"textdomain": "flux-blocks",
+	"textdomain": "quovex-blocks",
 	"editorScript": "file:./index.js",
 	"editorStyle": "file:./index.css",
 	"style": "file:./style-index.css",
