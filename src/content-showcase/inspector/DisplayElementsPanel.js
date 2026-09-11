@@ -31,15 +31,15 @@ export default function DisplayElementsPanel( { attributes, setAttributes } ) {
 	return (
 		<InspectorControls>
 			<PanelBody
-				title={ __( 'Display Elements (Per Post)', 'flux-blocks' ) }
+				title={ __( 'Display Elements (Per Post)', 'quovex-blocks' ) }
 				initialOpen={ false }
 			>
 				<p style={ SLOT_LABEL_STYLE }>
-					{ __( 'POST 1 (MAIN ITEM)', 'flux-blocks' ) }
+					{ __( 'POST 1 (MAIN ITEM)', 'quovex-blocks' ) }
 				</p>
 				<ToggleControl
 					__nextHasNoMarginBottom
-					label={ __( 'Show Image (Post 1)', 'flux-blocks' ) }
+					label={ __( 'Show Image (Post 1)', 'quovex-blocks' ) }
 					checked={ post1Image }
 					onChange={ ( value ) =>
 						setAttributes( { post1Image: value } )
@@ -47,7 +47,7 @@ export default function DisplayElementsPanel( { attributes, setAttributes } ) {
 				/>
 				<ToggleControl
 					__nextHasNoMarginBottom
-					label={ __( 'Show Date (Post 1)', 'flux-blocks' ) }
+					label={ __( 'Show Date (Post 1)', 'quovex-blocks' ) }
 					checked={ post1Date }
 					onChange={ ( value ) =>
 						setAttributes( { post1Date: value } )
@@ -55,7 +55,7 @@ export default function DisplayElementsPanel( { attributes, setAttributes } ) {
 				/>
 				<ToggleControl
 					__nextHasNoMarginBottom
-					label={ __( 'Show Excerpt (Post 1)', 'flux-blocks' ) }
+					label={ __( 'Show Excerpt (Post 1)', 'quovex-blocks' ) }
 					checked={ post1Excerpt }
 					onChange={ ( value ) =>
 						setAttributes( { post1Excerpt: value } )
@@ -65,11 +65,11 @@ export default function DisplayElementsPanel( { attributes, setAttributes } ) {
 				<hr style={ { margin: '14px 0', borderColor: '#e5e5e5' } } />
 
 				<p style={ SLOT_LABEL_STYLE }>
-					{ __( 'POST 2 (SECOND ITEM)', 'flux-blocks' ) }
+					{ __( 'POST 2 (SECOND ITEM)', 'quovex-blocks' ) }
 				</p>
 				<ToggleControl
 					__nextHasNoMarginBottom
-					label={ __( 'Show Image (Post 2)', 'flux-blocks' ) }
+					label={ __( 'Show Image (Post 2)', 'quovex-blocks' ) }
 					checked={ post2Image }
 					onChange={ ( value ) =>
 						setAttributes( { post2Image: value } )
@@ -77,7 +77,7 @@ export default function DisplayElementsPanel( { attributes, setAttributes } ) {
 				/>
 				<ToggleControl
 					__nextHasNoMarginBottom
-					label={ __( 'Show Date (Post 2)', 'flux-blocks' ) }
+					label={ __( 'Show Date (Post 2)', 'quovex-blocks' ) }
 					checked={ post2Date }
 					onChange={ ( value ) =>
 						setAttributes( { post2Date: value } )
@@ -85,7 +85,7 @@ export default function DisplayElementsPanel( { attributes, setAttributes } ) {
 				/>
 				<ToggleControl
 					__nextHasNoMarginBottom
-					label={ __( 'Show Excerpt (Post 2)', 'flux-blocks' ) }
+					label={ __( 'Show Excerpt (Post 2)', 'quovex-blocks' ) }
 					checked={ post2Excerpt }
 					onChange={ ( value ) =>
 						setAttributes( { post2Excerpt: value } )
@@ -95,11 +95,11 @@ export default function DisplayElementsPanel( { attributes, setAttributes } ) {
 				<hr style={ { margin: '14px 0', borderColor: '#e5e5e5' } } />
 
 				<p style={ SLOT_LABEL_STYLE }>
-					{ __( 'POST 3 (THIRD ITEM)', 'flux-blocks' ) }
+					{ __( 'POST 3 (THIRD ITEM)', 'quovex-blocks' ) }
 				</p>
 				<ToggleControl
 					__nextHasNoMarginBottom
-					label={ __( 'Show Image (Post 3)', 'flux-blocks' ) }
+					label={ __( 'Show Image (Post 3)', 'quovex-blocks' ) }
 					checked={ post3Image }
 					onChange={ ( value ) =>
 						setAttributes( { post3Image: value } )
@@ -107,7 +107,7 @@ export default function DisplayElementsPanel( { attributes, setAttributes } ) {
 				/>
 				<ToggleControl
 					__nextHasNoMarginBottom
-					label={ __( 'Show Date (Post 3)', 'flux-blocks' ) }
+					label={ __( 'Show Date (Post 3)', 'quovex-blocks' ) }
 					checked={ post3Date }
 					onChange={ ( value ) =>
 						setAttributes( { post3Date: value } )
@@ -115,7 +115,7 @@ export default function DisplayElementsPanel( { attributes, setAttributes } ) {
 				/>
 				<ToggleControl
 					__nextHasNoMarginBottom
-					label={ __( 'Show Excerpt (Post 3)', 'flux-blocks' ) }
+					label={ __( 'Show Excerpt (Post 3)', 'quovex-blocks' ) }
 					checked={ post3Excerpt }
 					onChange={ ( value ) =>
 						setAttributes( { post3Excerpt: value } )

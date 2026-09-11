@@ -37,15 +37,15 @@ export default function HotspotsPanel( {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Image Hotspots', 'flux-blocks' ) }
+					title={ __( 'Image Hotspots', 'quovex-blocks' ) }
 					initialOpen={ false }
 				>
 					<ToggleControl
 						__nextHasNoMarginBottom
-						label={ __( 'Enable Image Hotspots', 'flux-blocks' ) }
+						label={ __( 'Enable Image Hotspots', 'quovex-blocks' ) }
 						help={ __(
 							'Add interactive pins to post images with popup cards.',
-							'flux-blocks'
+							'quovex-blocks'
 						) }
 						checked={ enableHotspots }
 						onChange={ ( value ) =>
@@ -63,7 +63,7 @@ export default function HotspotsPanel( {
 									marginBottom: '1em',
 								} }
 							>
-								{ __( '+ Add Hotspot Pin', 'flux-blocks' ) }
+								{ __( '+ Add Hotspot Pin', 'quovex-blocks' ) }
 							</Button>
 
 							{ hotspots.map( ( hs, index ) => (
@@ -71,10 +71,10 @@ export default function HotspotsPanel( {
 									key={ hs.id || index }
 									title={ `${ __(
 										'Hotspot #',
-										'flux-blocks'
+										'quovex-blocks'
 									) }${ index + 1 }: ${
 										hs.title ||
-										__( 'Untitled', 'flux-blocks' )
+										__( 'Untitled', 'quovex-blocks' )
 									}` }
 									initialOpen={ false }
 								>
@@ -82,7 +82,7 @@ export default function HotspotsPanel( {
 										__nextHasNoMarginBottom
 										label={ __(
 											'Target Post Image',
-											'flux-blocks'
+											'quovex-blocks'
 										) }
 										value={ hs.postIndex ?? 0 }
 										options={ Array.from(
@@ -90,7 +90,7 @@ export default function HotspotsPanel( {
 											( _, i ) => ( {
 												label: `${ __(
 													'Post #',
-													'flux-blocks'
+													'quovex-blocks'
 												) }${ i + 1 }`,
 												value: i,
 											} )
@@ -107,7 +107,7 @@ export default function HotspotsPanel( {
 										__nextHasNoMarginBottom
 										label={ __(
 											'Horizontal Position (X %)',
-											'flux-blocks'
+											'quovex-blocks'
 										) }
 										min={ 0 }
 										max={ 100 }
@@ -120,7 +120,7 @@ export default function HotspotsPanel( {
 										__nextHasNoMarginBottom
 										label={ __(
 											'Vertical Position (Y %)',
-											'flux-blocks'
+											'quovex-blocks'
 										) }
 										min={ 0 }
 										max={ 100 }
@@ -133,7 +133,7 @@ export default function HotspotsPanel( {
 										__nextHasNoMarginBottom
 										label={ __(
 											'Tooltip Title',
-											'flux-blocks'
+											'quovex-blocks'
 										) }
 										value={ hs.title || '' }
 										onChange={ ( val ) =>
@@ -144,7 +144,7 @@ export default function HotspotsPanel( {
 										__nextHasNoMarginBottom
 										label={ __(
 											'Tooltip Content',
-											'flux-blocks'
+											'quovex-blocks'
 										) }
 										value={ hs.content || '' }
 										onChange={ ( val ) =>
@@ -160,7 +160,7 @@ export default function HotspotsPanel( {
 										type="url"
 										label={ __(
 											'Button / Link URL (Optional)',
-											'flux-blocks'
+											'quovex-blocks'
 										) }
 										placeholder="https://"
 										value={ hs.linkUrl || '' }
@@ -180,7 +180,7 @@ export default function HotspotsPanel( {
 									>
 										{ __(
 											'Remove Hotspot',
-											'flux-blocks'
+											'quovex-blocks'
 										) }
 									</Button>
 								</PanelBody>
@@ -193,14 +193,14 @@ export default function HotspotsPanel( {
 			<InspectorControls group="styles">
 				{ enableHotspots && (
 					<PanelBody
-						title={ __( 'Hotspot Styling', 'flux-blocks' ) }
+						title={ __( 'Hotspot Styling', 'quovex-blocks' ) }
 						initialOpen={ false }
 					>
 						<RangeControl
 							__nextHasNoMarginBottom
 							label={ __(
 								'Hotspot Pin Size (px)',
-								'flux-blocks'
+								'quovex-blocks'
 							) }
 							min={ 20 }
 							max={ 45 }
@@ -217,7 +217,7 @@ export default function HotspotsPanel( {
 									fontWeight: '500',
 								} }
 							>
-								{ __( 'Pin Color', 'flux-blocks' ) }
+								{ __( 'Pin Color', 'quovex-blocks' ) }
 							</p>
 							<ColorPalette
 								value={ hotspotPinColor }
@@ -236,7 +236,7 @@ export default function HotspotsPanel( {
 									fontWeight: '500',
 								} }
 							>
-								{ __( 'Tooltip Background', 'flux-blocks' ) }
+								{ __( 'Tooltip Background', 'quovex-blocks' ) }
 							</p>
 							<ColorPalette
 								value={ hotspotTooltipBg }
@@ -255,7 +255,7 @@ export default function HotspotsPanel( {
 									fontWeight: '500',
 								} }
 							>
-								{ __( 'Tooltip Text Color', 'flux-blocks' ) }
+								{ __( 'Tooltip Text Color', 'quovex-blocks' ) }
 							</p>
 							<ColorPalette
 								value={ hotspotTooltipTextColor }

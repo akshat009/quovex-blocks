@@ -18,7 +18,7 @@ export default function FilterPaginationStylesPanel( {
 	return (
 		<>
 			<PanelColorSettings
-				title={ __( 'Filter & Pagination Colors', 'flux-blocks' ) }
+				title={ __( 'Filter & Pagination Colors', 'quovex-blocks' ) }
 				initialOpen={ false }
 				colorSettings={ [
 					{
@@ -26,7 +26,7 @@ export default function FilterPaginationStylesPanel( {
 						onChange: setColor( 'activeAccent' ),
 						label: __(
 							'Active Pill & Pagination Accent',
-							'flux-blocks'
+							'quovex-blocks'
 						),
 					},
 					{
@@ -34,7 +34,7 @@ export default function FilterPaginationStylesPanel( {
 						onChange: setColor( 'disabledNav' ),
 						label: __(
 							'Disabled Prev/Next Button Color',
-							'flux-blocks'
+							'quovex-blocks'
 						),
 					},
 					{
@@ -42,38 +42,47 @@ export default function FilterPaginationStylesPanel( {
 						onChange: setColor( 'inactivePillBg' ),
 						label: __(
 							'Inactive Pill Background Color',
-							'flux-blocks'
+							'quovex-blocks'
 						),
 					},
 					{
 						value: colorsValue.inactivePillText,
 						onChange: setColor( 'inactivePillText' ),
-						label: __( 'Inactive Pill Text Color', 'flux-blocks' ),
+						label: __(
+							'Inactive Pill Text Color',
+							'quovex-blocks'
+						),
 					},
 				] }
 			/>
 
 			<PanelBody
-				title={ __( 'Filter & Pagination Typography', 'flux-blocks' ) }
+				title={ __(
+					'Filter & Pagination Typography',
+					'quovex-blocks'
+				) }
 				initialOpen={ false }
 			>
 				<p>
 					{ __(
 						'Font choices come from the active theme -- picking one here never needs a separate font to be installed or loaded.',
-						'flux-blocks'
+						'quovex-blocks'
 					) }
 				</p>
 
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Filter & Pagination Font', 'flux-blocks' ) }
+					label={ __( 'Filter & Pagination Font', 'quovex-blocks' ) }
 					value={ typographyValue.filterPaginationFontFamily }
 					options={ fontFamilyOptions }
 					onChange={ setTypography( 'filterPaginationFontFamily' ) }
 				/>
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Filter & Pagination Weight', 'flux-blocks' ) }
+					label={ __(
+						'Filter & Pagination Weight',
+						'quovex-blocks'
+					) }
 					value={ typographyValue.filterPaginationFontWeight }
 					options={ fontWeightOptions }
 					onChange={ setTypography( 'filterPaginationFontWeight' ) }

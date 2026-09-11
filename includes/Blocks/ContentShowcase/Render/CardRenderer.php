@@ -5,10 +5,10 @@
  * excerpt) every layout shares. String-return, matching ItemsRenderer's
  * contract (the equivalent class for Query Grid).
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
-namespace FluxBlocks\Blocks\ContentShowcase\Render;
+namespace QuovexBlocks\Blocks\ContentShowcase\Render;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -41,10 +41,10 @@ class CardRenderer {
 		$featured = array_shift( $items );
 		ob_start();
 		?>
-		<div class="fb-content-showcase__<?php echo esc_attr( $variant ); ?>">
+		<div class="qv-content-showcase__<?php echo esc_attr( $variant ); ?>">
 			<?php echo $this->render_card( $featured, 'featured', 0, $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_card() escapes per field. ?>
 			<?php if ( $items ) : ?>
-				<div class="fb-content-showcase__<?php echo esc_attr( $variant ); ?>-list">
+				<div class="qv-content-showcase__<?php echo esc_attr( $variant ); ?>-list">
 					<?php foreach ( $items as $index => $item ) : ?>
 						<?php echo $this->render_card( $item, 'small', $index + 1, $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_card() escapes per field. ?>
 					<?php endforeach; ?>
@@ -65,21 +65,21 @@ class CardRenderer {
 	public function render_split( array $items, array $attributes ): string {
 		ob_start();
 		?>
-		<div class="fb-content-showcase__split">
+		<div class="qv-content-showcase__split">
 			<?php foreach ( $items as $index => $item ) : ?>
 				<?php $vis = $this->get_post_visibility( $index, $attributes ); ?>
-				<article class="fb-content-showcase__split-row <?php echo 0 === $index % 2 ? 'fb-content-showcase__split-row--image-right' : 'fb-content-showcase__split-row--image-left'; ?>">
+				<article class="qv-content-showcase__split-row <?php echo 0 === $index % 2 ? 'qv-content-showcase__split-row--image-right' : 'qv-content-showcase__split-row--image-left'; ?>">
 					<?php if ( $vis['show_image'] && $item['image'] ) : ?>
-						<div class="fb-content-showcase__image-wrap">
-							<a class="fb-content-showcase__split-image" href="<?php echo esc_url( $item['permalink'] ); ?>">
+						<div class="qv-content-showcase__image-wrap">
+							<a class="qv-content-showcase__split-image" href="<?php echo esc_url( $item['permalink'] ); ?>">
 								<img src="<?php echo esc_url( $item['image'] ); ?>" alt="<?php echo esc_attr( $item['imageAlt'] ); ?>" loading="lazy" />
 							</a>
 							<?php echo $this->hotspots->render_hotspots_for_post( $index, $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_hotspots_for_post() escapes per field. ?>
 						</div>
 					<?php endif; ?>
-					<div class="fb-content-showcase__split-text">
+					<div class="qv-content-showcase__split-text">
 						<?php if ( $vis['show_date'] && ! empty( $item['date'] ) ) : ?>
-							<span class="fb-content-showcase__date"><?php echo esc_html( $item['date'] ); ?></span>
+							<span class="qv-content-showcase__date"><?php echo esc_html( $item['date'] ); ?></span>
 						<?php endif; ?>
 						<h3><a href="<?php echo esc_url( $item['permalink'] ); ?>"><?php echo esc_html( $item['title'] ); ?></a></h3>
 						<?php if ( $vis['show_excerpt'] && ! empty( $item['excerpt'] ) ) : ?>
@@ -103,20 +103,20 @@ class CardRenderer {
 	public function render_overlay( array $items, array $attributes ): string {
 		ob_start();
 		?>
-		<div class="fb-content-showcase__overlay-grid">
+		<div class="qv-content-showcase__overlay-grid">
 			<?php foreach ( $items as $index => $item ) : ?>
 				<?php $vis = $this->get_post_visibility( $index, $attributes ); ?>
-				<div class="fb-content-showcase__image-wrap fb-content-showcase__overlay-wrap">
+				<div class="qv-content-showcase__image-wrap qv-content-showcase__overlay-wrap">
 					<a
-						class="fb-content-showcase__overlay-card"
+						class="qv-content-showcase__overlay-card"
 						href="<?php echo esc_url( $item['permalink'] ); ?>"
 						<?php if ( $vis['show_image'] && $item['image'] ) : ?>
 							style="background-image:url(<?php echo esc_url( $item['image'] ); ?>);"
 						<?php endif; ?>
 					>
-						<span class="fb-content-showcase__overlay-text">
+						<span class="qv-content-showcase__overlay-text">
 							<?php if ( $vis['show_date'] && ! empty( $item['date'] ) ) : ?>
-								<span class="fb-content-showcase__date" style="color:rgba(255,255,255,0.8);"><?php echo esc_html( $item['date'] ); ?></span>
+								<span class="qv-content-showcase__date" style="color:rgba(255,255,255,0.8);"><?php echo esc_html( $item['date'] ); ?></span>
 							<?php endif; ?>
 							<?php echo esc_html( $item['title'] ); ?>
 							<?php if ( $vis['show_excerpt'] && ! empty( $item['excerpt'] ) ) : ?>
@@ -145,10 +145,10 @@ class CardRenderer {
 		$vis = $this->get_post_visibility( $index, $attributes );
 		ob_start();
 		?>
-		<article class="fb-content-showcase__card fb-content-showcase__card--<?php echo esc_attr( $size ); ?>">
+		<article class="qv-content-showcase__card qv-content-showcase__card--<?php echo esc_attr( $size ); ?>">
 			<?php if ( $vis['show_image'] && ( ! empty( $item['imageId'] ) || $item['image'] ) ) : ?>
-				<div class="fb-content-showcase__image-wrap">
-					<a class="fb-content-showcase__card-image" href="<?php echo esc_url( $item['permalink'] ); ?>">
+				<div class="qv-content-showcase__image-wrap">
+					<a class="qv-content-showcase__card-image" href="<?php echo esc_url( $item['permalink'] ); ?>">
 						<?php if ( ! empty( $item['imageId'] ) ) : ?>
 							<?php
 							$img_attr = 0 === $index
@@ -163,9 +163,9 @@ class CardRenderer {
 					<?php echo $this->hotspots->render_hotspots_for_post( $index, $attributes ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- render_hotspots_for_post() escapes per field. ?>
 				</div>
 			<?php endif; ?>
-			<div class="fb-content-showcase__card-body">
+			<div class="qv-content-showcase__card-body">
 				<?php if ( $vis['show_date'] && ! empty( $item['date'] ) ) : ?>
-					<span class="fb-content-showcase__date"><?php echo esc_html( $item['date'] ); ?></span>
+					<span class="qv-content-showcase__date"><?php echo esc_html( $item['date'] ); ?></span>
 				<?php endif; ?>
 
 				<h3><a href="<?php echo esc_url( $item['permalink'] ); ?>"><?php echo esc_html( $item['title'] ); ?></a></h3>

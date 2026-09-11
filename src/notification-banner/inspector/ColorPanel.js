@@ -29,12 +29,12 @@ export default function ColorPanel( {
 	return (
 		<InspectorControls group="styles">
 			<PanelBody
-				title={ __( 'Color & Border Customization', 'flux-blocks' ) }
+				title={ __( 'Color & Border Customization', 'quovex-blocks' ) }
 				initialOpen={ false }
 			>
 				<RangeControl
 					__nextHasNoMarginBottom
-					label={ __( 'Border Radius (px)', 'flux-blocks' ) }
+					label={ __( 'Border Radius (px)', 'quovex-blocks' ) }
 					min={ 0 }
 					max={ 30 }
 					value={ borderRadius }
@@ -45,7 +45,7 @@ export default function ColorPanel( {
 
 				<div style={ { marginTop: '1em' } }>
 					<p style={ { marginBottom: '6px', fontWeight: '500' } }>
-						{ __( 'Background Color', 'flux-blocks' ) }
+						{ __( 'Background Color', 'quovex-blocks' ) }
 					</p>
 					<ColorPalette
 						value={ bgColor }
@@ -57,7 +57,7 @@ export default function ColorPanel( {
 
 				<div style={ { marginTop: '1em' } }>
 					<p style={ { marginBottom: '6px', fontWeight: '500' } }>
-						{ __( 'Text & Title Color', 'flux-blocks' ) }
+						{ __( 'Text & Title Color', 'quovex-blocks' ) }
 					</p>
 					<ColorPalette
 						value={ textColor }
@@ -70,10 +70,10 @@ export default function ColorPanel( {
 				<div style={ { marginTop: '1em' } }>
 					<SelectControl
 						__nextHasNoMarginBottom
-						label={ __( 'Text & Title Font', 'flux-blocks' ) }
+						label={ __( 'Text & Title Font', 'quovex-blocks' ) }
 						help={ __(
 							'Comes from the active theme -- picking one never needs a separate font to be installed or loaded.',
-							'flux-blocks'
+							'quovex-blocks'
 						) }
 						value={ textFontFamily }
 						options={ fontFamilyOptions }
@@ -83,7 +83,7 @@ export default function ColorPanel( {
 					/>
 					<SelectControl
 						__nextHasNoMarginBottom
-						label={ __( 'Text & Title Weight', 'flux-blocks' ) }
+						label={ __( 'Text & Title Weight', 'quovex-blocks' ) }
 						value={ textFontWeight }
 						options={ fontWeightOptions }
 						onChange={ ( val ) =>
@@ -96,7 +96,7 @@ export default function ColorPanel( {
 					<p style={ { marginBottom: '6px', fontWeight: '500' } }>
 						{ __(
 							'Accent Border / Highlight Color',
-							'flux-blocks'
+							'quovex-blocks'
 						) }
 					</p>
 					<ColorPalette
@@ -116,7 +116,10 @@ export default function ColorPanel( {
 									fontWeight: '500',
 								} }
 							>
-								{ __( 'CTA Button Background', 'flux-blocks' ) }
+								{ __(
+									'CTA Button Background',
+									'quovex-blocks'
+								) }
 							</p>
 							<ColorPalette
 								value={ btnBgColor }
@@ -135,7 +138,10 @@ export default function ColorPanel( {
 									fontWeight: '500',
 								} }
 							>
-								{ __( 'CTA Button Text Color', 'flux-blocks' ) }
+								{ __(
+									'CTA Button Text Color',
+									'quovex-blocks'
+								) }
 							</p>
 							<ColorPalette
 								value={ btnTextColor }
@@ -156,7 +162,7 @@ export default function ColorPanel( {
 							>
 								{ __(
 									'CTA Button Hover Background',
-									'flux-blocks'
+									'quovex-blocks'
 								) }
 							</p>
 							<ColorPalette

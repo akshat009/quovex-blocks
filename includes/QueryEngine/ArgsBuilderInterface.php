@@ -4,10 +4,10 @@
  * Renderers depend on this abstraction instead of the concrete
  * QueryArgsBuilder class.
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
-namespace FluxBlocks\QueryEngine;
+namespace QuovexBlocks\QueryEngine;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

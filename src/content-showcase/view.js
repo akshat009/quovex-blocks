@@ -3,7 +3,7 @@
  */
 import { store, getContext } from '@wordpress/interactivity';
 
-store( 'flux-blocks/content-showcase', {
+store( 'quovex-blocks/content-showcase', {
 	actions: {
 		toggleHotspot() {
 			const context = getContext();

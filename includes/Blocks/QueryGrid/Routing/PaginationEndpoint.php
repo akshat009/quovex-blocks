@@ -2,7 +2,7 @@
 /**
  * Registers the `/<slug>/N/` URL suffix Query Grid's numbered pagination
  * uses instead of a `?query=N` query string. `<slug>` defaults to
- * `flux-page` (namespaced to avoid colliding with a real page of that
+ * `quovex-page` (namespaced to avoid colliding with a real page of that
  * name) and is a site-wide setting, editable via Rest\PaginationSlugController
  * from any Query Grid block's Inspector.
  *
@@ -14,12 +14,12 @@
  * Changing the stored slug breaks existing bookmarked pagination links and
  * requires a rewrite-rules flush -- PaginationSlugController::update_slug()
  * triggers that automatically; the default is only flushed once, on
- * activation (see flux-blocks.php).
+ * activation (see quovex-blocks.php).
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
-namespace FluxBlocks\Blocks\QueryGrid\Routing;
+namespace QuovexBlocks\Blocks\QueryGrid\Routing;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -31,7 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class PaginationEndpoint {
 
 	/** The wp_options key the chosen slug is stored under. */
-	const OPTION = 'flux_blocks_pagination_slug';
+	const OPTION = 'quovex_blocks_pagination_slug';
 
 	/**
 	 * The configured slug -- also the `get_query_var()` key it's
@@ -40,8 +40,8 @@ class PaginationEndpoint {
 	 * @return string
 	 */
 	public static function slug(): string {
-		$value = sanitize_title( (string) get_option( self::OPTION, 'flux-page' ) );
-		return $value ? $value : 'flux-page';
+		$value = sanitize_title( (string) get_option( self::OPTION, 'quovex-page' ) );
+		return $value ? $value : 'quovex-page';
 	}
 
 	/**

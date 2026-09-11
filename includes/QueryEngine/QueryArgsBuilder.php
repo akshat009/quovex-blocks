@@ -3,10 +3,10 @@
  * Builds WP_Query args from block attributes. Single source of truth for
  * query logic -- used by both Renderers and the REST controller.
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
-namespace FluxBlocks\QueryEngine;
+namespace QuovexBlocks\QueryEngine;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -51,9 +51,9 @@ class QueryArgsBuilder implements ArgsBuilderInterface {
 		// "Show all posts" ignores `postCount` and defaults to a bounded
 		// 200 instead of a literal -1, to avoid an unbounded query on
 		// large sites. Filterable per site:
-		// `add_filter( 'flux_blocks_show_all_posts_limit', fn() => -1 )`.
+		// `add_filter( 'quovex_blocks_show_all_posts_limit', fn() => -1 )`.
 		if ( ! empty( $attributes['showAllPosts'] ) ) {
-			$per_page = (int) apply_filters( 'flux_blocks_show_all_posts_limit', 200 );
+			$per_page = (int) apply_filters( 'quovex_blocks_show_all_posts_limit', 200 );
 		} else {
 			$per_page = isset( $attributes['postCount'] ) ? max( 1, absint( $attributes['postCount'] ) ) : 9;
 			// Hard cap on items PER PAGE, not on the total matching pool --

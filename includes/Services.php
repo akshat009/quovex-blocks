@@ -4,20 +4,20 @@
  * dependencies. Uses MemoizesInstanceTrait so each factory below is one
  * line instead of its own boilerplate.
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
-namespace FluxBlocks;
+namespace QuovexBlocks;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use FluxBlocks\QueryEngine\QueryArgsBuilder;
-use FluxBlocks\Cache\QueryCache;
-use FluxBlocks\QueryEngine\PostDataTransformer;
-use FluxBlocks\Blocks\QueryGrid\Render\Renderer as QueryGridRenderer;
-use FluxBlocks\Blocks\ContentShowcase\Render\Renderer as ContentShowcaseRenderer;
+use QuovexBlocks\QueryEngine\QueryArgsBuilder;
+use QuovexBlocks\Cache\QueryCache;
+use QuovexBlocks\QueryEngine\PostDataTransformer;
+use QuovexBlocks\Blocks\QueryGrid\Render\Renderer as QueryGridRenderer;
+use QuovexBlocks\Blocks\ContentShowcase\Render\Renderer as ContentShowcaseRenderer;
 
 /**
  * Service container providing singleton instances of plugin services.

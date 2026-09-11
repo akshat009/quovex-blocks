@@ -1,18 +1,18 @@
 <?php
 /**
- * @package FluxBlocks\Tests
+ * @package QuovexBlocks\Tests
  */
 
-namespace FluxBlocks\Tests\Unit;
+namespace QuovexBlocks\Tests\Unit;
 
 use Brain\Monkey\Functions;
-use FluxBlocks\Blocks\ContentShowcase\Render\HeadingRenderer;
-use FluxBlocks\Blocks\ContentShowcase\Render\HeadingStyle;
-use FluxBlocks\Tests\TestCase;
+use QuovexBlocks\Blocks\ContentShowcase\Render\HeadingRenderer;
+use QuovexBlocks\Blocks\ContentShowcase\Render\HeadingStyle;
+use QuovexBlocks\Tests\TestCase;
 
 /**
- * @covers \FluxBlocks\Blocks\ContentShowcase\Render\HeadingRenderer
- * @covers \FluxBlocks\Blocks\ContentShowcase\Render\HeadingStyle
+ * @covers \QuovexBlocks\Blocks\ContentShowcase\Render\HeadingRenderer
+ * @covers \QuovexBlocks\Blocks\ContentShowcase\Render\HeadingStyle
  */
 class ContentShowcaseHeadingRendererTest extends TestCase {
 
@@ -43,7 +43,7 @@ class ContentShowcaseHeadingRendererTest extends TestCase {
 		$html = $this->renderer->render_heading( 'Latest Posts', 'Latest', new HeadingStyle() );
 
 		$this->assertSame(
-			'<span></span><span class="fb-content-showcase__heading-accent">Latest</span><span> Posts</span>',
+			'<span></span><span class="qv-content-showcase__heading-accent">Latest</span><span> Posts</span>',
 			$html
 		);
 	}
@@ -54,7 +54,7 @@ class ContentShowcaseHeadingRendererTest extends TestCase {
 
 		$this->assertSame(
 			'<span style="color:#123456;font-family:Georgia;font-weight:700"></span>'
-				. '<span class="fb-content-showcase__heading-accent">Latest</span>'
+				. '<span class="qv-content-showcase__heading-accent">Latest</span>'
 				. '<span style="color:#123456;font-family:Georgia;font-weight:700"> Posts</span>',
 			$html
 		);
@@ -64,7 +64,7 @@ class ContentShowcaseHeadingRendererTest extends TestCase {
 		$style = new HeadingStyle( '', '#654321' );
 		$html  = $this->renderer->render_heading( 'Latest Posts', 'Latest', $style );
 
-		$this->assertStringContainsString( '<span class="fb-content-showcase__heading-accent" style="color:#654321">', $html );
+		$this->assertStringContainsString( '<span class="qv-content-showcase__heading-accent" style="color:#654321">', $html );
 	}
 
 	public function test_build_style_attr_returns_empty_string_when_every_value_is_empty(): void {

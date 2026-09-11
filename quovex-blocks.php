@@ -1,6 +1,7 @@
 <?php
 /**
- * Plugin Name:       Flux Blocks
+ * Plugin Name:       Quovex Blocks
+ * Plugin URI:        https://github.com/akshat009/quovex-blocks
  * Description:       A filterable Query Grid, a customizable Content Showcase, and a dismissible Notification Banner block, built with the native block editor and the Interactivity API.
  * Version:           0.1.0
  * Requires at least: 6.8
@@ -9,9 +10,9 @@
  * Author URI:        https://github.com/akshat009
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       flux-blocks
+ * Text Domain:       quovex-blocks
  *
- * @package           flux-blocks
+ * @package           quovex-blocks
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -19,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /*
- * Autoload `FluxBlocks\...` classes from includes/ (PSR-4).
+ * Autoload `QuovexBlocks\...` classes from includes/ (PSR-4).
  *
  * Prefer Composer's autoloader when vendor/ is present (dev checkouts that
  * ran `composer install`); otherwise fall back to a minimal hand-rolled
@@ -32,7 +33,7 @@ if ( is_readable( __DIR__ . '/vendor/autoload.php' ) ) {
 } else {
 	spl_autoload_register(
 		static function ( $class_name ) {
-			$prefix   = 'FluxBlocks\\';
+			$prefix   = 'QuovexBlocks\\';
 			$base_dir = __DIR__ . '/includes/';
 			$len      = strlen( $prefix );
 
@@ -58,21 +59,21 @@ if ( is_readable( __DIR__ . '/vendor/autoload.php' ) ) {
  * @see https://make.wordpress.org/core/2025/03/13/more-efficient-block-type-registration-in-6-8/
  * @see https://make.wordpress.org/core/2024/10/17/new-block-type-registration-apis-to-improve-performance-in-wordpress-6-7/
  */
-function flux_blocks_block_init() {
+function quovex_blocks_block_init() {
 	wp_register_block_types_from_metadata_collection( __DIR__ . '/build', __DIR__ . '/build/blocks-manifest.php' );
 }
-add_action( 'init', 'flux_blocks_block_init' );
+add_action( 'init', 'quovex_blocks_block_init' );
 
 /*
  * Why: boots the plugin's composition root (category registration, cache
  * invalidation hooks, REST routes) — see includes/Plugin.php.
  */
-add_action( 'init', array( \FluxBlocks\Plugin::class, 'boot' ) );
+add_action( 'init', array( \QuovexBlocks\Plugin::class, 'boot' ) );
 
 /*
- * Why: FluxBlocks\PaginationEndpoint::add_endpoint() (called every 'init'
+ * Why: QuovexBlocks\PaginationEndpoint::add_endpoint() (called every 'init'
  * via Plugin::boot()) only registers the query-var mapping for whatever
- * slug PaginationEndpoint::slug() currently resolves to (`/flux-page/N/`
+ * slug PaginationEndpoint::slug() currently resolves to (`/quovex-page/N/`
  * by default, but site-configurable -- see that class's docblock) in
  * memory for the CURRENT request -- WordPress still needs its cached
  * rewrite rules regenerated once for that URL pattern to actually resolve
@@ -88,7 +89,7 @@ add_action( 'init', array( \FluxBlocks\Plugin::class, 'boot' ) );
 register_activation_hook(
 	__FILE__,
 	function () {
-		( new \FluxBlocks\Blocks\QueryGrid\Routing\PaginationEndpoint() )->add_endpoint();
+		( new \QuovexBlocks\Blocks\QueryGrid\Routing\PaginationEndpoint() )->add_endpoint();
 		flush_rewrite_rules();
 	}
 );

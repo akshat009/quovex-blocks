@@ -1,16 +1,16 @@
 <?php
 /**
- * @package FluxBlocks\Tests
+ * @package QuovexBlocks\Tests
  */
 
-namespace FluxBlocks\Tests\Unit;
+namespace QuovexBlocks\Tests\Unit;
 
 use Brain\Monkey\Functions;
-use FluxBlocks\Blocks\QueryGrid\Render\StyleBuilder;
-use FluxBlocks\Tests\TestCase;
+use QuovexBlocks\Blocks\QueryGrid\Render\StyleBuilder;
+use QuovexBlocks\Tests\TestCase;
 
 /**
- * @covers \FluxBlocks\Blocks\QueryGrid\Render\StyleBuilder
+ * @covers \QuovexBlocks\Blocks\QueryGrid\Render\StyleBuilder
  */
 class QueryGridStyleBuilderTest extends TestCase {
 
@@ -48,10 +48,10 @@ class QueryGridStyleBuilderTest extends TestCase {
 			$this->builder->default_typography()
 		);
 
-		$this->assertStringContainsString( '--fb-cols-mobile:1;', $style );
-		$this->assertStringContainsString( '--fb-cols-tablet:2;', $style );
-		$this->assertStringContainsString( '--fb-cols-desktop:3;', $style );
-		$this->assertStringContainsString( '--fb-carousel-items:3;', $style );
+		$this->assertStringContainsString( '--qv-cols-mobile:1;', $style );
+		$this->assertStringContainsString( '--qv-cols-tablet:2;', $style );
+		$this->assertStringContainsString( '--qv-cols-desktop:3;', $style );
+		$this->assertStringContainsString( '--qv-carousel-items:3;', $style );
 	}
 
 	public function test_an_empty_color_produces_no_css_custom_property_for_it(): void {
@@ -65,7 +65,7 @@ class QueryGridStyleBuilderTest extends TestCase {
 			$this->builder->default_typography()
 		);
 
-		$this->assertStringNotContainsString( '--fb-title-color', $style );
+		$this->assertStringNotContainsString( '--qv-title-color', $style );
 	}
 
 	public function test_a_set_color_produces_its_css_custom_property(): void {
@@ -82,7 +82,7 @@ class QueryGridStyleBuilderTest extends TestCase {
 			$this->builder->default_typography()
 		);
 
-		$this->assertStringContainsString( '--fb-title-color:#123456;', $style );
+		$this->assertStringContainsString( '--qv-title-color:#123456;', $style );
 	}
 
 	public function test_a_set_typography_value_produces_its_css_custom_property(): void {
@@ -100,7 +100,7 @@ class QueryGridStyleBuilderTest extends TestCase {
 			$typography
 		);
 
-		$this->assertStringContainsString( '--fb-card-title-font-family:Georgia;', $style );
-		$this->assertStringContainsString( '--fb-card-title-font-weight:700;', $style );
+		$this->assertStringContainsString( '--qv-card-title-font-family:Georgia;', $style );
+		$this->assertStringContainsString( '--qv-card-title-font-weight:700;', $style );
 	}
 }

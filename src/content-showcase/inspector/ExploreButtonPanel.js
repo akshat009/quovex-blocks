@@ -34,12 +34,12 @@ export default function ExploreButtonPanel( {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Explore Button', 'flux-blocks' ) }
+					title={ __( 'Explore Button', 'quovex-blocks' ) }
 					initialOpen={ false }
 				>
 					<ToggleControl
 						__nextHasNoMarginBottom
-						label={ __( 'Show button', 'flux-blocks' ) }
+						label={ __( 'Show button', 'quovex-blocks' ) }
 						checked={ showExploreButton }
 						onChange={ ( value ) =>
 							setAttributes( { showExploreButton: value } )
@@ -49,7 +49,7 @@ export default function ExploreButtonPanel( {
 						<>
 							<TextControl
 								__nextHasNoMarginBottom
-								label={ __( 'Button text', 'flux-blocks' ) }
+								label={ __( 'Button text', 'quovex-blocks' ) }
 								value={ exploreButtonText }
 								onChange={ ( value ) =>
 									setAttributes( {
@@ -60,7 +60,7 @@ export default function ExploreButtonPanel( {
 							<TextControl
 								__nextHasNoMarginBottom
 								type="url"
-								label={ __( 'Button link', 'flux-blocks' ) }
+								label={ __( 'Button link', 'quovex-blocks' ) }
 								placeholder="https://"
 								value={ exploreButtonUrl }
 								onChange={ ( value ) =>
@@ -75,7 +75,7 @@ export default function ExploreButtonPanel( {
 			<InspectorControls group="styles">
 				{ showExploreButton && (
 					<PanelBody
-						title={ __( 'Explore Button Colors', 'flux-blocks' ) }
+						title={ __( 'Explore Button Colors', 'quovex-blocks' ) }
 						initialOpen={ false }
 					>
 						<div>
@@ -87,7 +87,7 @@ export default function ExploreButtonPanel( {
 							>
 								{ __(
 									'Button Text & Border Color',
-									'flux-blocks'
+									'quovex-blocks'
 								) }
 							</p>
 							<ColorPalette
@@ -109,7 +109,7 @@ export default function ExploreButtonPanel( {
 							>
 								{ __(
 									'Button Background Color',
-									'flux-blocks'
+									'quovex-blocks'
 								) }
 							</p>
 							<ColorPalette
@@ -131,7 +131,7 @@ export default function ExploreButtonPanel( {
 							>
 								{ __(
 									'Button Hover Background',
-									'flux-blocks'
+									'quovex-blocks'
 								) }
 							</p>
 							<ColorPalette
@@ -150,20 +150,20 @@ export default function ExploreButtonPanel( {
 					<PanelBody
 						title={ __(
 							'Explore Button Typography',
-							'flux-blocks'
+							'quovex-blocks'
 						) }
 						initialOpen={ false }
 					>
 						<p>
 							{ __(
 								'Font choices come from the active theme -- picking one here never needs a separate font to be installed or loaded.',
-								'flux-blocks'
+								'quovex-blocks'
 							) }
 						</p>
 
 						<SelectControl
 							__nextHasNoMarginBottom
-							label={ __( 'Button Font', 'flux-blocks' ) }
+							label={ __( 'Button Font', 'quovex-blocks' ) }
 							value={ exploreButtonFontFamily }
 							options={ fontFamilyOptions }
 							onChange={ ( val ) =>
@@ -174,7 +174,7 @@ export default function ExploreButtonPanel( {
 						/>
 						<SelectControl
 							__nextHasNoMarginBottom
-							label={ __( 'Button Weight', 'flux-blocks' ) }
+							label={ __( 'Button Weight', 'quovex-blocks' ) }
 							value={ exploreButtonFontWeight }
 							options={ fontWeightOptions }
 							onChange={ ( val ) =>

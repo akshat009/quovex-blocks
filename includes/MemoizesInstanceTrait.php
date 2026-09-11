@@ -5,10 +5,10 @@
  * to inherit through the way Renderers inherit capture() from
  * AbstractRenderer -- a trait can still hand down real method code here).
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
-namespace FluxBlocks;
+namespace QuovexBlocks;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.

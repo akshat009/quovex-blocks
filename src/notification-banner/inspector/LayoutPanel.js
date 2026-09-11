@@ -12,35 +12,41 @@ export default function LayoutPanel( { attributes, setAttributes } ) {
 	return (
 		<InspectorControls>
 			<PanelBody
-				title={ __( 'Preset Theme & Layout', 'flux-blocks' ) }
+				title={ __( 'Preset Theme & Layout', 'quovex-blocks' ) }
 				initialOpen={ false }
 			>
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Preset Theme', 'flux-blocks' ) }
+					label={ __( 'Preset Theme', 'quovex-blocks' ) }
 					value={ preset }
 					options={ [
 						{
 							label: __(
 								'Announcement (Gradient)',
-								'flux-blocks'
+								'quovex-blocks'
 							),
 							value: 'announcement',
 						},
 						{
-							label: __( 'Info (Blue Tint)', 'flux-blocks' ),
+							label: __( 'Info (Blue Tint)', 'quovex-blocks' ),
 							value: 'info',
 						},
 						{
-							label: __( 'Success (Green Tint)', 'flux-blocks' ),
+							label: __(
+								'Success (Green Tint)',
+								'quovex-blocks'
+							),
 							value: 'success',
 						},
 						{
-							label: __( 'Warning (Amber Tint)', 'flux-blocks' ),
+							label: __(
+								'Warning (Amber Tint)',
+								'quovex-blocks'
+							),
 							value: 'warning',
 						},
 						{
-							label: __( 'Custom Styling', 'flux-blocks' ),
+							label: __( 'Custom Styling', 'quovex-blocks' ),
 							value: 'custom',
 						},
 					] }
@@ -49,29 +55,32 @@ export default function LayoutPanel( { attributes, setAttributes } ) {
 
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Style Variation', 'flux-blocks' ) }
+					label={ __( 'Style Variation', 'quovex-blocks' ) }
 					value={ styleVariation }
 					options={ [
 						{
-							label: __( 'Full Background Fill', 'flux-blocks' ),
+							label: __(
+								'Full Background Fill',
+								'quovex-blocks'
+							),
 							value: 'gradient-bg',
 						},
 						{
-							label: __( 'Left Border Accent', 'flux-blocks' ),
+							label: __( 'Left Border Accent', 'quovex-blocks' ),
 							value: 'left-accent',
 						},
 						{
-							label: __( 'Soft Card Shadow', 'flux-blocks' ),
+							label: __( 'Soft Card Shadow', 'quovex-blocks' ),
 							value: 'soft-card',
 						},
 						{
-							label: __( 'Glassmorphism Blur', 'flux-blocks' ),
+							label: __( 'Glassmorphism Blur', 'quovex-blocks' ),
 							value: 'glassmorphism',
 						},
 						{
 							label: __(
 								'Minimal Outline Border',
-								'flux-blocks'
+								'quovex-blocks'
 							),
 							value: 'outline',
 						},
@@ -83,15 +92,15 @@ export default function LayoutPanel( { attributes, setAttributes } ) {
 
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Content Alignment', 'flux-blocks' ) }
+					label={ __( 'Content Alignment', 'quovex-blocks' ) }
 					value={ alignment }
 					options={ [
 						{
-							label: __( 'Left Aligned', 'flux-blocks' ),
+							label: __( 'Left Aligned', 'quovex-blocks' ),
 							value: 'left',
 						},
 						{
-							label: __( 'Center Aligned', 'flux-blocks' ),
+							label: __( 'Center Aligned', 'quovex-blocks' ),
 							value: 'center',
 						},
 					] }

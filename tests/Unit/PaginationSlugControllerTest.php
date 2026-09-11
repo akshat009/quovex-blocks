@@ -1,18 +1,18 @@
 <?php
 /**
- * @package FluxBlocks\Tests
+ * @package QuovexBlocks\Tests
  */
 
-namespace FluxBlocks\Tests\Unit;
+namespace QuovexBlocks\Tests\Unit;
 
 use Brain\Monkey\Functions;
-use FluxBlocks\Blocks\QueryGrid\Routing\PaginationEndpoint;
-use FluxBlocks\Blocks\QueryGrid\Rest\PaginationSlugController;
-use FluxBlocks\Tests\TestCase;
+use QuovexBlocks\Blocks\QueryGrid\Routing\PaginationEndpoint;
+use QuovexBlocks\Blocks\QueryGrid\Rest\PaginationSlugController;
+use QuovexBlocks\Tests\TestCase;
 use WP_REST_Request;
 
 /**
- * @covers \FluxBlocks\Blocks\QueryGrid\Rest\PaginationSlugController
+ * @covers \QuovexBlocks\Blocks\QueryGrid\Rest\PaginationSlugController
  */
 class PaginationSlugControllerTest extends TestCase {
 
@@ -60,15 +60,15 @@ class PaginationSlugControllerTest extends TestCase {
 		$this->assertSame( array( 'slug' => 'my-new-slug' ), $response->get_data() );
 	}
 
-	public function test_update_slug_falls_back_to_flux_page_when_it_sanitizes_to_nothing(): void {
+	public function test_update_slug_falls_back_to_quovex_page_when_it_sanitizes_to_nothing(): void {
 		Functions\expect( 'update_option' )
 			->once()
-			->with( PaginationEndpoint::OPTION, 'flux-page' )
+			->with( PaginationEndpoint::OPTION, 'quovex-page' )
 			->andReturn( true );
 
 		$request  = new WP_REST_Request( array( 'slug' => '!!!' ) );
 		$response = $this->controller->update_slug( $request );
 
-		$this->assertSame( array( 'slug' => 'flux-page' ), $response->get_data() );
+		$this->assertSame( array( 'slug' => 'quovex-page' ), $response->get_data() );
 	}
 }

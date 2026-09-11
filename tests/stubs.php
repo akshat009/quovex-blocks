@@ -8,7 +8,7 @@
  * These are intentionally minimal (public properties only, no real WP
  * behavior) -- just enough shape for the code under test to work with.
  *
- * @package FluxBlocks\Tests
+ * @package QuovexBlocks\Tests
  */
 
 if ( ! class_exists( 'WP_Post_Type' ) ) {

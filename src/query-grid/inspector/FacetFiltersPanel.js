@@ -33,16 +33,16 @@ export default function FacetFiltersPanel( {
 
 	return (
 		<PanelBody
-			title={ __( 'Facet Filters', 'flux-blocks' ) }
+			title={ __( 'Facet Filters', 'quovex-blocks' ) }
 			initialOpen={ false }
 		>
 			{ ( showSearch || showCategoryFilter ) && (
 				<ToggleControl
 					__nextHasNoMarginBottom
-					label={ __( 'Show Sidebar', 'flux-blocks' ) }
+					label={ __( 'Show Sidebar', 'quovex-blocks' ) }
 					help={ __(
 						'Off keeps search/filters at the top instead. Only applies when at least one is on.',
-						'flux-blocks'
+						'quovex-blocks'
 					) }
 					checked={ !! showSidebar }
 					onChange={ ( value ) =>
@@ -53,15 +53,15 @@ export default function FacetFiltersPanel( {
 			{ ( showSearch || showCategoryFilter ) && showSidebar && (
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Sidebar Side', 'flux-blocks' ) }
+					label={ __( 'Sidebar Side', 'quovex-blocks' ) }
 					value={ sidebarSide }
 					options={ [
 						{
-							label: __( 'Left', 'flux-blocks' ),
+							label: __( 'Left', 'quovex-blocks' ),
 							value: 'left',
 						},
 						{
-							label: __( 'Right', 'flux-blocks' ),
+							label: __( 'Right', 'quovex-blocks' ),
 							value: 'right',
 						},
 					] }
@@ -72,26 +72,26 @@ export default function FacetFiltersPanel( {
 			) }
 			<ToggleControl
 				__nextHasNoMarginBottom
-				label={ __( 'Show Search', 'flux-blocks' ) }
+				label={ __( 'Show Search', 'quovex-blocks' ) }
 				checked={ !! showSearch }
 				onChange={ ( value ) => setAttributes( { showSearch: value } ) }
 			/>
 			{ showSearch && (
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Search Alignment', 'flux-blocks' ) }
+					label={ __( 'Search Alignment', 'quovex-blocks' ) }
 					value={ searchAlign }
 					options={ [
 						{
-							label: __( 'Left', 'flux-blocks' ),
+							label: __( 'Left', 'quovex-blocks' ),
 							value: 'left',
 						},
 						{
-							label: __( 'Center', 'flux-blocks' ),
+							label: __( 'Center', 'quovex-blocks' ),
 							value: 'center',
 						},
 						{
-							label: __( 'Right', 'flux-blocks' ),
+							label: __( 'Right', 'quovex-blocks' ),
 							value: 'right',
 						},
 					] }
@@ -102,7 +102,7 @@ export default function FacetFiltersPanel( {
 			) }
 			<ToggleControl
 				__nextHasNoMarginBottom
-				label={ __( 'Show Category Filter', 'flux-blocks' ) }
+				label={ __( 'Show Category Filter', 'quovex-blocks' ) }
 				checked={ !! showCategoryFilter }
 				onChange={ ( value ) =>
 					setAttributes( { showCategoryFilter: value } )
@@ -110,9 +110,12 @@ export default function FacetFiltersPanel( {
 			/>
 			{ showCategoryFilter && taxonomyOptions.length > 0 && (
 				<BaseControl
-					id="fb-query-grid-facet-taxonomies"
+					id="qv-query-grid-facet-taxonomies"
 					__nextHasNoMarginBottom
-					label={ __( 'Filter by these taxonomies', 'flux-blocks' ) }
+					label={ __(
+						'Filter by these taxonomies',
+						'quovex-blocks'
+					) }
 				>
 					{ taxonomyOptions.map( ( taxonomy ) => (
 						<CheckboxControl
@@ -130,17 +133,17 @@ export default function FacetFiltersPanel( {
 				<p>
 					{ __(
 						'This post type has no public taxonomies to filter by.',
-						'flux-blocks'
+						'quovex-blocks'
 					) }
 				</p>
 			) }
 			{ showCategoryFilter && facets.length > 0 && (
 				<ToggleControl
 					__nextHasNoMarginBottom
-					label={ __( 'Show Filter Headings', 'flux-blocks' ) }
+					label={ __( 'Show Filter Headings', 'quovex-blocks' ) }
 					help={ __(
 						'Labels each selected taxonomy above its pills, e.g. "Categories", "Tags".',
-						'flux-blocks'
+						'quovex-blocks'
 					) }
 					checked={ !! showFilterHeadings }
 					onChange={ ( value ) =>
@@ -161,7 +164,7 @@ export default function FacetFiltersPanel( {
 							__nextHasNoMarginBottom
 							label={ sprintf(
 								/* translators: %s: taxonomy label, e.g. "Categories". */
-								__( '%s Heading Text', 'flux-blocks' ),
+								__( '%s Heading Text', 'quovex-blocks' ),
 								taxonomyLabel
 							) }
 							placeholder={ taxonomyLabel }

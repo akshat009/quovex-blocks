@@ -39,19 +39,19 @@ export default function SettingsPanel( {
 	return (
 		<InspectorControls>
 			<PanelBody
-				title={ __( 'Settings', 'flux-blocks' ) }
+				title={ __( 'Settings', 'quovex-blocks' ) }
 				initialOpen={ false }
 			>
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Post type', 'flux-blocks' ) }
+					label={ __( 'Post type', 'quovex-blocks' ) }
 					value={ postType }
 					options={
 						postTypeOptions.length
 							? postTypeOptions
 							: [
 									{
-										label: __( 'Post', 'flux-blocks' ),
+										label: __( 'Post', 'quovex-blocks' ),
 										value: 'post',
 									},
 							  ]
@@ -70,7 +70,7 @@ export default function SettingsPanel( {
 				/>
 				<RangeControl
 					__nextHasNoMarginBottom
-					label={ __( 'Number of items', 'flux-blocks' ) }
+					label={ __( 'Number of items', 'quovex-blocks' ) }
 					min={ 1 }
 					max={ 3 }
 					value={ postCount }
@@ -80,23 +80,23 @@ export default function SettingsPanel( {
 				/>
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Order by', 'flux-blocks' ) }
+					label={ __( 'Order by', 'quovex-blocks' ) }
 					value={ `${ orderBy }-${ order }` }
 					options={ [
 						{
-							label: __( 'Newest first', 'flux-blocks' ),
+							label: __( 'Newest first', 'quovex-blocks' ),
 							value: 'date-desc',
 						},
 						{
-							label: __( 'Oldest first', 'flux-blocks' ),
+							label: __( 'Oldest first', 'quovex-blocks' ),
 							value: 'date-asc',
 						},
 						{
-							label: __( 'Title A→Z', 'flux-blocks' ),
+							label: __( 'Title A→Z', 'quovex-blocks' ),
 							value: 'title-asc',
 						},
 						{
-							label: __( 'Title Z→A', 'flux-blocks' ),
+							label: __( 'Title Z→A', 'quovex-blocks' ),
 							value: 'title-desc',
 						},
 					] }
@@ -111,12 +111,12 @@ export default function SettingsPanel( {
 			</PanelBody>
 
 			<PanelBody
-				title={ __( 'Section Heading Settings', 'flux-blocks' ) }
+				title={ __( 'Section Heading Settings', 'quovex-blocks' ) }
 				initialOpen={ false }
 			>
 				<ToggleControl
 					__nextHasNoMarginBottom
-					label={ __( 'Show Section Heading', 'flux-blocks' ) }
+					label={ __( 'Show Section Heading', 'quovex-blocks' ) }
 					checked={ showHeading }
 					onChange={ ( value ) =>
 						setAttributes( { showHeading: value } )
@@ -126,7 +126,7 @@ export default function SettingsPanel( {
 					<>
 						<TextControl
 							__nextHasNoMarginBottom
-							label={ __( 'SECTION TITLE', 'flux-blocks' ) }
+							label={ __( 'SECTION TITLE', 'quovex-blocks' ) }
 							value={ heading }
 							onChange={ ( value ) =>
 								setAttributes( { heading: value } )
@@ -136,12 +136,12 @@ export default function SettingsPanel( {
 							__nextHasNoMarginBottom
 							label={ __(
 								'HIGHLIGHTED ACCENT TEXT',
-								'flux-blocks'
+								'quovex-blocks'
 							) }
 							value={ headingAccent }
 							help={ __(
 								'Must exactly match a substring of the title above to be colored.',
-								'flux-blocks'
+								'quovex-blocks'
 							) }
 							onChange={ ( value ) =>
 								setAttributes( { headingAccent: value } )
@@ -151,12 +151,12 @@ export default function SettingsPanel( {
 							__nextHasNoMarginBottom
 							label={ __(
 								'SECTION SUBHEADING / DESCRIPTION',
-								'flux-blocks'
+								'quovex-blocks'
 							) }
 							value={ subheading }
 							help={ __(
 								'Subheading text displayed directly below the main title.',
-								'flux-blocks'
+								'quovex-blocks'
 							) }
 							onChange={ ( value ) =>
 								setAttributes( { subheading: value } )
@@ -167,18 +167,18 @@ export default function SettingsPanel( {
 			</PanelBody>
 
 			<PanelBody
-				title={ __( 'Manual Post Selection & Order', 'flux-blocks' ) }
+				title={ __( 'Manual Post Selection & Order', 'quovex-blocks' ) }
 				initialOpen={ false }
 			>
 				<ToggleControl
 					__nextHasNoMarginBottom
 					label={ __(
 						'Enable Manual Post Selection',
-						'flux-blocks'
+						'quovex-blocks'
 					) }
 					help={ __(
 						'Turn ON to manually pick individual posts for each slot. Overrides Category Filter.',
-						'flux-blocks'
+						'quovex-blocks'
 					) }
 					checked={ !! enableManualSelection }
 					onChange={ ( val ) =>
@@ -198,14 +198,14 @@ export default function SettingsPanel( {
 							__nextHasNoMarginBottom
 							label={ __(
 								'Post Slot 1 (Main Featured)',
-								'flux-blocks'
+								'quovex-blocks'
 							) }
 							value={ manualPost1 }
 							options={ [
 								{
 									label: __(
 										'-- Automatic (Query Default) --',
-										'flux-blocks'
+										'quovex-blocks'
 									),
 									value: 0,
 								},
@@ -232,14 +232,14 @@ export default function SettingsPanel( {
 							__nextHasNoMarginBottom
 							label={ __(
 								'Post Slot 2 (Second Post)',
-								'flux-blocks'
+								'quovex-blocks'
 							) }
 							value={ manualPost2 }
 							options={ [
 								{
 									label: __(
 										'-- Automatic (Query Default) --',
-										'flux-blocks'
+										'quovex-blocks'
 									),
 									value: 0,
 								},
@@ -266,14 +266,14 @@ export default function SettingsPanel( {
 							__nextHasNoMarginBottom
 							label={ __(
 								'Post Slot 3 (Third Post)',
-								'flux-blocks'
+								'quovex-blocks'
 							) }
 							value={ manualPost3 }
 							options={ [
 								{
 									label: __(
 										'-- Automatic (Query Default) --',
-										'flux-blocks'
+										'quovex-blocks'
 									),
 									value: 0,
 								},

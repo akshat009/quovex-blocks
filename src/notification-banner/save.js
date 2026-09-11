@@ -62,37 +62,37 @@ export default function save( { attributes } ) {
 	} = attributes;
 
 	const styleVars = {
-		'--fb-nb-radius': `${ borderRadius }px`,
+		'--qv-nb-radius': `${ borderRadius }px`,
 	};
 	if ( bgColor ) {
-		styleVars[ '--fb-nb-custom-bg' ] = bgColor;
+		styleVars[ '--qv-nb-custom-bg' ] = bgColor;
 	}
 	if ( textColor ) {
-		styleVars[ '--fb-nb-custom-text' ] = textColor;
+		styleVars[ '--qv-nb-custom-text' ] = textColor;
 	}
 	// Font families come from the active theme's theme.json (see edit.js's
 	// useSettings('typography.fontFamilies')).
 	if ( textFontFamily ) {
-		styleVars[ '--fb-nb-text-font-family' ] = textFontFamily;
+		styleVars[ '--qv-nb-text-font-family' ] = textFontFamily;
 	}
 	if ( textFontWeight ) {
-		styleVars[ '--fb-nb-text-font-weight' ] = textFontWeight;
+		styleVars[ '--qv-nb-text-font-weight' ] = textFontWeight;
 	}
 	if ( accentColor ) {
-		styleVars[ '--fb-nb-custom-accent' ] = accentColor;
+		styleVars[ '--qv-nb-custom-accent' ] = accentColor;
 	}
 	if ( btnBgColor ) {
-		styleVars[ '--fb-nb-custom-btn-bg' ] = btnBgColor;
+		styleVars[ '--qv-nb-custom-btn-bg' ] = btnBgColor;
 	}
 	if ( btnTextColor ) {
-		styleVars[ '--fb-nb-custom-btn-text' ] = btnTextColor;
+		styleVars[ '--qv-nb-custom-btn-text' ] = btnTextColor;
 	}
 	if ( btnHoverBg ) {
-		styleVars[ '--fb-nb-custom-btn-hover' ] = btnHoverBg;
+		styleVars[ '--qv-nb-custom-btn-hover' ] = btnHoverBg;
 	}
 
 	const blockProps = useBlockProps.save( {
-		className: `fb-notification-banner fb-notification-banner--preset-${ preset } fb-notification-banner--style-${ styleVariation } fb-notification-banner--align-${ alignment }`,
+		className: `qv-notification-banner qv-notification-banner--preset-${ preset } qv-notification-banner--style-${ styleVariation } qv-notification-banner--align-${ alignment }`,
 		style: styleVars,
 		'data-banner-id': bannerId || undefined,
 		'data-remember-dismiss':
@@ -120,7 +120,7 @@ export default function save( { attributes } ) {
 		if ( iconType === 'svg' && svgIconsHTML[ icon ] ) {
 			return (
 				<span
-					className="fb-svg-icon"
+					className="qv-svg-icon"
 					style={ {
 						display: 'inline-flex',
 						width: '24px',
@@ -141,25 +141,25 @@ export default function save( { attributes } ) {
 
 	return (
 		<div { ...blockProps }>
-			<div className="fb-notification-banner__main">
+			<div className="qv-notification-banner__main">
 				{ showIcon && icon && (
-					<div className="fb-notification-banner__icon">
+					<div className="qv-notification-banner__icon">
 						{ renderIcon() }
 					</div>
 				) }
 
-				<div className="fb-notification-banner__body">
+				<div className="qv-notification-banner__body">
 					{ title && (
 						<RichText.Content
 							tagName="h4"
-							className="fb-notification-banner__title"
+							className="qv-notification-banner__title"
 							value={ title }
 						/>
 					) }
 					{ message && (
 						<RichText.Content
 							tagName="p"
-							className="fb-notification-banner__message"
+							className="qv-notification-banner__message"
 							value={ message }
 						/>
 					) }
@@ -167,12 +167,12 @@ export default function save( { attributes } ) {
 			</div>
 
 			{ ( showButton || allowDismiss ) && (
-				<div className="fb-notification-banner__actions">
+				<div className="qv-notification-banner__actions">
 					{ showButton && buttonText && (
 						<a
 							href={ safeButtonUrl( buttonUrl ) }
 							target={ target }
-							className="fb-notification-banner__btn"
+							className="qv-notification-banner__btn"
 							{ ...( buttonTarget
 								? { rel: 'noopener noreferrer' }
 								: {} ) }
@@ -184,8 +184,11 @@ export default function save( { attributes } ) {
 					{ allowDismiss && (
 						<button
 							type="button"
-							className="fb-notification-banner__dismiss"
-							aria-label={ __( 'Dismiss notice', 'flux-blocks' ) }
+							className="qv-notification-banner__dismiss"
+							aria-label={ __(
+								'Dismiss notice',
+								'quovex-blocks'
+							) }
 						>
 							✕
 						</button>

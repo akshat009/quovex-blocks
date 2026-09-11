@@ -1,18 +1,18 @@
 <?php
 /**
- * @package FluxBlocks\Tests
+ * @package QuovexBlocks\Tests
  */
 
-namespace FluxBlocks\Tests\Unit;
+namespace QuovexBlocks\Tests\Unit;
 
 use Brain\Monkey\Functions;
-use FluxBlocks\Blocks\QueryGrid\Render\FacetRenderer;
-use FluxBlocks\Cache\CacheInterface;
-use FluxBlocks\Tests\TestCase;
+use QuovexBlocks\Blocks\QueryGrid\Render\FacetRenderer;
+use QuovexBlocks\Cache\CacheInterface;
+use QuovexBlocks\Tests\TestCase;
 use Mockery;
 
 /**
- * @covers \FluxBlocks\Blocks\QueryGrid\Render\FacetRenderer
+ * @covers \QuovexBlocks\Blocks\QueryGrid\Render\FacetRenderer
  */
 class FacetRendererTest extends TestCase {
 
@@ -51,7 +51,7 @@ class FacetRendererTest extends TestCase {
 	public function test_render_search_form_contains_the_search_input_and_submit_button(): void {
 		$html = $this->renderer->render_search_form();
 
-		$this->assertStringContainsString( 'fb-query-grid__search-input', $html );
+		$this->assertStringContainsString( 'qv-query-grid__search-input', $html );
 		$this->assertStringContainsString( 'data-wp-on--submit="actions.onSearchSubmit"', $html );
 	}
 
@@ -82,7 +82,7 @@ class FacetRendererTest extends TestCase {
 
 		$html = $this->renderer->render_facet_group( 'category', 'post', true );
 
-		$this->assertSame( 2, substr_count( $html, 'fb-query-grid__filter-btn' ) );
+		$this->assertSame( 2, substr_count( $html, 'qv-query-grid__filter-btn' ) );
 		$this->assertStringContainsString( 'News', $html );
 		$this->assertStringContainsString( 'Reviews', $html );
 	}
@@ -97,7 +97,7 @@ class FacetRendererTest extends TestCase {
 
 		$html = $this->renderer->render_facet_group( 'category', 'post', false );
 
-		$this->assertStringNotContainsString( 'fb-query-grid__filter-heading', $html );
+		$this->assertStringNotContainsString( 'qv-query-grid__filter-heading', $html );
 	}
 
 	public function test_render_facet_group_prefers_a_custom_heading_over_the_taxonomy_label(): void {

@@ -1,17 +1,17 @@
 <?php
 /**
- * @package FluxBlocks\Tests
+ * @package QuovexBlocks\Tests
  */
 
-namespace FluxBlocks\Tests\Unit;
+namespace QuovexBlocks\Tests\Unit;
 
 use Brain\Monkey\Functions;
-use FluxBlocks\QueryEngine\QueryArgsBuilder;
-use FluxBlocks\Tests\TestCase;
+use QuovexBlocks\QueryEngine\QueryArgsBuilder;
+use QuovexBlocks\Tests\TestCase;
 use WP_Post_Type;
 
 /**
- * @covers \FluxBlocks\QueryEngine\QueryArgsBuilder
+ * @covers \QuovexBlocks\QueryEngine\QueryArgsBuilder
  */
 class QueryArgsBuilderTest extends TestCase {
 

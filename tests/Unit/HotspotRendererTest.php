@@ -1,16 +1,16 @@
 <?php
 /**
- * @package FluxBlocks\Tests
+ * @package QuovexBlocks\Tests
  */
 
-namespace FluxBlocks\Tests\Unit;
+namespace QuovexBlocks\Tests\Unit;
 
 use Brain\Monkey\Functions;
-use FluxBlocks\Blocks\ContentShowcase\Render\HotspotRenderer;
-use FluxBlocks\Tests\TestCase;
+use QuovexBlocks\Blocks\ContentShowcase\Render\HotspotRenderer;
+use QuovexBlocks\Tests\TestCase;
 
 /**
- * @covers \FluxBlocks\Blocks\ContentShowcase\Render\HotspotRenderer
+ * @covers \QuovexBlocks\Blocks\ContentShowcase\Render\HotspotRenderer
  */
 class HotspotRendererTest extends TestCase {
 
@@ -55,8 +55,8 @@ class HotspotRendererTest extends TestCase {
 		);
 
 		$result = $this->renderer->render_hotspots_for_post( 0, $attributes );
-		$this->assertStringContainsString( 'fb-hotspot-pin', $result );
-		$this->assertStringContainsString( '--fb-hotspot-pin-color: #ff0000', $result );
+		$this->assertStringContainsString( 'qv-hotspot-pin', $result );
+		$this->assertStringContainsString( '--qv-hotspot-pin-color: #ff0000', $result );
 		$this->assertStringContainsString( 'Spot 1', $result );
 	}
 }

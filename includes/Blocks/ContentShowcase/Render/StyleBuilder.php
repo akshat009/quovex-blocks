@@ -3,10 +3,10 @@
  * Builds Content Showcase's wrapper-level CSS custom properties from block
  * attributes.
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
-namespace FluxBlocks\Blocks\ContentShowcase\Render;
+namespace QuovexBlocks\Blocks\ContentShowcase\Render;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -25,17 +25,17 @@ class StyleBuilder {
 		// Font families come from the active theme's theme.json (see
 		// edit.js's useSettings('typography.fontFamilies')).
 		$property_map = array(
-			'headingAccentColor'    => '--fb-accent',
-			'cardTitleColor'        => '--fb-card-title-color',
-			'cardTitleHoverColor'   => '--fb-card-title-hover-color',
-			'cardDateColor'         => '--fb-card-date-color',
-			'cardExcerptColor'      => '--fb-card-excerpt-color',
-			'cardTitleFontFamily'   => '--fb-card-title-font-family',
-			'cardTitleFontWeight'   => '--fb-card-title-font-weight',
-			'cardExcerptFontFamily' => '--fb-card-excerpt-font-family',
-			'cardExcerptFontWeight' => '--fb-card-excerpt-font-weight',
-			'cardDateFontFamily'    => '--fb-card-date-font-family',
-			'cardDateFontWeight'    => '--fb-card-date-font-weight',
+			'headingAccentColor'    => '--qv-accent',
+			'cardTitleColor'        => '--qv-card-title-color',
+			'cardTitleHoverColor'   => '--qv-card-title-hover-color',
+			'cardDateColor'         => '--qv-card-date-color',
+			'cardExcerptColor'      => '--qv-card-excerpt-color',
+			'cardTitleFontFamily'   => '--qv-card-title-font-family',
+			'cardTitleFontWeight'   => '--qv-card-title-font-weight',
+			'cardExcerptFontFamily' => '--qv-card-excerpt-font-family',
+			'cardExcerptFontWeight' => '--qv-card-excerpt-font-weight',
+			'cardDateFontFamily'    => '--qv-card-date-font-family',
+			'cardDateFontWeight'    => '--qv-card-date-font-weight',
 		);
 
 		$inline_styles = array();

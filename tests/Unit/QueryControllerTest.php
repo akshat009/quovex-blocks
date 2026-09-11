@@ -1,20 +1,20 @@
 <?php
 /**
- * @package FluxBlocks\Tests
+ * @package QuovexBlocks\Tests
  */
 
-namespace FluxBlocks\Tests\Unit;
+namespace QuovexBlocks\Tests\Unit;
 
 use Brain\Monkey\Functions;
-use FluxBlocks\Blocks\QueryGrid\Render\Renderer;
-use FluxBlocks\Blocks\QueryGrid\Rest\QueryController;
-use FluxBlocks\QueryEngine\QueryArgsBuilder;
-use FluxBlocks\Tests\TestCase;
+use QuovexBlocks\Blocks\QueryGrid\Render\Renderer;
+use QuovexBlocks\Blocks\QueryGrid\Rest\QueryController;
+use QuovexBlocks\QueryEngine\QueryArgsBuilder;
+use QuovexBlocks\Tests\TestCase;
 use Mockery;
 use WP_REST_Request;
 
 /**
- * @covers \FluxBlocks\Blocks\QueryGrid\Rest\QueryController
+ * @covers \QuovexBlocks\Blocks\QueryGrid\Rest\QueryController
  */
 class QueryControllerTest extends TestCase {
 

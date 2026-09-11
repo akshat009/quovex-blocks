@@ -61,33 +61,33 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		? rawThemeFontFamilies
 		: [];
 	const fontFamilyOptions = [
-		{ label: __( 'Theme Default', 'flux-blocks' ), value: '' },
+		{ label: __( 'Theme Default', 'quovex-blocks' ), value: '' },
 		...themeFontFamilies.map( ( font ) => ( {
 			label: font.name,
 			value: font.fontFamily,
 		} ) ),
 	];
 	const fontWeightOptions = [
-		{ label: __( 'Theme Default', 'flux-blocks' ), value: '' },
-		{ label: __( 'Normal (400)', 'flux-blocks' ), value: '400' },
-		{ label: __( 'Medium (500)', 'flux-blocks' ), value: '500' },
-		{ label: __( 'Semi-Bold (600)', 'flux-blocks' ), value: '600' },
-		{ label: __( 'Bold (700)', 'flux-blocks' ), value: '700' },
-		{ label: __( 'Extra-Bold (800)', 'flux-blocks' ), value: '800' },
+		{ label: __( 'Theme Default', 'quovex-blocks' ), value: '' },
+		{ label: __( 'Normal (400)', 'quovex-blocks' ), value: '400' },
+		{ label: __( 'Medium (500)', 'quovex-blocks' ), value: '500' },
+		{ label: __( 'Semi-Bold (600)', 'quovex-blocks' ), value: '600' },
+		{ label: __( 'Bold (700)', 'quovex-blocks' ), value: '700' },
+		{ label: __( 'Extra-Bold (800)', 'quovex-blocks' ), value: '800' },
 	];
 
 	const blockProps = useBlockProps( {
-		className: `fb-notification-banner fb-notification-banner--preset-${ preset } fb-notification-banner--style-${ styleVariation } fb-notification-banner--align-${ alignment }`,
+		className: `qv-notification-banner qv-notification-banner--preset-${ preset } qv-notification-banner--style-${ styleVariation } qv-notification-banner--align-${ alignment }`,
 		style: {
-			'--fb-nb-radius': `${ borderRadius }px`,
-			'--fb-nb-custom-bg': bgColor || undefined,
-			'--fb-nb-custom-text': textColor || undefined,
-			'--fb-nb-text-font-family': textFontFamily || undefined,
-			'--fb-nb-text-font-weight': textFontWeight || undefined,
-			'--fb-nb-custom-accent': accentColor || undefined,
-			'--fb-nb-custom-btn-bg': btnBgColor || undefined,
-			'--fb-nb-custom-btn-text': btnTextColor || undefined,
-			'--fb-nb-custom-btn-hover': btnHoverBg || undefined,
+			'--qv-nb-radius': `${ borderRadius }px`,
+			'--qv-nb-custom-bg': bgColor || undefined,
+			'--qv-nb-custom-text': textColor || undefined,
+			'--qv-nb-text-font-family': textFontFamily || undefined,
+			'--qv-nb-text-font-weight': textFontWeight || undefined,
+			'--qv-nb-custom-accent': accentColor || undefined,
+			'--qv-nb-custom-btn-bg': btnBgColor || undefined,
+			'--qv-nb-custom-btn-text': btnTextColor || undefined,
+			'--qv-nb-custom-btn-hover': btnHoverBg || undefined,
 		},
 	} );
 
@@ -110,7 +110,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 		}
 
 		if ( iconType === 'svg' && svgIcons[ icon ] ) {
-			return <span className="fb-svg-icon">{ svgIcons[ icon ] }</span>;
+			return <span className="qv-svg-icon">{ svgIcons[ icon ] }</span>;
 		}
 
 		return <span>{ icon }</span>;
@@ -145,57 +145,57 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 			/>
 
 			<div { ...blockProps }>
-				<div className="fb-notification-banner__main">
+				<div className="qv-notification-banner__main">
 					{ showIcon && (
-						<div className="fb-notification-banner__icon">
+						<div className="qv-notification-banner__icon">
 							{ renderIcon() }
 						</div>
 					) }
 
-					<div className="fb-notification-banner__body">
+					<div className="qv-notification-banner__body">
 						<RichText
 							tagName="h4"
-							className="fb-notification-banner__title"
+							className="qv-notification-banner__title"
 							value={ title }
 							onChange={ ( val ) =>
 								setAttributes( { title: val } )
 							}
 							placeholder={ __(
 								'Announcement title…',
-								'flux-blocks'
+								'quovex-blocks'
 							) }
 						/>
 						<RichText
 							tagName="div"
-							className="fb-notification-banner__message"
+							className="qv-notification-banner__message"
 							value={ message }
 							onChange={ ( val ) =>
 								setAttributes( { message: val } )
 							}
 							placeholder={ __(
 								'Announcement message…',
-								'flux-blocks'
+								'quovex-blocks'
 							) }
 						/>
 					</div>
 				</div>
 
 				{ ( showButton || allowDismiss ) && (
-					<div className="fb-notification-banner__actions">
+					<div className="qv-notification-banner__actions">
 						{ showButton && (
-							<span className="fb-notification-banner__btn">
+							<span className="qv-notification-banner__btn">
 								{ buttonText ||
-									__( 'Explore Now →', 'flux-blocks' ) }
+									__( 'Explore Now →', 'quovex-blocks' ) }
 							</span>
 						) }
 
 						{ allowDismiss && (
 							<button
 								type="button"
-								className="fb-notification-banner__dismiss"
+								className="qv-notification-banner__dismiss"
 								aria-label={ __(
 									'Dismiss notice',
-									'flux-blocks'
+									'quovex-blocks'
 								) }
 							>
 								✕

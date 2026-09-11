@@ -1,8 +1,8 @@
 /**
  * Query Grid frontend behavior (Interactivity API).
  *
- * Pagination/search/filter fetch from /flux-blocks/v1/query and REPLACE
- * `.fb-query-grid__items` + `.fb-query-grid__pagination-slot`; "Load more"
+ * Pagination/search/filter fetch from /quovex-blocks/v1/query and REPLACE
+ * `.qv-query-grid__items` + `.qv-query-grid__pagination-slot`; "Load more"
  * APPENDS instead (see fetchAndApply()'s `append` arg). Carousel nav is
  * pure client-side -- every slide is already server-rendered.
  *
@@ -15,7 +15,7 @@
  *
  * Pagination buttons use plain event delegation
  * (initPaginationDelegation), not `data-wp-on--click` --
- * `.fb-query-grid__pagination-slot`'s innerHTML gets replaced on every
+ * `.qv-query-grid__pagination-slot`'s innerHTML gets replaced on every
  * page change, and the Interactivity API only binds directives during its
  * one-time hydration walk, so a freshly-inserted button's directive would
  * be inert.
@@ -48,7 +48,7 @@ const activeFetchControllers = new Map();
  * below and the delegated pagination click handler (see file docblock for
  * why pagination needs different event wiring).
  *
- * @param {HTMLElement} rootEl  The `.fb-query-grid` root element for this instance.
+ * @param {HTMLElement} rootEl  The `.qv-query-grid` root element for this instance.
  * @param {Object}      context This instance's Interactivity context (mutated in place).
  * @param {number}      page    Page to fetch.
  * @param {boolean}     append  true = grow items (load-more); false = replace (pagination/search/filter).
@@ -89,7 +89,7 @@ async function fetchAndApply( rootEl, context, page, append ) {
 			params.set( 'showAll', '1' );
 		}
 
-		const baseUrl = context.restUrl || '/wp-json/flux-blocks/v1/query';
+		const baseUrl = context.restUrl || '/wp-json/quovex-blocks/v1/query';
 		const response = await fetch(
 			`${ baseUrl }${
 				baseUrl.includes( '?' ) ? '&' : '?'
@@ -103,7 +103,7 @@ async function fetchAndApply( rootEl, context, page, append ) {
 
 		const data = await response.json();
 
-		const itemsEl = rootEl.querySelector( '.fb-query-grid__items' );
+		const itemsEl = rootEl.querySelector( '.qv-query-grid__items' );
 		if ( itemsEl && data?.html ) {
 			if ( append ) {
 				itemsEl.insertAdjacentHTML( 'beforeend', data.html );
@@ -114,7 +114,7 @@ async function fetchAndApply( rootEl, context, page, append ) {
 			// items this same way regardless of layout -- Masonry's spans
 			// need recomputing for whichever items are now in the DOM every
 			// time this runs, not just on first hydration.
-			if ( rootEl.classList.contains( 'fb-query-grid--masonry' ) ) {
+			if ( rootEl.classList.contains( 'qv-query-grid--masonry' ) ) {
 				layoutMasonryItems( rootEl );
 			}
 		}
@@ -123,7 +123,7 @@ async function fetchAndApply( rootEl, context, page, append ) {
 		// to refresh in that mode.
 		if ( ! append && data?.pagination !== undefined ) {
 			const paginationEl = rootEl.querySelector(
-				'.fb-query-grid__pagination-slot'
+				'.qv-query-grid__pagination-slot'
 			);
 			if ( paginationEl ) {
 				paginationEl.innerHTML = data.pagination;
@@ -134,10 +134,10 @@ async function fetchAndApply( rootEl, context, page, append ) {
 		context.hasMore = !! data?.hasMore;
 		context.totalPages = data?.totalPages || 1;
 
-		let statusEl = rootEl.querySelector( '.fb-query-grid__status' );
+		let statusEl = rootEl.querySelector( '.qv-query-grid__status' );
 		if ( ! statusEl ) {
 			statusEl = document.createElement( 'div' );
-			statusEl.className = 'fb-query-grid__status screen-reader-text';
+			statusEl.className = 'qv-query-grid__status screen-reader-text';
 			statusEl.setAttribute( 'role', 'status' );
 			statusEl.setAttribute( 'aria-live', 'polite' );
 			rootEl.appendChild( statusEl );
@@ -155,7 +155,7 @@ async function fetchAndApply( rootEl, context, page, append ) {
 	}
 }
 
-store( 'flux-blocks/query-grid', {
+store( 'quovex-blocks/query-grid', {
 	state: {
 		get isActiveTerm() {
 			const { taxonomy, termId, activeFacetTaxonomy, activeTermIds } =
@@ -177,7 +177,7 @@ store( 'flux-blocks/query-grid', {
 			if ( hadQuery && ! context.searchQuery ) {
 				const { ref } = getElement();
 				fetchAndApply(
-					ref.closest( '.fb-query-grid' ),
+					ref.closest( '.qv-query-grid' ),
 					context,
 					1,
 					false
@@ -188,7 +188,7 @@ store( 'flux-blocks/query-grid', {
 			event.preventDefault();
 			const { ref } = getElement();
 			fetchAndApply(
-				ref.closest( '.fb-query-grid' ),
+				ref.closest( '.qv-query-grid' ),
 				getContext(),
 				1,
 				false
@@ -221,7 +221,7 @@ store( 'flux-blocks/query-grid', {
 			}
 
 			const { ref } = getElement();
-			fetchAndApply( ref.closest( '.fb-query-grid' ), context, 1, false );
+			fetchAndApply( ref.closest( '.qv-query-grid' ), context, 1, false );
 		},
 		/**
 		 * "Load more" alternative to numbered pagination -- appends the
@@ -235,7 +235,7 @@ store( 'flux-blocks/query-grid', {
 			}
 			const { ref } = getElement();
 			fetchAndApply(
-				ref.closest( '.fb-query-grid' ),
+				ref.closest( '.qv-query-grid' ),
 				context,
 				context.page + 1,
 				true
@@ -243,7 +243,7 @@ store( 'flux-blocks/query-grid', {
 		},
 		carouselNext() {
 			const context = getContext();
-			const rootEl = getElement().ref.closest( '.fb-query-grid' );
+			const rootEl = getElement().ref.closest( '.qv-query-grid' );
 			const totalGroups = countCarouselGroups( rootEl, context );
 			context.carouselIndex = nextIndex(
 				context.carouselIndex,
@@ -253,7 +253,7 @@ store( 'flux-blocks/query-grid', {
 		},
 		carouselPrev() {
 			const context = getContext();
-			const rootEl = getElement().ref.closest( '.fb-query-grid' );
+			const rootEl = getElement().ref.closest( '.qv-query-grid' );
 			const totalGroups = countCarouselGroups( rootEl, context );
 			context.carouselIndex = prevIndex(
 				context.carouselIndex,
@@ -265,14 +265,14 @@ store( 'flux-blocks/query-grid', {
 	callbacks: {
 		/**
 		 * Attaches ONE delegated click listener on
-		 * `.fb-query-grid__pagination-slot` (see file docblock for why) --
+		 * `.qv-query-grid__pagination-slot` (see file docblock for why) --
 		 * `context` is captured at hydration but stays live as its
 		 * properties change.
 		 */
 		initPaginationDelegation() {
 			const { ref } = getElement();
 			const context = getContext();
-			const rootEl = ref.closest( '.fb-query-grid' );
+			const rootEl = ref.closest( '.qv-query-grid' );
 
 			// Registered so a browser back/forward navigation (popstate,
 			// below) can look this instance up by its queryId and re-sync
@@ -289,7 +289,7 @@ store( 'flux-blocks/query-grid', {
 				// disabled-Prev/Next marker now instead of `.disabled`
 				// (which only ever worked for real <button> elements).
 				const button = event.target.closest(
-					'.fb-query-grid__page-btn'
+					'.qv-query-grid__page-btn'
 				);
 				if (
 					! button ||
@@ -301,11 +301,11 @@ store( 'flux-blocks/query-grid', {
 
 				let targetPage;
 				if (
-					button.classList.contains( 'fb-query-grid__page-btn--prev' )
+					button.classList.contains( 'qv-query-grid__page-btn--prev' )
 				) {
 					targetPage = context.page - 1;
 				} else if (
-					button.classList.contains( 'fb-query-grid__page-btn--next' )
+					button.classList.contains( 'qv-query-grid__page-btn--next' )
 				) {
 					targetPage = context.page + 1;
 				} else {
@@ -332,7 +332,7 @@ store( 'flux-blocks/query-grid', {
 		 */
 		initMasonryLayout() {
 			const { ref } = getElement();
-			layoutMasonryItems( ref.closest( '.fb-query-grid' ) );
+			layoutMasonryItems( ref.closest( '.qv-query-grid' ) );
 		},
 	},
 } );
@@ -346,7 +346,7 @@ window.addEventListener( 'resize', () => {
 	clearTimeout( masonryResizeTimeout );
 	masonryResizeTimeout = setTimeout( () => {
 		document
-			.querySelectorAll( '.fb-query-grid--masonry' )
+			.querySelectorAll( '.qv-query-grid--masonry' )
 			.forEach( ( rootEl ) => layoutMasonryItems( rootEl ) );
 	}, 150 );
 } );
@@ -388,13 +388,13 @@ window.addEventListener( 'popstate', () => {
 } );
 
 /**
- * @param {HTMLElement} rootEl  The `.fb-query-grid` root element for this instance.
+ * @param {HTMLElement} rootEl  The `.qv-query-grid` root element for this instance.
  * @param {Object}      context This instance's context (for `carouselItemsPerView`).
  * @return {number} How many carousel "pages" (groups of `carouselItemsPerView` cards) exist.
  */
 function countCarouselGroups( rootEl, context ) {
 	const total =
-		rootEl?.querySelectorAll( '.fb-query-grid__item' ).length || 0;
+		rootEl?.querySelectorAll( '.qv-query-grid__item' ).length || 0;
 	const perView = context.carouselItemsPerView || 1;
 	return Math.max( 1, Math.ceil( total / perView ) );
 }
@@ -405,13 +405,13 @@ function countCarouselGroups( rootEl, context ) {
  * why). Items are toggled by DOM position, matching the `slideIndex` each
  * was rendered with.
  *
- * @param {HTMLElement} rootEl  The `.fb-query-grid` root element for this instance.
+ * @param {HTMLElement} rootEl  The `.qv-query-grid` root element for this instance.
  * @param {Object}      context This instance's context (`carouselIndex` + `carouselItemsPerView`).
  */
 function applyCarouselVisibility( rootEl, context ) {
 	const perView = context.carouselItemsPerView || 1;
 	const groupStart = context.carouselIndex * perView;
-	const items = rootEl?.querySelectorAll( '.fb-query-grid__item' ) || [];
+	const items = rootEl?.querySelectorAll( '.qv-query-grid__item' ) || [];
 	items.forEach( ( item, index ) => {
 		item.hidden = ! ( index >= groupStart && index < groupStart + perView );
 	} );
@@ -423,10 +423,10 @@ function applyCarouselVisibility( rootEl, context ) {
  * like nothing happened. Only called on explicit pagination clicks, not
  * search/filter/load-more.
  *
- * @param {HTMLElement} rootEl The `.fb-query-grid` root element for this instance.
+ * @param {HTMLElement} rootEl The `.qv-query-grid` root element for this instance.
  */
 function scrollFirstItemIntoView( rootEl ) {
-	const firstItem = rootEl?.querySelector( '.fb-query-grid__item' );
+	const firstItem = rootEl?.querySelector( '.qv-query-grid__item' );
 	if ( firstItem ) {
 		firstItem.scrollIntoView( { behavior: 'smooth', block: 'start' } );
 		const focusTarget = firstItem.querySelector( 'a, button' ) || firstItem;
@@ -439,10 +439,10 @@ function scrollFirstItemIntoView( rootEl ) {
  * Sizes each Masonry item's grid row-span from its real rendered height,
  * keeping items in DOM order with variable heights (see file docblock).
  *
- * @param {HTMLElement} rootEl The `.fb-query-grid` root element for this instance.
+ * @param {HTMLElement} rootEl The `.qv-query-grid` root element for this instance.
  */
 function layoutMasonryItems( rootEl ) {
-	const itemsEl = rootEl?.querySelector( '.fb-query-grid__items' );
+	const itemsEl = rootEl?.querySelector( '.qv-query-grid__items' );
 	if ( ! itemsEl ) {
 		return;
 	}
@@ -456,7 +456,7 @@ function layoutMasonryItems( rootEl ) {
 	const rowGap = parseFloat( styles.rowGap ) || 0;
 
 	itemsEl
-		.querySelectorAll( ':scope > .fb-query-grid__item' )
+		.querySelectorAll( ':scope > .qv-query-grid__item' )
 		.forEach( ( item ) => {
 			const height = item.getBoundingClientRect().height;
 			const span = Math.max(

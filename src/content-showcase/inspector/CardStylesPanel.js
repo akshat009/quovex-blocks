@@ -28,12 +28,12 @@ export default function CardStylesPanel( {
 	return (
 		<InspectorControls group="styles">
 			<PanelBody
-				title={ __( 'Post Card Content Colors', 'flux-blocks' ) }
+				title={ __( 'Post Card Content Colors', 'quovex-blocks' ) }
 				initialOpen={ false }
 			>
 				<div>
 					<p style={ { marginBottom: '6px', fontWeight: '500' } }>
-						{ __( 'Post Date Color', 'flux-blocks' ) }
+						{ __( 'Post Date Color', 'quovex-blocks' ) }
 					</p>
 					<ColorPalette
 						value={ cardDateColor }
@@ -45,7 +45,7 @@ export default function CardStylesPanel( {
 
 				<div style={ { marginTop: '1em' } }>
 					<p style={ { marginBottom: '6px', fontWeight: '500' } }>
-						{ __( 'Post Title Color', 'flux-blocks' ) }
+						{ __( 'Post Title Color', 'quovex-blocks' ) }
 					</p>
 					<ColorPalette
 						value={ cardTitleColor }
@@ -57,7 +57,7 @@ export default function CardStylesPanel( {
 
 				<div style={ { marginTop: '1em' } }>
 					<p style={ { marginBottom: '6px', fontWeight: '500' } }>
-						{ __( 'Post Title Hover Color', 'flux-blocks' ) }
+						{ __( 'Post Title Hover Color', 'quovex-blocks' ) }
 					</p>
 					<ColorPalette
 						value={ cardTitleHoverColor }
@@ -71,7 +71,7 @@ export default function CardStylesPanel( {
 
 				<div style={ { marginTop: '1em' } }>
 					<p style={ { marginBottom: '6px', fontWeight: '500' } }>
-						{ __( 'Post Excerpt / Text Color', 'flux-blocks' ) }
+						{ __( 'Post Excerpt / Text Color', 'quovex-blocks' ) }
 					</p>
 					<ColorPalette
 						value={ cardExcerptColor }
@@ -83,19 +83,19 @@ export default function CardStylesPanel( {
 			</PanelBody>
 
 			<PanelBody
-				title={ __( 'Post Card Typography', 'flux-blocks' ) }
+				title={ __( 'Post Card Typography', 'quovex-blocks' ) }
 				initialOpen={ false }
 			>
 				<p>
 					{ __(
 						'Font choices come from the active theme -- picking one here never needs a separate font to be installed or loaded.',
-						'flux-blocks'
+						'quovex-blocks'
 					) }
 				</p>
 
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Post Title Font', 'flux-blocks' ) }
+					label={ __( 'Post Title Font', 'quovex-blocks' ) }
 					value={ cardTitleFontFamily }
 					options={ fontFamilyOptions }
 					onChange={ ( val ) =>
@@ -104,7 +104,7 @@ export default function CardStylesPanel( {
 				/>
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Post Title Weight', 'flux-blocks' ) }
+					label={ __( 'Post Title Weight', 'quovex-blocks' ) }
 					value={ cardTitleFontWeight }
 					options={ fontWeightOptions }
 					onChange={ ( val ) =>
@@ -114,7 +114,7 @@ export default function CardStylesPanel( {
 
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Post Excerpt Font', 'flux-blocks' ) }
+					label={ __( 'Post Excerpt Font', 'quovex-blocks' ) }
 					value={ cardExcerptFontFamily }
 					options={ fontFamilyOptions }
 					onChange={ ( val ) =>
@@ -123,7 +123,7 @@ export default function CardStylesPanel( {
 				/>
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Post Excerpt Weight', 'flux-blocks' ) }
+					label={ __( 'Post Excerpt Weight', 'quovex-blocks' ) }
 					value={ cardExcerptFontWeight }
 					options={ fontWeightOptions }
 					onChange={ ( val ) =>
@@ -133,7 +133,7 @@ export default function CardStylesPanel( {
 
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Post Date Font', 'flux-blocks' ) }
+					label={ __( 'Post Date Font', 'quovex-blocks' ) }
 					value={ cardDateFontFamily }
 					options={ fontFamilyOptions }
 					onChange={ ( val ) =>
@@ -142,7 +142,7 @@ export default function CardStylesPanel( {
 				/>
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Post Date Weight', 'flux-blocks' ) }
+					label={ __( 'Post Date Weight', 'quovex-blocks' ) }
 					value={ cardDateFontWeight }
 					options={ fontWeightOptions }
 					onChange={ ( val ) =>

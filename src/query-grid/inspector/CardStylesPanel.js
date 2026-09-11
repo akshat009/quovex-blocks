@@ -16,74 +16,74 @@ export default function CardStylesPanel( {
 	return (
 		<>
 			<PanelColorSettings
-				title={ __( 'Card Content & Link Colors', 'flux-blocks' ) }
+				title={ __( 'Card Content & Link Colors', 'quovex-blocks' ) }
 				initialOpen={ false }
 				colorSettings={ [
 					{
 						value: colorsValue.metaText,
 						onChange: setColor( 'metaText' ),
-						label: __( 'Date & Meta Text Color', 'flux-blocks' ),
+						label: __( 'Date & Meta Text Color', 'quovex-blocks' ),
 					},
 					{
 						value: colorsValue.authorText,
 						onChange: setColor( 'authorText' ),
-						label: __( 'Author Name Color', 'flux-blocks' ),
+						label: __( 'Author Name Color', 'quovex-blocks' ),
 					},
 					{
 						value: colorsValue.cardTitleColor,
 						onChange: setColor( 'cardTitleColor' ),
-						label: __( 'Card Title Color', 'flux-blocks' ),
+						label: __( 'Card Title Color', 'quovex-blocks' ),
 					},
 					{
 						value: colorsValue.cardTitleHoverColor,
 						onChange: setColor( 'cardTitleHoverColor' ),
 						label: __(
 							'Card Title Link Hover Color',
-							'flux-blocks'
+							'quovex-blocks'
 						),
 					},
 					{
 						value: colorsValue.cardExcerptColor,
 						onChange: setColor( 'cardExcerptColor' ),
-						label: __( 'Card Excerpt Text Color', 'flux-blocks' ),
+						label: __( 'Card Excerpt Text Color', 'quovex-blocks' ),
 					},
 					{
 						value: colorsValue.readMoreColor,
 						onChange: setColor( 'readMoreColor' ),
-						label: __( 'Read More Link Color', 'flux-blocks' ),
+						label: __( 'Read More Link Color', 'quovex-blocks' ),
 					},
 					{
 						value: colorsValue.readMoreHoverColor,
 						onChange: setColor( 'readMoreHoverColor' ),
 						label: __(
 							'Read More Link Hover Color',
-							'flux-blocks'
+							'quovex-blocks'
 						),
 					},
 				] }
 			/>
 
 			<PanelBody
-				title={ __( 'Card Typography', 'flux-blocks' ) }
+				title={ __( 'Card Typography', 'quovex-blocks' ) }
 				initialOpen={ false }
 			>
 				<p>
 					{ __(
 						'Font choices come from the active theme -- picking one here never needs a separate font to be installed or loaded.',
-						'flux-blocks'
+						'quovex-blocks'
 					) }
 				</p>
 
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Card Title Font', 'flux-blocks' ) }
+					label={ __( 'Card Title Font', 'quovex-blocks' ) }
 					value={ typographyValue.cardTitleFontFamily }
 					options={ fontFamilyOptions }
 					onChange={ setTypography( 'cardTitleFontFamily' ) }
 				/>
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Card Title Weight', 'flux-blocks' ) }
+					label={ __( 'Card Title Weight', 'quovex-blocks' ) }
 					value={ typographyValue.cardTitleFontWeight }
 					options={ fontWeightOptions }
 					onChange={ setTypography( 'cardTitleFontWeight' ) }
@@ -91,14 +91,14 @@ export default function CardStylesPanel( {
 
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Card Excerpt Font', 'flux-blocks' ) }
+					label={ __( 'Card Excerpt Font', 'quovex-blocks' ) }
 					value={ typographyValue.cardExcerptFontFamily }
 					options={ fontFamilyOptions }
 					onChange={ setTypography( 'cardExcerptFontFamily' ) }
 				/>
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Card Excerpt Weight', 'flux-blocks' ) }
+					label={ __( 'Card Excerpt Weight', 'quovex-blocks' ) }
 					value={ typographyValue.cardExcerptFontWeight }
 					options={ fontWeightOptions }
 					onChange={ setTypography( 'cardExcerptFontWeight' ) }
@@ -106,14 +106,14 @@ export default function CardStylesPanel( {
 
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Date & Author Font', 'flux-blocks' ) }
+					label={ __( 'Date & Author Font', 'quovex-blocks' ) }
 					value={ typographyValue.metaFontFamily }
 					options={ fontFamilyOptions }
 					onChange={ setTypography( 'metaFontFamily' ) }
 				/>
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Date & Author Weight', 'flux-blocks' ) }
+					label={ __( 'Date & Author Weight', 'quovex-blocks' ) }
 					value={ typographyValue.metaFontWeight }
 					options={ fontWeightOptions }
 					onChange={ setTypography( 'metaFontWeight' ) }

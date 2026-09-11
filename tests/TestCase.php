@@ -8,10 +8,10 @@
  * shared base class means every test file gets this for free instead of
  * repeating the same two calls everywhere.
  *
- * @package FluxBlocks\Tests
+ * @package QuovexBlocks\Tests
  */
 
-namespace FluxBlocks\Tests;
+namespace QuovexBlocks\Tests;
 
 use Brain\Monkey;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -37,7 +37,7 @@ abstract class TestCase extends PHPUnitTestCase {
 		Monkey\Functions\stubs(
 			array(
 				'home_url'                         => 'https://example.com',
-				'rest_url'                         => 'https://example.com/wp-json/flux-blocks/v1/query',
+				'rest_url'                         => 'https://example.com/wp-json/quovex-blocks/v1/query',
 				'wp_interactivity_data_wp_context' => fn( $ctx ) => 'data-wp-context="' . htmlspecialchars( (string) wp_json_encode( $ctx ) ) . '"',
 			)
 		);

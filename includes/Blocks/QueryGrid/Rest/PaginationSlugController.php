@@ -7,16 +7,16 @@
  * for every Query Grid on the site -- requires `manage_options`, matching
  * core's own Permalinks screen.
  *
- * @package FluxBlocks
+ * @package QuovexBlocks
  */
 
-namespace FluxBlocks\Blocks\QueryGrid\Rest;
+namespace QuovexBlocks\Blocks\QueryGrid\Rest;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use FluxBlocks\Blocks\QueryGrid\Routing\PaginationEndpoint;
+use QuovexBlocks\Blocks\QueryGrid\Routing\PaginationEndpoint;
 
 /**
  * REST route the Query Grid editor reads/writes the pagination URL slug through.
@@ -31,7 +31,7 @@ class PaginationSlugController implements UsesQueryGridNamespace {
 	}
 
 	/**
-	 * Registers `GET/POST /flux-blocks/v1/pagination-slug`.
+	 * Registers `GET/POST /quovex-blocks/v1/pagination-slug`.
 	 */
 	public function register_routes(): void {
 		register_rest_route(
@@ -92,7 +92,7 @@ class PaginationSlugController implements UsesQueryGridNamespace {
 	public function update_slug( \WP_REST_Request $request ) {
 		$slug = sanitize_title( (string) $request->get_param( 'slug' ) );
 		if ( ! $slug ) {
-			$slug = 'flux-page';
+			$slug = 'quovex-page';
 		}
 		// update_option() only fires update_option_{option} (which
 		// PaginationEndpoint::init_hooks() hooks the flush onto) when the

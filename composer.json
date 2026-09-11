@@ -1,5 +1,5 @@
 {
-	"name": "flux-blocks/flux-blocks",
+	"name": "quovex-blocks/quovex-blocks",
 	"description": "Custom Gutenberg block category with a Query Grid, a Content Showcase, and a Notification Banner block for any public post type.",
 	"type": "wordpress-plugin",
 	"license": "GPL-2.0-or-later",
@@ -33,12 +33,12 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"FluxBlocks\\": "includes/"
+			"QuovexBlocks\\": "includes/"
 		}
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"FluxBlocks\\Tests\\": "tests/"
+			"QuovexBlocks\\Tests\\": "tests/"
 		}
 	}
 }

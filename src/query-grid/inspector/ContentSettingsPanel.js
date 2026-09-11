@@ -42,12 +42,12 @@ export default function ContentSettingsPanel( {
 	return (
 		<>
 			<PanelBody
-				title={ __( 'Section Heading Settings', 'flux-blocks' ) }
+				title={ __( 'Section Heading Settings', 'quovex-blocks' ) }
 				initialOpen={ false }
 			>
 				<ToggleControl
 					__nextHasNoMarginBottom
-					label={ __( 'Show Section Heading', 'flux-blocks' ) }
+					label={ __( 'Show Section Heading', 'quovex-blocks' ) }
 					checked={ !! showHeading }
 					onChange={ ( value ) =>
 						setAttributes( { showHeading: value } )
@@ -57,7 +57,7 @@ export default function ContentSettingsPanel( {
 					<>
 						<TextControl
 							__nextHasNoMarginBottom
-							label={ __( 'Section Title', 'flux-blocks' ) }
+							label={ __( 'Section Title', 'quovex-blocks' ) }
 							value={ heading }
 							onChange={ ( value ) =>
 								setAttributes( { heading: value } )
@@ -67,11 +67,11 @@ export default function ContentSettingsPanel( {
 							__nextHasNoMarginBottom
 							label={ __(
 								'Highlighted Accent Text',
-								'flux-blocks'
+								'quovex-blocks'
 							) }
 							help={ __(
 								'Must exactly match a substring of the title above to be colored.',
-								'flux-blocks'
+								'quovex-blocks'
 							) }
 							value={ headingAccent }
 							onChange={ ( value ) =>
@@ -83,19 +83,19 @@ export default function ContentSettingsPanel( {
 			</PanelBody>
 
 			<PanelBody
-				title={ __( 'Grid Layout Settings', 'flux-blocks' ) }
+				title={ __( 'Grid Layout Settings', 'quovex-blocks' ) }
 				initialOpen={ false }
 			>
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Post type', 'flux-blocks' ) }
+					label={ __( 'Post type', 'quovex-blocks' ) }
 					value={ postType }
 					options={
 						postTypeOptions.length
 							? postTypeOptions
 							: [
 									{
-										label: __( 'Post', 'flux-blocks' ),
+										label: __( 'Post', 'quovex-blocks' ),
 										value: 'post',
 									},
 							  ]
@@ -109,14 +109,17 @@ export default function ContentSettingsPanel( {
 						__nextHasNoMarginBottom
 						label={
 							currentStyle === 'carousel'
-								? __( 'Total Posts (Carousel)', 'flux-blocks' )
-								: __( 'Posts per page', 'flux-blocks' )
+								? __(
+										'Total Posts (Carousel)',
+										'quovex-blocks'
+								  )
+								: __( 'Posts per page', 'quovex-blocks' )
 						}
 						help={
 							currentStyle === 'carousel'
 								? __(
 										'Total posts loaded into the carousel (Prev/Next cycle through these). Want every matching post instead? Turn on "Show All Posts (No Pagination)" below.',
-										'flux-blocks'
+										'quovex-blocks'
 								  )
 								: undefined
 						}
@@ -130,23 +133,23 @@ export default function ContentSettingsPanel( {
 				) }
 				<SelectControl
 					__nextHasNoMarginBottom
-					label={ __( 'Order by', 'flux-blocks' ) }
+					label={ __( 'Order by', 'quovex-blocks' ) }
 					value={ `${ orderBy }-${ order }` }
 					options={ [
 						{
-							label: __( 'Newest first', 'flux-blocks' ),
+							label: __( 'Newest first', 'quovex-blocks' ),
 							value: 'date-desc',
 						},
 						{
-							label: __( 'Oldest first', 'flux-blocks' ),
+							label: __( 'Oldest first', 'quovex-blocks' ),
 							value: 'date-asc',
 						},
 						{
-							label: __( 'Title A→Z', 'flux-blocks' ),
+							label: __( 'Title A→Z', 'quovex-blocks' ),
 							value: 'title-asc',
 						},
 						{
-							label: __( 'Title Z→A', 'flux-blocks' ),
+							label: __( 'Title Z→A', 'quovex-blocks' ),
 							value: 'title-desc',
 						},
 					] }
@@ -161,15 +164,18 @@ export default function ContentSettingsPanel( {
 				{ currentStyle !== 'carousel' && ! showAllPosts && (
 					<SelectControl
 						__nextHasNoMarginBottom
-						label={ __( 'Pagination Style', 'flux-blocks' ) }
+						label={ __( 'Pagination Style', 'quovex-blocks' ) }
 						value={ paginationStyle }
 						options={ [
 							{
-								label: __( 'Page numbers', 'flux-blocks' ),
+								label: __( 'Page numbers', 'quovex-blocks' ),
 								value: 'numbers',
 							},
 							{
-								label: __( 'Load more button', 'flux-blocks' ),
+								label: __(
+									'Load more button',
+									'quovex-blocks'
+								),
 								value: 'load-more',
 							},
 						] }
@@ -185,11 +191,11 @@ export default function ContentSettingsPanel( {
 							__nextHasNoMarginBottom
 							label={ __(
 								'Pagination URL Segment',
-								'flux-blocks'
+								'quovex-blocks'
 							) }
 							help={ __(
 								'Site-wide -- shared by every Query Grid block on this site. Shown in the address bar as e.g. /your-value/2/.',
-								'flux-blocks'
+								'quovex-blocks'
 							) }
 							value={ paginationSlug ?? '' }
 							onChange={ updatePaginationSlug }
@@ -199,17 +205,17 @@ export default function ContentSettingsPanel( {
 					__nextHasNoMarginBottom
 					label={ __(
 						'Show All Posts (No Pagination)',
-						'flux-blocks'
+						'quovex-blocks'
 					) }
 					help={
 						currentStyle === 'carousel'
 							? __(
 									'Cycles through every matching post (up to 200) instead of stopping at the Total Posts number above -- Prev/Next still work as normal.',
-									'flux-blocks'
+									'quovex-blocks'
 							  )
 							: __(
 									'Shows every matching post on one page (up to 200) instead of paginating. Turns off Posts per page and Pagination Style above.',
-									'flux-blocks'
+									'quovex-blocks'
 							  )
 					}
 					checked={ !! showAllPosts }
@@ -220,10 +226,10 @@ export default function ContentSettingsPanel( {
 				{ currentStyle === 'carousel' && (
 					<RangeControl
 						__nextHasNoMarginBottom
-						label={ __( 'Cards Per Slide', 'flux-blocks' ) }
+						label={ __( 'Cards Per Slide', 'quovex-blocks' ) }
 						help={ __(
 							'How many cards show side by side; Next/Prev move a whole group at a time.',
-							'flux-blocks'
+							'quovex-blocks'
 						) }
 						min={ 1 }
 						max={ 6 }
@@ -234,7 +240,7 @@ export default function ContentSettingsPanel( {
 					/>
 				) }
 				<NumberControl
-					label={ __( 'Mobile columns', 'flux-blocks' ) }
+					label={ __( 'Mobile columns', 'quovex-blocks' ) }
 					min={ 1 }
 					max={ 4 }
 					value={ columnsValue.mobile }
@@ -248,7 +254,7 @@ export default function ContentSettingsPanel( {
 					}
 				/>
 				<NumberControl
-					label={ __( 'Tablet columns', 'flux-blocks' ) }
+					label={ __( 'Tablet columns', 'quovex-blocks' ) }
 					min={ 1 }
 					max={ 6 }
 					value={ columnsValue.tablet }
@@ -262,7 +268,7 @@ export default function ContentSettingsPanel( {
 					}
 				/>
 				<NumberControl
-					label={ __( 'Desktop columns', 'flux-blocks' ) }
+					label={ __( 'Desktop columns', 'quovex-blocks' ) }
 					min={ 1 }
 					max={ 6 }
 					value={ columnsValue.desktop }

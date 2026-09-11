@@ -20,7 +20,7 @@
 node_modules
 
 # Uncompiled block source -- build/ is what WordPress actually loads
-# (see flux-blocks.php's wp_register_block_types_from_metadata_collection()
+# (see quovex-blocks.php's wp_register_block_types_from_metadata_collection()
 # call, which points at build/, never src/).
 src
 

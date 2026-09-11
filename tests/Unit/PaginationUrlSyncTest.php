@@ -1,13 +1,13 @@
 <?php
 /**
- * @package FluxBlocks\Tests
+ * @package QuovexBlocks\Tests
  */
 
-namespace FluxBlocks\Tests\Unit;
+namespace QuovexBlocks\Tests\Unit;
 
 use Brain\Monkey\Functions;
-use FluxBlocks\Blocks\QueryGrid\Render\ItemsRenderer;
-use FluxBlocks\Tests\TestCase;
+use QuovexBlocks\Blocks\QueryGrid\Render\ItemsRenderer;
+use QuovexBlocks\Tests\TestCase;
 use ReflectionMethod;
 
 /**
@@ -27,7 +27,7 @@ use ReflectionMethod;
  * nothing outside ItemsRenderer has a legitimate reason to call it directly
  * (render_pagination() is the real public contract).
  *
- * @covers \FluxBlocks\Blocks\QueryGrid\Render\ItemsRenderer::build_page_url
+ * @covers \QuovexBlocks\Blocks\QueryGrid\Render\ItemsRenderer::build_page_url
  */
 class PaginationUrlSyncTest extends TestCase {
 

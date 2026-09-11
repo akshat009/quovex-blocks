@@ -7,22 +7,22 @@
  * #default) fallback here; property names must stay in sync with that file.
  */
 
-.fb-query-grid {
-	--fb-cols-mobile: 1;
-	--fb-cols-tablet: 2;
-	--fb-cols-desktop: 3;
+.qv-query-grid {
+	--qv-cols-mobile: 1;
+	--qv-cols-tablet: 2;
+	--qv-cols-desktop: 3;
 
 	&__heading {
-		font-family: var(--fb-title-font-family, inherit);
-		font-weight: var(--fb-title-font-weight, inherit);
+		font-family: var(--qv-title-font-family, inherit);
+		font-weight: var(--qv-title-font-weight, inherit);
 		margin: 0 0 1em;
 		text-align: center;
 		font-size: 2em;
-		color: var(--fb-title-color, inherit);
+		color: var(--qv-title-color, inherit);
 	}
 
 	&__heading-accent {
-		color: var(--fb-accent-color, #d1372d);
+		color: var(--qv-accent-color, #d1372d);
 	}
 
 	&__toolbar {
@@ -78,18 +78,18 @@
 
 	&__filter-btn {
 		cursor: pointer;
-		border: 1px solid var(--fb-inactive-pill-bg, #ddd);
-		background: var(--fb-inactive-pill-bg, transparent);
-		color: var(--fb-inactive-pill-text, inherit);
+		border: 1px solid var(--qv-inactive-pill-bg, #ddd);
+		background: var(--qv-inactive-pill-bg, transparent);
+		color: var(--qv-inactive-pill-text, inherit);
 		border-radius: 999px;
 		padding: 0.4em 1em;
 		font-size: 0.9em;
-		font-family: var(--fb-filter-pagination-font-family, inherit);
-		font-weight: var(--fb-filter-pagination-font-weight, inherit);
+		font-family: var(--qv-filter-pagination-font-family, inherit);
+		font-weight: var(--qv-filter-pagination-font-weight, inherit);
 
 		&.is-active {
-			border-color: var(--fb-active-accent, #d1372d);
-			background: var(--fb-active-accent, #d1372d);
+			border-color: var(--qv-active-accent, #d1372d);
+			background: var(--qv-active-accent, #d1372d);
 			color: #fff;
 
 			// A leading "x" on active pills only -- visually confirms the
@@ -123,32 +123,32 @@
 		line-height: 1.3;
 		margin: 0 0 0.75em;
 		padding-bottom: 0.4em;
-		border-bottom: 2px solid var(--fb-active-accent, #d1372d);
+		border-bottom: 2px solid var(--qv-active-accent, #d1372d);
 	}
 
 	&__items {
 		display: grid;
-		grid-template-columns: repeat(var(--fb-cols-mobile), minmax(0, 1fr));
+		grid-template-columns: repeat(var(--qv-cols-mobile), minmax(0, 1fr));
 		gap: 1.5em;
 	}
 
 	@media (min-width: 600px) {
 
 		&__items {
-			grid-template-columns: repeat(var(--fb-cols-tablet), minmax(0, 1fr));
+			grid-template-columns: repeat(var(--qv-cols-tablet), minmax(0, 1fr));
 		}
 	}
 
 	@media (min-width: 960px) {
 
 		&__items {
-			grid-template-columns: repeat(var(--fb-cols-desktop), minmax(0, 1fr));
+			grid-template-columns: repeat(var(--qv-cols-desktop), minmax(0, 1fr));
 		}
 	}
 
 	/* Base item card -- must come before the &--list/&--masonry overrides
 	   below (the no-descending-specificity lint rule wants the plain
-	   .fb-query-grid__item rule declared before anything more specific that
+	   .qv-query-grid__item rule declared before anything more specific that
 	   also targets it). */
 	&__item {
 		position: relative;
@@ -189,21 +189,21 @@
 			align-items: center;
 			gap: 0.4em;
 			font-size: 0.8em;
-			color: var(--fb-meta-text, #767676);
-			font-family: var(--fb-meta-font-family, inherit);
-			font-weight: var(--fb-meta-font-weight, inherit);
+			color: var(--qv-meta-text, #767676);
+			font-family: var(--qv-meta-font-family, inherit);
+			font-weight: var(--qv-meta-font-weight, inherit);
 			margin: 0 0 0.5em;
 		}
 
 		&-title {
 			margin: 0 0 0.4em;
 			font-size: 1.1em;
-			font-family: var(--fb-card-title-font-family, inherit);
-			font-weight: var(--fb-card-title-font-weight, inherit);
+			font-family: var(--qv-card-title-font-family, inherit);
+			font-weight: var(--qv-card-title-font-weight, inherit);
 
 			a {
 				text-decoration: none;
-				color: var(--fb-card-title-color, inherit);
+				color: var(--qv-card-title-color, inherit);
 				transition: color 0.15s ease;
 
 				&::after {
@@ -214,34 +214,34 @@
 				}
 
 				&:hover {
-					color: var(--fb-card-title-hover-color, var(--fb-card-title-color, inherit));
+					color: var(--qv-card-title-hover-color, var(--qv-card-title-color, inherit));
 				}
 			}
 		}
 
 		&-excerpt {
 			margin: 0 0 0.75em;
-			color: var(--fb-card-excerpt-color, inherit);
+			color: var(--qv-card-excerpt-color, inherit);
 			opacity: 0.8;
 			font-size: 0.9em;
-			font-family: var(--fb-card-excerpt-font-family, inherit);
-			font-weight: var(--fb-card-excerpt-font-weight, inherit);
+			font-family: var(--qv-card-excerpt-font-family, inherit);
+			font-weight: var(--qv-card-excerpt-font-weight, inherit);
 		}
 
 		&-readmore {
 			font-size: 0.85em;
 			font-weight: 600;
 			text-decoration: none;
-			color: var(--fb-read-more-color, var(--fb-active-accent, #d1372d));
+			color: var(--qv-read-more-color, var(--qv-active-accent, #d1372d));
 			transition: color 0.15s ease;
 
 			&:hover {
-				color: var(--fb-read-more-hover-color, var(--fb-read-more-color, var(--fb-active-accent, #d1372d)));
+				color: var(--qv-read-more-hover-color, var(--qv-read-more-color, var(--qv-active-accent, #d1372d)));
 			}
 		}
 
 		&-author {
-			color: var(--fb-author-text, inherit);
+			color: var(--qv-author-text, inherit);
 		}
 	}
 
@@ -259,11 +259,11 @@
 		   it would refuse to shrink narrower than its own longest
 		   unbroken word/URL, which is exactly what can push a full-width
 		   block wider than the viewport on mobile. */
-		.fb-query-grid__item-body {
+		.qv-query-grid__item-body {
 			min-width: 0;
 		}
 
-		.fb-query-grid__item-image {
+		.qv-query-grid__item-image {
 			flex: 0 0 12em;
 		}
 	}
@@ -292,15 +292,15 @@
 	   real per-item spans. */
 	&--masonry &__items {
 		display: grid;
-		grid-template-columns: repeat(var(--fb-cols-mobile), minmax(0, 1fr));
+		grid-template-columns: repeat(var(--qv-cols-mobile), minmax(0, 1fr));
 		align-items: start;
 
 		@media (min-width: 600px) {
-			grid-template-columns: repeat(var(--fb-cols-tablet), minmax(0, 1fr));
+			grid-template-columns: repeat(var(--qv-cols-tablet), minmax(0, 1fr));
 		}
 
 		@media (min-width: 960px) {
-			grid-template-columns: repeat(var(--fb-cols-desktop), minmax(0, 1fr));
+			grid-template-columns: repeat(var(--qv-cols-desktop), minmax(0, 1fr));
 		}
 	}
 
@@ -316,21 +316,21 @@
 		height: auto;
 	}
 
-	/* Carousel shows a GROUP of --fb-carousel-items cards side by side (a
+	/* Carousel shows a GROUP of --qv-carousel-items cards side by side (a
 	   single visible card at a time read as unpolished) -- see the
 	   $carousel_items_per_view variable in Renderer::render() and view.js's
 	   isCurrentSlide getter, which windows visibility to match this same
 	   column count. */
 	&--carousel &__items {
 		display: grid;
-		grid-template-columns: repeat(var(--fb-carousel-items, 3), minmax(0, 1fr));
+		grid-template-columns: repeat(var(--qv-carousel-items, 3), minmax(0, 1fr));
 		gap: 1.5em;
 
 		@media (max-width: 782px) {
 
 			/* Regardless of how many columns are configured, a phone-width
 			   viewport only fits one at a time -- the JS windowing logic
-			   still reveals --fb-carousel-items cards, they just wrap to
+			   still reveals --qv-carousel-items cards, they just wrap to
 			   their own rows here instead of squeezing into one. */
 			grid-template-columns: minmax(0, 1fr);
 		}
@@ -365,8 +365,8 @@
 		&:disabled {
 			opacity: 0.5;
 			cursor: default;
-			border-color: var(--fb-disabled-nav, currentcolor);
-			color: var(--fb-disabled-nav, currentcolor);
+			border-color: var(--qv-disabled-nav, currentcolor);
+			color: var(--qv-disabled-nav, currentcolor);
 		}
 	}
 
@@ -401,8 +401,8 @@
 		background: transparent;
 		color: inherit;
 		text-decoration: none;
-		font-family: var(--fb-filter-pagination-font-family, inherit);
-		font-weight: var(--fb-filter-pagination-font-weight, 600);
+		font-family: var(--qv-filter-pagination-font-family, inherit);
+		font-weight: var(--qv-filter-pagination-font-weight, 600);
 		font-size: 0.95em;
 		min-width: 2.25em;
 		height: 2.25em;
@@ -416,7 +416,7 @@
 
 		&.is-active {
 			border-radius: 6px;
-			background: var(--fb-active-accent, #d1372d);
+			background: var(--qv-active-accent, #d1372d);
 			color: #fff;
 		}
 
@@ -429,9 +429,9 @@
 		   line for the common case (a handful of page numbers) instead. */
 		&--prev,
 		&--next {
-			border: 2px solid var(--fb-active-accent, #d1372d);
+			border: 2px solid var(--qv-active-accent, #d1372d);
 			border-radius: 999px;
-			color: var(--fb-active-accent, #d1372d);
+			color: var(--qv-active-accent, #d1372d);
 			padding: 0 1.25em;
 			font-weight: 600;
 
@@ -448,15 +448,15 @@
 		&:disabled,
 		&[aria-disabled="true"] {
 			cursor: default;
-			border-color: var(--fb-disabled-nav, #f3c8c4);
+			border-color: var(--qv-disabled-nav, #f3c8c4);
 			background: transparent;
-			color: var(--fb-disabled-nav, #f3c8c4);
+			color: var(--qv-disabled-nav, #f3c8c4);
 		}
 	}
 
 	&__page-ellipsis {
-		font-family: var(--fb-filter-pagination-font-family, inherit);
-		font-weight: var(--fb-filter-pagination-font-weight, 600);
+		font-family: var(--qv-filter-pagination-font-family, inherit);
+		font-weight: var(--qv-filter-pagination-font-weight, 600);
 		opacity: 0.7;
 	}
 
@@ -468,14 +468,14 @@
 
 	&__load-more-btn {
 		cursor: pointer;
-		border: 2px solid var(--fb-active-accent, #d1372d);
+		border: 2px solid var(--qv-active-accent, #d1372d);
 		background: transparent;
-		color: var(--fb-active-accent, #d1372d);
+		color: var(--qv-active-accent, #d1372d);
 		border-radius: 999px;
 		padding: 0.6em 1.5em;
 		font-size: 0.95em;
-		font-family: var(--fb-filter-pagination-font-family, inherit);
-		font-weight: var(--fb-filter-pagination-font-weight, 600);
+		font-family: var(--qv-filter-pagination-font-family, inherit);
+		font-weight: var(--qv-filter-pagination-font-weight, 600);
 
 		&:disabled {
 			opacity: 0.5;
@@ -486,14 +486,14 @@
 	/* Sidebar layout: a two-column layout (search + filters in one column,
 	   items + pagination in the other) instead of the default single-column
 	   top toolbar. Only applied when the block wrapper has the
-	   fb-query-grid--filter-sidebar modifier -- see the $is_sidebar variable
+	   qv-query-grid--filter-sidebar modifier -- see the $is_sidebar variable
 	   in Renderer::render() (only true when Show Sidebar is on AND at least
 	   one of search/filters is actually showing). Declared last so its
-	   .fb-query-grid__filters override always wins over the earlier plain
+	   .qv-query-grid__filters override always wins over the earlier plain
 	   &__filters rule (no-descending-specificity). */
 	&--filter-sidebar {
 
-		.fb-query-grid__layout {
+		.qv-query-grid__layout {
 			display: grid;
 
 			/* minmax(0, 1fr), not a bare 1fr: grid items default to
@@ -520,7 +520,7 @@
 			}
 		}
 
-		/* The item grid's own --fb-cols-tablet/--fb-cols-desktop counts
+		/* The item grid's own --qv-cols-tablet/--qv-cols-desktop counts
 		   (set above, default 2/3) assume a FULL-width block -- once the
 		   sidebar sits side-by-side with main (from 782px, matching the
 		   breakpoint above), main is only a fraction of that width, and
@@ -532,19 +532,19 @@
 		   there, so the un-capped default is correct again. */
 		@media (min-width: 782px) {
 
-			.fb-query-grid__items {
-				grid-template-columns: repeat(min(var(--fb-cols-tablet), 2), minmax(0, 1fr));
+			.qv-query-grid__items {
+				grid-template-columns: repeat(min(var(--qv-cols-tablet), 2), minmax(0, 1fr));
 			}
 		}
 
 		@media (min-width: 960px) {
 
-			.fb-query-grid__items {
-				grid-template-columns: repeat(min(var(--fb-cols-desktop), 2), minmax(0, 1fr));
+			.qv-query-grid__items {
+				grid-template-columns: repeat(min(var(--qv-cols-desktop), 2), minmax(0, 1fr));
 			}
 		}
 
-		.fb-query-grid__sidebar {
+		.qv-query-grid__sidebar {
 			display: flex;
 			flex-direction: column;
 			gap: 1.5em;
@@ -554,11 +554,11 @@
 		   narrow min(16em, 260px) column above (each pill has the full
 		   column width to itself, wrapping would look cramped) -- once the
 		   layout collapses to one full-width column below 782px (see
-		   .fb-query-grid__layout above), that same full width fits several
+		   .qv-query-grid__layout above), that same full width fits several
 		   pills per row easily, so stacking one-per-line there was just
 		   wasting scroll height for no reason. Revert to the default
 		   wrapping row at that breakpoint. */
-		.fb-query-grid__filters {
+		.qv-query-grid__filters {
 			flex-direction: column;
 			align-items: flex-start;
 
@@ -580,7 +580,7 @@
 			}
 		}
 
-		.fb-query-grid__toolbar {
+		.qv-query-grid__toolbar {
 			margin-bottom: 1.5em;
 		}
 	}
@@ -588,14 +588,14 @@
 	// Sidebar on the right: swap column order (grid-template-columns stays
 	// the same, only which side each pane renders on changes) via `order`
 	// rather than re-declaring grid-template-columns in reverse.
-	&--sidebar-right .fb-query-grid__layout {
+	&--sidebar-right .qv-query-grid__layout {
 		grid-template-columns: minmax(0, 1fr) min(16em, 260px);
 
-		.fb-query-grid__sidebar {
+		.qv-query-grid__sidebar {
 			order: 2;
 		}
 
-		.fb-query-grid__main {
+		.qv-query-grid__main {
 			order: 1;
 		}
 
