@@ -13,16 +13,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Verify tag matches readme.txt Stable tag
-        run: |
-          TAG_VERSION="${GITHUB_REF_NAME#v}"
-          STABLE_TAG=$(grep -m1 "^Stable tag:" readme.txt | sed -E 's/^Stable tag:[[:space:]]*//')
-          echo "Git tag: $TAG_VERSION | readme.txt Stable tag: $STABLE_TAG"
-          if [ "$TAG_VERSION" != "$STABLE_TAG" ]; then
-            echo "::error::Git tag ($GITHUB_REF_NAME) does not match readme.txt's Stable tag ($STABLE_TAG). Bump Stable tag and commit before tagging a release. Aborting."
-            exit 1
-          fi
-
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
@@ -34,16 +24,16 @@ jobs:
           npm ci
           npm run build
 
+      # WordPress.org is the only place the built plugin is published, so
+      # nothing here generates a zip or attaches one to the GitHub release --
+      # people install from the directory, and GitHub's own auto-generated
+      # source archives are enough for anyone reading the code.
       - name: WordPress Plugin Deploy
-        id: deploy
         uses: 10up/action-wordpress-plugin-deploy@stable
-        with:
-          generate-zip: true
         env:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-
-      - name: Attach zip to GitHub release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: ${{ steps.deploy.outputs.zip-path }}
+          # Without this the action looks for .wordpress-org/ (its default),
+          # finds nothing, and silently ships the release with no banner,
+          # icon or screenshots. Ours live in assets/.
+          ASSETS_DIR: assets

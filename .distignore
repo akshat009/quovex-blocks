@@ -39,6 +39,12 @@ docs
 # plugin never reads them.
 assets
 
+# Husky git hooks -- dev-only. `npm ci` in the deploy workflow runs the
+# `prepare` script, which generates .husky/_/ on the CI runner, so without
+# this line those hook scripts get copied into SVN trunk (this happened to
+# story-video-block 1.0.0 and 1.0.1).
+.husky
+
 # Dev tooling configs -- meaningless without the dev dependencies above.
 phpcs.xml.dist
 .eslintrc*
