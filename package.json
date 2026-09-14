@@ -1,6 +1,6 @@
 {
 	"name": "quovex-blocks",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"description": "Custom Gutenberg block category with a Query Grid, a Content Showcase, and a Notification Banner block for any public post type.",
 	"author": "Akshat",
 	"license": "GPL-2.0-or-later",

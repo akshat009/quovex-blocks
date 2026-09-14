@@ -3,7 +3,7 @@
  * Plugin Name:       Quovex Blocks
  * Plugin URI:        https://github.com/akshat009/quovex-blocks
  * Description:       A filterable Query Grid, a customizable Content Showcase, and a dismissible Notification Banner block, built with the native block editor and the Interactivity API.
- * Version:           0.1.0
+ * Version:           1.0.0
  * Requires at least: 6.8
  * Requires PHP:      7.4
  * Author:            Akshat

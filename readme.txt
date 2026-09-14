@@ -4,7 +4,7 @@ Tags:               post grid, query loop, content showcase, notification bar, p
 Requires at least:  6.8
 Tested up to:       7.1
 Requires PHP:       7.4
-Stable tag:         0.1.0
+Stable tag:         1.0.0
 License:            GPL-2.0-or-later
 License URI:        https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -141,5 +141,5 @@ The `build/` directory ships compiled, minified JavaScript and CSS. Its uncompil
 
 == Changelog ==
 
-= 0.1.0 =
+= 1.0.0 =
 * Initial release: Query Grid (Grid/List/Masonry/Carousel layouts, search, taxonomy filters, sidebar layout, numbered/load-more pagination, show-all option, SEO-friendly pagination URLs) and Content Showcase (Magazine/Split/Overlay/Two-Thirds layouts, automatic/manual post selection, section heading, image hotspots, Explore More button, color controls).
