@@ -1,4 +1,4 @@
-# Quovex Blocks
+# Quovex Blocks – Post Grid, Featured Posts, Carousel & Announcement Banner for Gutenberg
 
 ![Quovex Blocks](assets/banner-1544x500.gif)
 

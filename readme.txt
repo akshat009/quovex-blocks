@@ -1,6 +1,6 @@
-=== Quovex Blocks – Post Grid, Carousel, Notification Bar & Announcement Banner for Gutenberg ===
+=== Quovex Blocks – Post Grid, Featured Posts, Carousel & Announcement Banner for Gutenberg ===
 Contributors:      developerakshat
-Tags:               notification bar, notification, post grid, query loop, post carousel
+Tags:               post grid, featured posts, announcement, post carousel, magazine
 Requires at least:  6.8
 Tested up to:       7.1
 Requires PHP:       7.4
@@ -8,7 +8,7 @@ Stable tag:         1.0.0
 License:            GPL-2.0-or-later
 License URI:        https://www.gnu.org/licenses/gpl-2.0.html
 
-Customizable notification bar, announcement banner, post grid, masonry & carousel blocks for Gutenberg.
+Customizable post grid, magazine & featured posts showcase, announcement banner, and post carousel blocks for Gutenberg.
 
 == Description ==
 
