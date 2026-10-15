@@ -1,4 +1,4 @@
-# Quovex Blocks
+# Quovex Blocks – Post Grid, Content Showcase, Carousel & Notification Bar for Gutenberg
 
 ![Quovex Blocks](assets/banner-1544x500.gif)
 
