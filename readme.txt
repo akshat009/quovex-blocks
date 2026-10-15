@@ -1,6 +1,6 @@
-=== Quovex Blocks – Post Grid, Carousel & Announcement Bar for Gutenberg ===
+=== Quovex Blocks – Post Grid, Carousel, Notification Bar & Announcement Banner for Gutenberg ===
 Contributors:      developerakshat
-Tags:               post grid, query loop, content showcase, notification bar, post carousel
+Tags:               notification bar, notification, post grid, query loop, post carousel
 Requires at least:  6.8
 Tested up to:       7.1
 Requires PHP:       7.4
@@ -8,7 +8,7 @@ Stable tag:         1.0.0
 License:            GPL-2.0-or-later
 License URI:        https://www.gnu.org/licenses/gpl-2.0.html
 
-Post grid, query loop, masonry & carousel blocks, a content showcase, and a dismissible notification / announcement bar for Gutenberg.
+Customizable notification bar, announcement banner, post grid, masonry & carousel blocks for Gutenberg.
 
 == Description ==
 
@@ -69,6 +69,14 @@ A dismissible announcement bar or alert box for promos, notices, sales, and upda
 * Editable title and message, an optional CTA button with its own label, link, and open-in-new-tab option.
 * Dismiss button with "remember dismissal" (stored in the visitor's browser, so a dismissed banner stays hidden on their next visit).
 * Color and typography controls (font family/weight, pulled from your active theme) for the background, text, accent, and button.
+
+= Check Out My Other Plugins =
+
+If you find Quovex Blocks helpful, feel free to check out my other free WordPress plugins:
+
+* [Flash Sale Stock Guard for WooCommerce](https://wordpress.org/plugins/flash-sale-stock-guard-for-woocommerce/) — Prevent overselling during limited drops and flash sales by reserving stock at add-to-cart.
+* [Story Video Block](https://wordpress.org/plugins/story-video-block/) — Fast video player, YouTube/Vimeo embed & video testimonials for Gutenberg with click-to-play lazy loading.
+* [Multimage – Image Uploads for WPForms](https://wordpress.org/plugins/multimage-image-uploads-for-wpforms/) — Multiple image uploads for WPForms Lite with instant AJAX uploads.
 
 == Installation ==
 
