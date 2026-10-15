@@ -1,4 +1,4 @@
-=== Quovex Blocks ===
+=== Quovex Blocks – Post Grid, Carousel & Announcement Bar for Gutenberg ===
 Contributors:      developerakshat
 Tags:               post grid, query loop, content showcase, notification bar, post carousel
 Requires at least:  6.8
@@ -11,6 +11,12 @@ License URI:        https://www.gnu.org/licenses/gpl-2.0.html
 Post grid, query loop, masonry & carousel blocks, a content showcase, and a dismissible notification / announcement bar for Gutenberg.
 
 == Description ==
+
+= Video Walkthrough =
+
+Watch the complete walkthrough and demo of Quovex Blocks:
+
+https://www.youtube.com/watch?v=ADyo0WuhiR0
 
 Quovex Blocks adds three focused, modern blocks to the native Gutenberg block editor -- a filterable, paginated **Query Grid** (a post grid with grid, list, masonry, and carousel layouts), a magazine-style **Content Showcase**, and a dismissible **Notification Banner** for announcements and alerts. Query Grid and Content Showcase both work with **any public post type** -- Posts, Pages, WooCommerce products, or any custom post type registered on your site -- not just Posts.
 
