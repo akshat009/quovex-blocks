@@ -8,6 +8,10 @@ Three native Gutenberg blocks for showcasing content: a filterable **Query Grid*
 ![PHP](https://img.shields.io/badge/PHP-7.4%2B-777bb4?logo=php&logoColor=white)
 ![License](https://img.shields.io/badge/license-GPL--2.0--or--later-blue)
 
+[![Watch Quovex Blocks Walkthrough](https://img.youtube.com/vi/ADyo0WuhiR0/maxresdefault.jpg)](https://www.youtube.com/watch?v=ADyo0WuhiR0)
+
+**[Try it live in your browser](https://playground.wordpress.net/?plugin=quovex-blocks&url=/wp-admin/post-new.php%3Fpost_type%3Dpage)** — no install required, via WordPress Playground.
+
 ## Why this plugin?
 
 - **No separate builder layer** -- everything is a native block, edited with the block editor you already use.
