@@ -121,6 +121,14 @@ npm run test:unit:js            # Jest
 - `tests/` -- PHPUnit (`tests/Unit/`) and Jest (`src/**/test/`) suites.
 - Each block's render path: `src/<block>/render.php` -> `Services::<block>_renderer()` -> `includes/Blocks/<Block>/Render/Renderer.php`.
 
+## Other Plugins by Me
+
+Check out my other free plugins on the WordPress Plugin Directory:
+
+* **[Flash Sale Stock Guard for WooCommerce](https://wordpress.org/plugins/flash-sale-stock-guard-for-woocommerce/)** — Stop overselling during limited drops and flash sales by reserving stock at add-to-cart.
+* **[Story Video Block](https://wordpress.org/plugins/story-video-block/)** — Fast video player, YouTube/Vimeo embed & video testimonials block for Gutenberg with click-to-play lazy loading.
+* **[Multimage – Image Uploads for WPForms](https://wordpress.org/plugins/multimage-image-uploads-for-wpforms/)** — Multiple image uploads for WPForms Lite with instant AJAX uploads.
+
 ## License
 
 GPL-2.0-or-later. See [LICENSE](https://www.gnu.org/licenses/gpl-2.0.html).
